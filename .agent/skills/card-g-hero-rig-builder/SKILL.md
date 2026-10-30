@@ -41,9 +41,12 @@ Each hero has ONE fixed rarity (`N`, `R`, `S`, or `SSR`), an Element (`Kim`, `M�
 2. Require a full-body standing pose at `3/4 angle facing RIGHT`, solid flat `#FF00FF` magenta background, occupying 65%–70% of the canvas with open limb separation so all joints are clearly visible.
 3. Post-process with `generate2dsprite.py process --rows 1 --cols 1 --align feet --scale-strategy preserve --strict-qc` to save `assets/heroes/<hero_dir>/reference/<hero_id>_reference_clean.png`.
 
-### Step 3: Composite Complete Hero Card (`<hero_id>_card_complete_<rarity>.png` & `.webp`)
+### Step 3: Generate Horizontal Hero Portrait Preview Only (`<hero_id>_portrait_preview.png` & `.webp` — DO NOT Bake Card Frame)
 
-Composite the hero artwork + elemental background into the matching rarity frame (`assets/cards/frames/khoet_common/frame_rarity_<N|R|S|SSR>_khoet_common_kem_icon.png`) with Element badge, Type badge, name ribbon, and stats according to `assets/cards/card-template-layout.json`.
+- **DO NOT** generate a pre-assembled card image (`<hero_id>_card_complete_<rarity>.png`) with the card frame, text, or stats baked in — the card frame template, name, skill text, icons, and stats are assembled dynamically in game code.
+- **ONLY** generate and save the horizontal hero portrait preview that fits the `art_window` slot in `assets/cards/card-template-layout.json`:
+  - Master PNG (`884x632`): `assets/heroes/<hero_dir>/card/<hero_id>_portrait_preview.png`
+  - Mobile WebP (`354x253`): `assets/mobile/heroes/<hero_dir>/card/<hero_id>_portrait_preview.webp`
 
 ### Step 4: Generate & Split 18 Isolated Body Cutout Parts (`godot/parts/*.png`)
 

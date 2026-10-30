@@ -117,5 +117,8 @@ Trước khi tạo bất kỳ asset 2D nào, hãy đọc tài liệu skill tươ
    - **Xử lý Video sang Sprite (`video2dsprite`):**
      - `/Users/dochung/.gemini/config/skills/video2dsprite/scripts/video2dsprite.py`
 
-3. **Kiểm định chất lượng (QC):**
-   - Kiểm tra kết quả xuất ra (`pipeline-meta.json`, `sheet-transparent.png`, `animation.gif`) xem có bị chạm viền (`edge_touch_frames`), mất bộ phận, lệch chân hay còn viền tím magenta hay không. Nếu không đạt QC, điều chỉnh tham số xử lý hoặc gọi lại Muse Local API để tạo lại raw sheet.
+3. **Kiểm định chất lượng (QC) & Quy trình Tạo Tướng Xương 2D Godot 4 (`.tscn` — Cách 2A):**
+   - **Chỉ tạo ảnh ngang Preview Chân Dung Tướng (`<hero_id>_portrait_preview.png` `884x632` & `.webp` `354x253`), KHÔNG tạo ảnh thẻ bài đã ghép sẵn khung:** Khung thẻ template, tên tướng, mô tả kỹ năng, icon hệ/loại và chỉ số sẽ được ghép động bằng code trong game.
+   - **KHÔNG tạo file `.gif` — BẮT BUỘC tạo kèm 1 file HTML Editor (`<hero_id>_editor.html`) cho mỗi Tướng:**
+     - Với mỗi tướng sau khi tạo xong `.tscn`, bắt buộc xuất kèm 1 file HTML tương tác (`/Users/dochung/Desktop/card_g/assets/heroes/<hero_dir>/<hero_id>_editor.html`) với thanh chọn 6 Action (`idle`, `walk`, `attack`, `cast`, `hurt`, `death`) ở trên: **chọn action nào thì mới preview trực tiếp action đó trên Canvas chính** (không hiển thị hàng loạt mini-canvas của các action khác trên thanh chọn).
+     - File HTML cho phép người dùng tự kéo/chỉnh lại vị trí khớp xương (`position`, `rotation`, `offset`, `z_index`) trên hệ xương Spine 18 `Bone2D` đầy đủ (Vai $\rightarrow$ Khuỷu $\rightarrow$ Cổ tay $\rightarrow$ Bàn tay & Đùi $\rightarrow$ Gối $\rightarrow$ Cổ chân $\rightarrow$ Bàn chân) và từng keyframe của mỗi action, kèm nút **`Save to .tscn`** cập nhật trực tiếp vào file `<hero_id>.tscn` của Godot.
