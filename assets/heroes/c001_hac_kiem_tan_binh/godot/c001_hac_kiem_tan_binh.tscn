@@ -326,7 +326,7 @@ tracks/24/keys = {
 "times": PackedFloat32Array(0.00, 0.30, 0.60, 0.90),
 "transitions": PackedFloat32Array(1, 1, 1, 1),
 "update": 0,
-"values": [-0.6772, 0.3142, 0.3142, 0.3142]
+"values": [0.3142, 0.3142, 0.3142, 0.3142]
 }
 tracks/25/type = "value"
 tracks/25/imported = false
@@ -374,7 +374,7 @@ tracks/28/keys = {
 "times": PackedFloat32Array(0.00, 0.30, 0.60, 0.90),
 "transitions": PackedFloat32Array(1, 1, 1, 1),
 "update": 0,
-"values": [0.6231, 0.4014, 0.3665, 0.4189]
+"values": [0.4538, 0.4014, 0.3665, 0.4189]
 }
 tracks/29/type = "value"
 tracks/29/imported = false
@@ -398,7 +398,7 @@ tracks/30/keys = {
 "times": PackedFloat32Array(0.00, 0.30, 0.60, 0.90),
 "transitions": PackedFloat32Array(1, 1, 1, 1),
 "update": 0,
-"values": [-0.6004, -0.1571, -0.1920, -0.1396]
+"values": [-0.1047, -0.1571, -0.1920, -0.1396]
 }
 tracks/31/type = "value"
 tracks/31/imported = false
@@ -422,7 +422,7 @@ tracks/32/keys = {
 "times": PackedFloat32Array(0.00, 0.30, 0.60, 0.90),
 "transitions": PackedFloat32Array(1, 1, 1, 1),
 "update": 0,
-"values": [-0.0908, -0.0349, -0.0698, -0.0349]
+"values": [0.0000, -0.0349, -0.0698, -0.0349]
 }
 tracks/33/type = "value"
 tracks/33/imported = false
@@ -4176,7 +4176,7 @@ script = ExtResource("1_script")
 [node name="Hip" type="Bone2D" parent="Skeleton2D"]
 position = Vector2(206.0, 248.0)
 rotation = 0.0000
-rest = Transform2D(1.0000, 0.0000, 0.0000, 1.0000, 206.0, 248.0)
+rest = Transform2D(1.0000, 0.0000, -0.0000, 1.0000, 206.0, 248.0)
 auto_calculate_length_and_angle = false
 length = 8.0
 bone_angle = -1.5708
@@ -4218,7 +4218,7 @@ offset = Vector2(-9.50, 38.00)
 [node name="Foot_L" type="Bone2D" parent="Skeleton2D/Hip/Thigh_L/Shin_L"]
 position = Vector2(-12.0, 76.0)
 rotation = 0.0000
-rest = Transform2D(1.0000, 0.0000, 0.0000, 1.0000, -12.0, 76.0)
+rest = Transform2D(1.0000, 0.0000, -0.0000, 1.0000, -12.0, 76.0)
 auto_calculate_length_and_angle = false
 length = 40.5
 bone_angle = 0.5743
@@ -4260,7 +4260,7 @@ offset = Vector2(-7.50, 39.00)
 [node name="Foot_R" type="Bone2D" parent="Skeleton2D/Hip/Thigh_R/Shin_R"]
 position = Vector2(-8.0, 78.0)
 rotation = 0.0000
-rest = Transform2D(1.0000, 0.0000, 0.0000, 1.0000, -8.0, 78.0)
+rest = Transform2D(1.0000, 0.0000, -0.0000, 1.0000, -8.0, 78.0)
 auto_calculate_length_and_angle = false
 length = 36.1
 bone_angle = 1.5153
@@ -4274,7 +4274,7 @@ offset = Vector2(-1.50, 19.00)
 [node name="Chest" type="Bone2D" parent="Skeleton2D/Hip"]
 position = Vector2(0.0, -8.0)
 rotation = 0.0000
-rest = Transform2D(1.0000, 0.0000, 0.0000, 1.0000, 0.0, -8.0)
+rest = Transform2D(1.0000, 0.0000, -0.0000, 1.0000, 0.0, -8.0)
 auto_calculate_length_and_angle = false
 length = 92.0
 bone_angle = -1.5491
@@ -4330,7 +4330,7 @@ offset = Vector2(15.00, 15.00)
 [node name="Hand_R" type="Bone2D" parent="Skeleton2D/Hip/Chest/UpperArm_R/Forearm_R"]
 position = Vector2(26.0, 36.0)
 rotation = 0.0000
-rest = Transform2D(1.0000, 0.0000, 0.0000, 1.0000, 26.0, 36.0)
+rest = Transform2D(1.0000, 0.0000, -0.0000, 1.0000, 26.0, 36.0)
 auto_calculate_length_and_angle = false
 length = 20.0
 bone_angle = 0.9273
@@ -4358,7 +4358,7 @@ offset = Vector2(57.20, 46.80)
 [node name="Head" type="Bone2D" parent="Skeleton2D/Hip/Chest"]
 position = Vector2(4.0, -112.0)
 rotation = 0.0000
-rest = Transform2D(1.0000, 0.0000, 0.0000, 1.0000, 4.0, -112.0)
+rest = Transform2D(1.0000, 0.0000, -0.0000, 1.0000, 4.0, -112.0)
 auto_calculate_length_and_angle = false
 length = 64.0
 bone_angle = -1.5396
@@ -4400,7 +4400,7 @@ offset = Vector2(-7.50, 16.00)
 [node name="Hand_L" type="Bone2D" parent="Skeleton2D/Hip/Chest/UpperArm_L/Forearm_L"]
 position = Vector2(-16.0, 36.0)
 rotation = 0.0000
-rest = Transform2D(1.0000, 0.0000, 0.0000, 1.0000, -16.0, 36.0)
+rest = Transform2D(1.0000, 0.0000, -0.0000, 1.0000, -16.0, 36.0)
 auto_calculate_length_and_angle = false
 length = 38.8
 bone_angle = 1.7783
@@ -4414,7 +4414,7 @@ offset = Vector2(-6.00, 17.50)
 [node name="Pauldron" type="Bone2D" parent="Skeleton2D/Hip/Chest"]
 position = Vector2(-24.0, -92.0)
 rotation = 0.0000
-rest = Transform2D(1.0000, 0.0000, 0.0000, 1.0000, -24.0, -92.0)
+rest = Transform2D(1.0000, 0.0000, -0.0000, 1.0000, -24.0, -92.0)
 auto_calculate_length_and_angle = false
 length = 26.9
 bone_angle = 2.4088
