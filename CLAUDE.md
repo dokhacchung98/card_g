@@ -73,6 +73,7 @@ Khi cần generate ảnh, spritesheet, nhân vật, hiệu ứng (FX/projectile/
 ### 2.2. Tuân thủ nghiêm ngặt quy trình Skill `agent-sprite-forge`
 
 Trước khi tạo bất kỳ asset 2D nào, hãy đọc tài liệu skill tương ứng đã được cài đặt sẵn trên máy:
+- **Skill chuyên biệt tạo Tướng Xương 2D (18 `Bone2D` + Soft-Opacity VFX + HTML Editor) của dự án `card_g`:** `/Users/dochung/Desktop/card_g/.agent/skills/card-g-hero-rig-builder/SKILL.md` (hoặc `/Users/dochung/.gemini/config/skills/card-g-hero-rig-builder/SKILL.md`)
 - **Tổng quan:** `/Users/dochung/.gemini/config/skills/agent-sprite-forge/SKILL.md`
 - **Tạo Sprite & Animation (`generate2dsprite`):** `/Users/dochung/.gemini/config/skills/generate2dsprite/SKILL.md`
   - Quy tắc viết prompt: `/Users/dochung/.gemini/config/skills/generate2dsprite/references/prompt-rules.md`
