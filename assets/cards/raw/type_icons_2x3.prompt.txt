@@ -1,0 +1,12 @@
+Use the 2x3 layout guide image just shown as a layout-only reference for the 2 rows and 3 columns of equal invisible slots. Do not reproduce any guide lines, boxes, or background.
+Create a 2x3 sheet of circular Dark Fantasy Card Type / Role Medallion Badges (6 circular game UI socket icons designed to fit inside a circular card corner socket, clean HD hand-painted 2D UI art, centered inside 65% of each cell).
+Background MUST be 100% solid flat magenta (#FF00FF) everywhere. NO text, NO words, NO numbers.
+Row 1 (left to right):
+- Cell (1,1) Physical Offense (Tấn Công Vật Lý): Circular dark-metal badge with crossed crimson-steel greatswords inside.
+- Cell (1,2) Magic Offense (Tấn Công Ma Pháp): Circular dark-metal badge with an arcane glowing violet spellcaster staff and orb inside.
+- Cell (1,3) Tanker (Đỡ Đòn / Tiên Phong): Circular dark-metal badge with a heavy iron bastion tower shield inside.
+Row 2 (left to right):
+- Cell (2,1) Support (Hỗ Trợ): Circular dark-metal badge with radiant golden angel wings and healing ankh/chalice inside.
+- Cell (2,2) Item / Relic (Vật Phẩm): Circular dark-metal badge with a glowing alchemical potion flask and runic scroll inside.
+- Cell (2,3) Unique Skill (Tuyệt Kỹ): Circular dark-metal badge with a golden arcane crown rune inside.
+Every circular badge must have the exact same diameter and stay strictly inside its cell on a 100% solid flat #FF00FF background.

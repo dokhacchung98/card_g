@@ -1,0 +1,16 @@
+Use the 3x3 layout guide image just shown as a layout-only reference for rows, columns, equal invisible frame slots, centering, spacing, and safe padding. Do not reproduce the guide: no visible boxes, no safe-area rectangles, no center marks, no labels, no borders, no guide background.
+Create a 3x3 game UI icon sheet (9 distinct Dark Fantasy RPG stat icons, clean HD hand-painted 2D game UI style, crisp readable silhouettes, dark metallic rim, centered inside the middle 65% of each cell, no pixel art).
+Background MUST be 100% solid flat magenta (#FF00FF) everywhere with generous margin around each icon. NO text, NO numbers, NO letters.
+Row 1 (left to right):
+- Cell (1,1) HP (Máu): A glowing crimson ruby heart emblem framed in dark silver.
+- Cell (1,2) Mana (Năng lượng): A glowing sapphire-blue mana crystal droplet emblem.
+- Cell (1,3) Shield (Khiên ảo): A radiant golden-white energy barrier kite-shield emblem.
+Row 2 (left to right):
+- Cell (2,1) Dame / ATK (Sát thương): A sharp diagonal steel broadsword with a warm orange edge glint.
+- Cell (2,2) ASPD (Tốc độ đánh): Twin crossed daggers with a golden lightning slash streak.
+- Cell (2,3) Range (Tầm đánh): A sleek dark-fantasy recurve bow with a glowing target arrow.
+Row 3 (left to right):
+- Cell (3,1) DEF (Giáp vật lý): A sturdy iron knight breastplate armor icon.
+- Cell (3,2) MDEF (Giáp kháng phép): A glowing arcane purple runic ward amulet icon.
+- Cell (3,3) MSPD (Tốc độ di chuyển): A winged leather combat boot icon with turquoise wind feathers.
+Every icon must stay strictly inside its own cell without touching any cell edge.

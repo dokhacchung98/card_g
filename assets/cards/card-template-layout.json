@@ -1,0 +1,279 @@
+{
+  "canvas_size": [
+    1280,
+    1920
+  ],
+  "card_outer_bounds": {
+    "x": 116,
+    "y": 94,
+    "width": 1048,
+    "height": 1742
+  },
+  "common_slots": {
+    "name_slot": {
+      "description": "Ô Tên thẻ bài (Top Header)",
+      "x": 192,
+      "y": 158,
+      "width": 896,
+      "height": 106,
+      "radius": 14
+    },
+    "art_window": {
+      "description": "Khung hình ảnh chữ nhật của thẻ (Upper-Middle Cutout)",
+      "x": 198,
+      "y": 332,
+      "width": 884,
+      "height": 632,
+      "radius": 6
+    },
+    "element_socket": {
+      "description": "Hốc biểu tượng Hệ Ngũ Hành (Góc trên-trái khung ảnh chữ nhật)",
+      "cx": 225,
+      "cy": 348,
+      "inner_radius": 50,
+      "outer_radius": 68
+    },
+    "type_socket": {
+      "description": "Hốc biểu tượng Loại Thẻ / Vai Trò (Góc trên-phải khung ảnh chữ nhật)",
+      "cx": 1055,
+      "cy": 348,
+      "inner_radius": 50,
+      "outer_radius": 68
+    },
+    "skill_info_slot": {
+      "description": "Ô Thông tin của thẻ & Kỹ năng (Lower-Middle Box)",
+      "x": 194,
+      "y": 1026,
+      "width": 892,
+      "height": 294,
+      "radius": 16,
+      "corner_ornament_keep_radius": 42
+    },
+    "stats_grid": {
+      "description": "Khu vực 9 Ô Chỉ số bằng Icon (3 hàng x 3 cột)",
+      "x": 190,
+      "y": 1368,
+      "width": 900,
+      "height": 280,
+      "rows": 3,
+      "cols": 3,
+      "slots": [
+        {
+          "index": 0,
+          "stat_id": "hp",
+          "stat_name": "HP (Máu)",
+          "row": 0,
+          "col": 0,
+          "x": 195,
+          "y": 1372,
+          "width": 285,
+          "height": 78,
+          "icon_box": [
+            203,
+            1378,
+            269,
+            1444
+          ],
+          "value_box": [
+            273,
+            1380,
+            472,
+            1442
+          ]
+        },
+        {
+          "index": 1,
+          "stat_id": "mana",
+          "stat_name": "Mana (Năng lượng)",
+          "row": 0,
+          "col": 1,
+          "x": 498,
+          "y": 1372,
+          "width": 284,
+          "height": 78,
+          "icon_box": [
+            506,
+            1378,
+            572,
+            1444
+          ],
+          "value_box": [
+            576,
+            1380,
+            774,
+            1442
+          ]
+        },
+        {
+          "index": 2,
+          "stat_id": "shield",
+          "stat_name": "Khiên (Giáp ảo)",
+          "row": 0,
+          "col": 2,
+          "x": 800,
+          "y": 1372,
+          "width": 285,
+          "height": 78,
+          "icon_box": [
+            808,
+            1378,
+            874,
+            1444
+          ],
+          "value_box": [
+            878,
+            1380,
+            1077,
+            1442
+          ]
+        },
+        {
+          "index": 3,
+          "stat_id": "dame",
+          "stat_name": "Dame (Sát thương)",
+          "row": 1,
+          "col": 0,
+          "x": 195,
+          "y": 1471,
+          "width": 285,
+          "height": 78,
+          "icon_box": [
+            203,
+            1477,
+            269,
+            1543
+          ],
+          "value_box": [
+            273,
+            1479,
+            472,
+            1541
+          ]
+        },
+        {
+          "index": 4,
+          "stat_id": "aspd",
+          "stat_name": "ASPD (Tốc đánh)",
+          "row": 1,
+          "col": 1,
+          "x": 498,
+          "y": 1471,
+          "width": 284,
+          "height": 78,
+          "icon_box": [
+            506,
+            1477,
+            572,
+            1543
+          ],
+          "value_box": [
+            576,
+            1479,
+            774,
+            1541
+          ]
+        },
+        {
+          "index": 5,
+          "stat_id": "range",
+          "stat_name": "Range (Tầm đánh)",
+          "row": 1,
+          "col": 2,
+          "x": 800,
+          "y": 1471,
+          "width": 285,
+          "height": 78,
+          "icon_box": [
+            808,
+            1477,
+            874,
+            1543
+          ],
+          "value_box": [
+            878,
+            1479,
+            1077,
+            1541
+          ]
+        },
+        {
+          "index": 6,
+          "stat_id": "def",
+          "stat_name": "Giáp (Vật lý)",
+          "row": 2,
+          "col": 0,
+          "x": 195,
+          "y": 1570,
+          "width": 285,
+          "height": 78,
+          "icon_box": [
+            203,
+            1576,
+            269,
+            1642
+          ],
+          "value_box": [
+            273,
+            1578,
+            472,
+            1640
+          ]
+        },
+        {
+          "index": 7,
+          "stat_id": "mdef",
+          "stat_name": "K.Phép (Kháng phép)",
+          "row": 2,
+          "col": 1,
+          "x": 498,
+          "y": 1570,
+          "width": 284,
+          "height": 78,
+          "icon_box": [
+            506,
+            1576,
+            572,
+            1642
+          ],
+          "value_box": [
+            576,
+            1578,
+            774,
+            1640
+          ]
+        },
+        {
+          "index": 8,
+          "stat_id": "mspd",
+          "stat_name": "MSPD (Tốc chạy)",
+          "row": 2,
+          "col": 2,
+          "x": 800,
+          "y": 1570,
+          "width": 285,
+          "height": 78,
+          "icon_box": [
+            808,
+            1576,
+            874,
+            1642
+          ],
+          "value_box": [
+            878,
+            1578,
+            1077,
+            1640
+          ]
+        }
+      ]
+    },
+    "card_id_slot": {
+      "description": "Ô ID của thẻ ở góc cuối (Bottom-Right Corner)",
+      "x": 906,
+      "y": 1692,
+      "width": 190,
+      "height": 74,
+      "radius": 10
+    }
+  }
+}

@@ -1,0 +1,10 @@
+Use the layout guide image just shown as a layout-only reference for exact vertical proportions and slot placement. Do not reproduce guide lines or colored outlines.
+Create a single vertical 2D tabletop trading card frame template (blank card base / phôi thẻ bài, Normal Tier N - Brushed Dark Silver & Matte Iron) in a clean, minimalist Dark Fantasy UI art style ('base fantasy', sleek, readable, NOT overly ornate or cluttered).
+Strict top-to-bottom structure matching the layout guide:
+1. OUTER BACKGROUND: 100% solid flat magenta (#FF00FF) outside the card border with generous margin on all 4 sides.
+2. TOP HEADER: A clean horizontal recessed dark-slate plaque framed by a thin brushed-silver bevel for the Card Name (completely empty, NO text).
+3. UPPER-MIDDLE RECTANGULAR ART WINDOW: A large rectangular frame window for the card illustration. CRITICAL CUTOUT: The interior of this rectangular art window MUST be 100% solid flat magenta (#FF00FF) so it is a hollow cutout window. Overlapping the top-left and top-right corners of this rectangular window are 2 circular metallic socket rings (empty recessed dark circles, NO icons inside) for the Element badge and Card Type badge.
+4. LOWER-MIDDLE SKILL BOX: Below the rectangular window is a clean rectangular recessed dark parchment-slate panel with thin silver trim for Card Info and Skill description (completely empty, NO text).
+5. BELOW SKILL BOX (STATS PANEL): A clean rectangular dark-slate panel subtly divided into a neat 3x3 grid of 9 small empty recessed slots for the 9 Stat Icons (completely empty, NO numbers, NO icons).
+6. BOTTOM-RIGHT CORNER (CARD ID): A small horizontal recessed metallic tag plate at the bottom-right corner of the card for the Card ID (completely empty, NO text).
+Orthographic front-facing 2D game UI asset, crisp clean edges, symmetrical, NO text, NO letters, NO numbers, NO character portrait, solid #FF00FF background and solid #FF00FF cutout inside the rectangular art window.

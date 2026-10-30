@@ -1,0 +1,267 @@
+{
+  "input": "/Users/dochung/Desktop/card_g/assets/cards/raw/type_icons_2x3_raw.png",
+  "rows": 2,
+  "cols": 3,
+  "threshold": 100,
+  "edge_threshold": 150,
+  "component_mode": "largest",
+  "component_padding": 4,
+  "min_component_area": 100,
+  "edge_touch_margin": 0,
+  "accepted": [
+    {
+      "index": 0,
+      "label": "atk-phys",
+      "grid": [
+        0,
+        0
+      ],
+      "source_box": [
+        0,
+        0,
+        640,
+        640
+      ],
+      "component_mode": "largest",
+      "component_count": 1,
+      "selected_component_area": 228234,
+      "selected_component_bbox": [
+        66,
+        64,
+        605,
+        603
+      ],
+      "crop_bbox": [
+        66,
+        64,
+        605,
+        603
+      ],
+      "padded_crop_bbox": [
+        62,
+        60,
+        609,
+        607
+      ],
+      "edge_touch": false,
+      "output_size": [
+        547,
+        547
+      ],
+      "status": "accepted",
+      "image": "/Users/dochung/Desktop/card_g/assets/cards/icons/types/atk-phys/prop.png"
+    },
+    {
+      "index": 1,
+      "label": "atk-mag",
+      "grid": [
+        0,
+        1
+      ],
+      "source_box": [
+        640,
+        0,
+        1280,
+        640
+      ],
+      "component_mode": "largest",
+      "component_count": 1,
+      "selected_component_area": 227791,
+      "selected_component_bbox": [
+        50,
+        63,
+        588,
+        603
+      ],
+      "crop_bbox": [
+        50,
+        63,
+        588,
+        603
+      ],
+      "padded_crop_bbox": [
+        46,
+        59,
+        592,
+        607
+      ],
+      "edge_touch": false,
+      "output_size": [
+        546,
+        548
+      ],
+      "status": "accepted",
+      "image": "/Users/dochung/Desktop/card_g/assets/cards/icons/types/atk-mag/prop.png"
+    },
+    {
+      "index": 2,
+      "label": "tanker",
+      "grid": [
+        0,
+        2
+      ],
+      "source_box": [
+        1280,
+        0,
+        1920,
+        640
+      ],
+      "component_mode": "largest",
+      "component_count": 1,
+      "selected_component_area": 227332,
+      "selected_component_bbox": [
+        32,
+        64,
+        570,
+        603
+      ],
+      "crop_bbox": [
+        32,
+        64,
+        570,
+        603
+      ],
+      "padded_crop_bbox": [
+        28,
+        60,
+        574,
+        607
+      ],
+      "edge_touch": false,
+      "output_size": [
+        546,
+        547
+      ],
+      "status": "accepted",
+      "image": "/Users/dochung/Desktop/card_g/assets/cards/icons/types/tanker/prop.png"
+    },
+    {
+      "index": 3,
+      "label": "support",
+      "grid": [
+        1,
+        0
+      ],
+      "source_box": [
+        0,
+        640,
+        640,
+        1280
+      ],
+      "component_mode": "largest",
+      "component_count": 1,
+      "selected_component_area": 227883,
+      "selected_component_bbox": [
+        67,
+        32,
+        606,
+        571
+      ],
+      "crop_bbox": [
+        67,
+        32,
+        606,
+        571
+      ],
+      "padded_crop_bbox": [
+        63,
+        28,
+        610,
+        575
+      ],
+      "edge_touch": false,
+      "output_size": [
+        547,
+        547
+      ],
+      "status": "accepted",
+      "image": "/Users/dochung/Desktop/card_g/assets/cards/icons/types/support/prop.png"
+    },
+    {
+      "index": 4,
+      "label": "item",
+      "grid": [
+        1,
+        1
+      ],
+      "source_box": [
+        640,
+        640,
+        1280,
+        1280
+      ],
+      "component_mode": "largest",
+      "component_count": 1,
+      "selected_component_area": 227735,
+      "selected_component_bbox": [
+        50,
+        31,
+        589,
+        571
+      ],
+      "crop_bbox": [
+        50,
+        31,
+        589,
+        571
+      ],
+      "padded_crop_bbox": [
+        46,
+        27,
+        593,
+        575
+      ],
+      "edge_touch": false,
+      "output_size": [
+        547,
+        548
+      ],
+      "status": "accepted",
+      "image": "/Users/dochung/Desktop/card_g/assets/cards/icons/types/item/prop.png"
+    },
+    {
+      "index": 5,
+      "label": "special-skill",
+      "grid": [
+        1,
+        2
+      ],
+      "source_box": [
+        1280,
+        640,
+        1920,
+        1280
+      ],
+      "component_mode": "largest",
+      "component_count": 1,
+      "selected_component_area": 227553,
+      "selected_component_bbox": [
+        32,
+        32,
+        570,
+        571
+      ],
+      "crop_bbox": [
+        32,
+        32,
+        570,
+        571
+      ],
+      "padded_crop_bbox": [
+        28,
+        28,
+        574,
+        575
+      ],
+      "edge_touch": false,
+      "output_size": [
+        546,
+        547
+      ],
+      "status": "accepted",
+      "image": "/Users/dochung/Desktop/card_g/assets/cards/icons/types/special-skill/prop.png"
+    }
+  ],
+  "rejected": [],
+  "edge_touch_props": []
+}
