@@ -13,8 +13,6 @@ class_name C003_DaoPhuDoiThi
 		if is_inside_tree() and has_node("Skeleton2D/Hip/Chest/UpperArm_R/Forearm_R/Hand_R/Weapon_Back"):
 			$Skeleton2D/Hip/Chest/UpperArm_R/Forearm_R/Hand_R/Weapon_Back.visible = val
 
-@export var weapon_aura_enabled: bool = true
-
 @onready var anim_player: AnimationPlayer = $AnimationPlayer
 @onready var skeleton: Skeleton2D = $Skeleton2D
 
@@ -47,6 +45,3 @@ func play_action(action_name: String) -> void:
 
 func toggle_dual_weapons(enabled: bool) -> void:
 	dual_weapon_enabled = enabled
-
-func toggle_weapon_aura(enabled: bool) -> void:
-	weapon_aura_enabled = enabled

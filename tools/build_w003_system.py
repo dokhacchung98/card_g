@@ -2,8 +2,9 @@
 """
 tools/build_w003_system.py
 Complete pipeline builder for W003 (Đại Đao Đồi Thí / Trảm Đao Đao Phủ - Cấp N)
-Follows strict 3-step weapon flow:
-  1. Ref Weapon -> 2. Spritesheet Animation (2x2) -> 3. Card Preview (884x632)
+Follows strict 2-step weapon flow for N & R tier weapons:
+  1. Static Ref Weapon (weapon_main.png / weapon_anim_0.png, no weapon animation)
+  2. Opaque RGB Card Preview (884x632 PNG & 354x253 WebP)
 Generates QC audit boards, Godot 4 .tscn/.gd, and interactive HTML editors.
 """
 
@@ -72,14 +73,10 @@ foot_f_px, _ = find_top_stem_pivot(im_foot_f)
 foot_b_px, _ = find_top_stem_pivot(im_foot_b)
 foot_f_py, foot_b_py = 9.0, 9.0
 
-# Weapon parts (oriented with handle at bottom-left, cleaver blade extending up-right)
+# Weapon parts (Cấp N: 1 static weapon image weapon_main.png = weapon_anim_0.png, no weapon animation)
 w003_main = Image.open(os.path.join(W003_PARTS_DIR, "weapon_main.png")).convert("RGBA")
 w003_offhand = Image.open(os.path.join(W003_PARTS_DIR, "weapon_offhand.png")).convert("RGBA")
-w003_aura = Image.open(os.path.join(W003_PARTS_DIR, "weapon_aura.png")).convert("RGBA")
-
-W003_ANIM_FRAMES = [
-    Image.open(os.path.join(W003_PARTS_DIR, f"weapon_anim_{i}.png")).convert("RGBA") for i in range(4)
-]
+w003_anim_0 = Image.open(os.path.join(W003_PARTS_DIR, "weapon_anim_0.png")).convert("RGBA")
 
 VFX_PARTS = {
     "fx_slash": Image.open(os.path.join(W003_PARTS_DIR, "fx_slash.png")).convert("RGBA"),
@@ -121,6 +118,7 @@ BONES_W003 = [
 W003_IMAGES = {
     "weapon_main": w003_main,
     "weapon_offhand": w003_offhand,
+    "weapon_anim_0": w003_anim_0,
     **VFX_PARTS
 }
 
@@ -140,79 +138,79 @@ ACTIONS_W003 = {
     "idle": {
         "grid": [2, 2], "length": 1.2, "loop": True,
         "frames": [
-            {"t": 0.0, "aura_frame": 0, "Hip": [0, 0, 0], "Chest": [0, 0, 0], "Head": [0, 0, 0], "UpperArm_R": [0, 0, 0], "Forearm_R": [0, 0, 0], "Hand_R": [0, 0, 0], "Weapon_Back": [0, 0, 0], "UpperArm_L": [0, 0, 0], "Forearm_L": [0, 0, 0], "Hand_L": [0, 0, 0], "Weapon_Front": [0, 0, 0], "Thigh_R": [0, 0, 0], "Shin_R": [0, 0, 0], "Foot_R": [0, 0, 0], "Thigh_L": [0, 0, 0], "Shin_L": [0, 0, 0], "Foot_L": [0, 0, 0]},
-            {"t": 0.3, "aura_frame": 1, "Hip": [0, 3, 0], "Chest": [2, 0, 0], "Head": [-2, 0, 0], "UpperArm_R": [4, 0, 0], "Forearm_R": [3, 0, 0], "Hand_R": [-2, 0, 0], "Weapon_Back": [0, 0, 0], "UpperArm_L": [-4, 0, 0], "Forearm_L": [-3, 0, 0], "Hand_L": [-2, 0, 0], "Weapon_Front": [-2, 0, 0], "Thigh_R": [-3, 0, 0], "Shin_R": [3, 0, 0], "Foot_R": [0, 0, 0], "Thigh_L": [-2, 0, 0], "Shin_L": [2, 0, 0], "Foot_L": [0, 0, 0]},
-            {"t": 0.6, "aura_frame": 2, "Hip": [0, 6, 0], "Chest": [4, 0, 0], "Head": [-3, 0, 0], "UpperArm_R": [6, 0, 0], "Forearm_R": [5, 0, 0], "Hand_R": [-3, 0, 0], "Weapon_Back": [0, 0, 0], "UpperArm_L": [-6, 0, 0], "Forearm_L": [-5, 0, 0], "Hand_L": [-3, 0, 0], "Weapon_Front": [-4, 0, 0], "Thigh_R": [-5, 0, 0], "Shin_R": [5, 0, 0], "Foot_R": [0, 0, 0], "Thigh_L": [-4, 0, 0], "Shin_L": [4, 0, 0], "Foot_L": [0, 0, 0]},
-            {"t": 0.9, "aura_frame": 3, "Hip": [0, 2, 0], "Chest": [1, 0, 0], "Head": [-1, 0, 0], "UpperArm_R": [2, 0, 0], "Forearm_R": [2, 0, 0], "Hand_R": [-1, 0, 0], "Weapon_Back": [0, 0, 0], "UpperArm_L": [-2, 0, 0], "Forearm_L": [-2, 0, 0], "Hand_L": [-1, 0, 0], "Weapon_Front": [-1, 0, 0], "Thigh_R": [-2, 0, 0], "Shin_R": [2, 0, 0], "Foot_R": [0, 0, 0], "Thigh_L": [-1, 0, 0], "Shin_L": [1, 0, 0], "Foot_L": [0, 0, 0]}
+            {"t": 0.0, "Hip": [0, 0, 0], "Chest": [0, 0, 0], "Head": [0, 0, 0], "UpperArm_R": [0, 0, 0], "Forearm_R": [0, 0, 0], "Hand_R": [0, 0, 0], "Weapon_Back": [0, 0, 0], "UpperArm_L": [0, 0, 0], "Forearm_L": [0, 0, 0], "Hand_L": [0, 0, 0], "Weapon_Front": [0, 0, 0], "Thigh_R": [0, 0, 0], "Shin_R": [0, 0, 0], "Foot_R": [0, 0, 0], "Thigh_L": [0, 0, 0], "Shin_L": [0, 0, 0], "Foot_L": [0, 0, 0]},
+            {"t": 0.3, "Hip": [0, 3, 0], "Chest": [2, 0, 0], "Head": [-2, 0, 0], "UpperArm_R": [4, 0, 0], "Forearm_R": [3, 0, 0], "Hand_R": [-2, 0, 0], "Weapon_Back": [0, 0, 0], "UpperArm_L": [-4, 0, 0], "Forearm_L": [-3, 0, 0], "Hand_L": [-2, 0, 0], "Weapon_Front": [-2, 0, 0], "Thigh_R": [-3, 0, 0], "Shin_R": [3, 0, 0], "Foot_R": [0, 0, 0], "Thigh_L": [-2, 0, 0], "Shin_L": [2, 0, 0], "Foot_L": [0, 0, 0]},
+            {"t": 0.6, "Hip": [0, 6, 0], "Chest": [4, 0, 0], "Head": [-3, 0, 0], "UpperArm_R": [6, 0, 0], "Forearm_R": [5, 0, 0], "Hand_R": [-3, 0, 0], "Weapon_Back": [0, 0, 0], "UpperArm_L": [-6, 0, 0], "Forearm_L": [-5, 0, 0], "Hand_L": [-3, 0, 0], "Weapon_Front": [-4, 0, 0], "Thigh_R": [-5, 0, 0], "Shin_R": [5, 0, 0], "Foot_R": [0, 0, 0], "Thigh_L": [-4, 0, 0], "Shin_L": [4, 0, 0], "Foot_L": [0, 0, 0]},
+            {"t": 0.9, "Hip": [0, 2, 0], "Chest": [1, 0, 0], "Head": [-1, 0, 0], "UpperArm_R": [2, 0, 0], "Forearm_R": [2, 0, 0], "Hand_R": [-1, 0, 0], "Weapon_Back": [0, 0, 0], "UpperArm_L": [-2, 0, 0], "Forearm_L": [-2, 0, 0], "Hand_L": [-1, 0, 0], "Weapon_Front": [-1, 0, 0], "Thigh_R": [-2, 0, 0], "Shin_R": [2, 0, 0], "Foot_R": [0, 0, 0], "Thigh_L": [-1, 0, 0], "Shin_L": [1, 0, 0], "Foot_L": [0, 0, 0]}
         ]
     },
     "walk": {
         "grid": [2, 3], "length": 0.9, "loop": True,
         "frames": [
-            {"t": 0.00, "aura_frame": 0, "Hip": [-3, 4, 2], "Chest": [4, 0, 0], "Head": [-3, 0, 0], "UpperArm_R": [16, 0, 0], "Forearm_R": [6, 0, 0], "Hand_R": [0, 0, 0], "Weapon_Back": [0, 0, 0], "UpperArm_L": [-16, 0, 0], "Forearm_L": [-6, 0, 0], "Hand_L": [-2, 0, 0], "Weapon_Front": [-4, 0, 0], "Thigh_R": [-22, 0, 0], "Shin_R": [12, 0, 0], "Foot_R": [6, 0, 0], "Thigh_L": [18, 0, 0], "Shin_L": [14, 0, 0], "Foot_L": [8, 0, 0]},
-            {"t": 0.15, "aura_frame": 1, "Hip": [-2, 6, 2], "Chest": [5, 0, 0], "Head": [-4, 0, 0], "UpperArm_R": [8, 0, 0], "Forearm_R": [4, 0, 0], "Hand_R": [0, 0, 0], "Weapon_Back": [0, 0, 0], "UpperArm_L": [-8, 0, 0], "Forearm_L": [-4, 0, 0], "Hand_L": [-2, 0, 0], "Weapon_Front": [-2, 0, 0], "Thigh_R": [-10, 0, 0], "Shin_R": [14, 0, 0], "Foot_R": [2, 0, 0], "Thigh_L": [8, 0, 0], "Shin_L": [18, 0, 0], "Foot_L": [10, 0, 0]},
-            {"t": 0.30, "aura_frame": 2, "Hip": [0, -2, 0], "Chest": [3, 0, 0], "Head": [-2, 0, 0], "UpperArm_R": [-8, 0, 0], "Forearm_R": [-4, 0, 0], "Hand_R": [0, 0, 0], "Weapon_Back": [0, 0, 0], "UpperArm_L": [8, 0, 0], "Forearm_L": [2, 0, 0], "Hand_L": [0, 0, 0], "Weapon_Front": [2, 0, 0], "Thigh_R": [4, 0, 0], "Shin_R": [8, 0, 0], "Foot_R": [-4, 0, 0], "Thigh_L": [-10, 0, 0], "Shin_L": [16, 0, 0], "Foot_L": [6, 0, 0]},
-            {"t": 0.45, "aura_frame": 3, "Hip": [3, 4, 2], "Chest": [5, 0, 0], "Head": [-3, 0, 0], "UpperArm_R": [-16, 0, 0], "Forearm_R": [-6, 0, 0], "Hand_R": [-2, 0, 0], "Weapon_Back": [0, 0, 0], "UpperArm_L": [16, 0, 0], "Forearm_L": [4, 0, 0], "Hand_L": [2, 0, 0], "Weapon_Front": [4, 0, 0], "Thigh_R": [16, 0, 0], "Shin_R": [14, 0, 0], "Foot_R": [6, 0, 0], "Thigh_L": [-22, 0, 0], "Shin_L": [10, 0, 0], "Foot_L": [-4, 0, 0]},
-            {"t": 0.60, "aura_frame": 2, "Hip": [2, 6, 2], "Chest": [6, 0, 0], "Head": [-4, 0, 0], "UpperArm_R": [-8, 0, 0], "Forearm_R": [-4, 0, 0], "Hand_R": [0, 0, 0], "Weapon_Back": [0, 0, 0], "UpperArm_L": [8, 0, 0], "Forearm_L": [2, 0, 0], "Hand_L": [0, 0, 0], "Weapon_Front": [2, 0, 0], "Thigh_R": [8, 0, 0], "Shin_R": [18, 0, 0], "Foot_R": [8, 0, 0], "Thigh_L": [-10, 0, 0], "Shin_L": [12, 0, 0], "Foot_L": [0, 0, 0]},
-            {"t": 0.75, "aura_frame": 1, "Hip": [-2, -2, 0], "Chest": [3, 0, 0], "Head": [-2, 0, 0], "UpperArm_R": [6, 0, 0], "Forearm_R": [2, 0, 0], "Hand_R": [0, 0, 0], "Weapon_Back": [0, 0, 0], "UpperArm_L": [-6, 0, 0], "Forearm_L": [-2, 0, 0], "Hand_L": [-1, 0, 0], "Weapon_Front": [-1, 0, 0], "Thigh_R": [-8, 0, 0], "Shin_R": [10, 0, 0], "Foot_R": [4, 0, 0], "Thigh_L": [4, 0, 0], "Shin_L": [10, 0, 0], "Foot_L": [4, 0, 0]}
+            {"t": 0.00, "Hip": [-3, 4, 2], "Chest": [4, 0, 0], "Head": [-3, 0, 0], "UpperArm_R": [16, 0, 0], "Forearm_R": [6, 0, 0], "Hand_R": [0, 0, 0], "Weapon_Back": [0, 0, 0], "UpperArm_L": [-16, 0, 0], "Forearm_L": [-6, 0, 0], "Hand_L": [-2, 0, 0], "Weapon_Front": [-4, 0, 0], "Thigh_R": [-22, 0, 0], "Shin_R": [12, 0, 0], "Foot_R": [6, 0, 0], "Thigh_L": [18, 0, 0], "Shin_L": [14, 0, 0], "Foot_L": [8, 0, 0]},
+            {"t": 0.15, "Hip": [-2, 6, 2], "Chest": [5, 0, 0], "Head": [-4, 0, 0], "UpperArm_R": [8, 0, 0], "Forearm_R": [4, 0, 0], "Hand_R": [0, 0, 0], "Weapon_Back": [0, 0, 0], "UpperArm_L": [-8, 0, 0], "Forearm_L": [-4, 0, 0], "Hand_L": [-2, 0, 0], "Weapon_Front": [-2, 0, 0], "Thigh_R": [-10, 0, 0], "Shin_R": [14, 0, 0], "Foot_R": [2, 0, 0], "Thigh_L": [8, 0, 0], "Shin_L": [18, 0, 0], "Foot_L": [10, 0, 0]},
+            {"t": 0.30, "Hip": [0, -2, 0], "Chest": [3, 0, 0], "Head": [-2, 0, 0], "UpperArm_R": [-8, 0, 0], "Forearm_R": [-4, 0, 0], "Hand_R": [0, 0, 0], "Weapon_Back": [0, 0, 0], "UpperArm_L": [8, 0, 0], "Forearm_L": [2, 0, 0], "Hand_L": [0, 0, 0], "Weapon_Front": [2, 0, 0], "Thigh_R": [4, 0, 0], "Shin_R": [8, 0, 0], "Foot_R": [-4, 0, 0], "Thigh_L": [-10, 0, 0], "Shin_L": [16, 0, 0], "Foot_L": [6, 0, 0]},
+            {"t": 0.45, "Hip": [3, 4, 2], "Chest": [5, 0, 0], "Head": [-3, 0, 0], "UpperArm_R": [-16, 0, 0], "Forearm_R": [-6, 0, 0], "Hand_R": [-2, 0, 0], "Weapon_Back": [0, 0, 0], "UpperArm_L": [16, 0, 0], "Forearm_L": [4, 0, 0], "Hand_L": [2, 0, 0], "Weapon_Front": [4, 0, 0], "Thigh_R": [16, 0, 0], "Shin_R": [14, 0, 0], "Foot_R": [6, 0, 0], "Thigh_L": [-22, 0, 0], "Shin_L": [10, 0, 0], "Foot_L": [-4, 0, 0]},
+            {"t": 0.60, "Hip": [2, 6, 2], "Chest": [6, 0, 0], "Head": [-4, 0, 0], "UpperArm_R": [-8, 0, 0], "Forearm_R": [-4, 0, 0], "Hand_R": [0, 0, 0], "Weapon_Back": [0, 0, 0], "UpperArm_L": [8, 0, 0], "Forearm_L": [2, 0, 0], "Hand_L": [0, 0, 0], "Weapon_Front": [2, 0, 0], "Thigh_R": [8, 0, 0], "Shin_R": [18, 0, 0], "Foot_R": [8, 0, 0], "Thigh_L": [-10, 0, 0], "Shin_L": [12, 0, 0], "Foot_L": [0, 0, 0]},
+            {"t": 0.75, "Hip": [-2, -2, 0], "Chest": [3, 0, 0], "Head": [-2, 0, 0], "UpperArm_R": [6, 0, 0], "Forearm_R": [2, 0, 0], "Hand_R": [0, 0, 0], "Weapon_Back": [0, 0, 0], "UpperArm_L": [-6, 0, 0], "Forearm_L": [-2, 0, 0], "Hand_L": [-1, 0, 0], "Weapon_Front": [-1, 0, 0], "Thigh_R": [-8, 0, 0], "Shin_R": [10, 0, 0], "Foot_R": [4, 0, 0], "Thigh_L": [4, 0, 0], "Shin_L": [10, 0, 0], "Foot_L": [4, 0, 0]}
         ]
     },
     "attack": {
         "grid": [2, 2], "length": 0.65, "loop": False,
         "frames": [
-            {"t": 0.00, "aura_frame": 1, "Hip": [-8, 4, -4], "Chest": [-8, 0, 0], "Head": [6, 0, 0], "UpperArm_R": [20, 0, 0], "Forearm_R": [12, 0, 0], "Hand_R": [6, 0, 0], "Weapon_Back": [0, 0, 0], "UpperArm_L": [-48, 0, 0], "Forearm_L": [-20, 0, 0], "Hand_L": [-14, 0, 0], "Weapon_Front": [-18, 0, 0], "Thigh_R": [10, 0, 0], "Shin_R": [10, 0, 0], "Foot_R": [0, 0, 0], "Thigh_L": [-10, 0, 0], "Shin_L": [10, 0, 0], "Foot_L": [0, 0, 0]},
-            {"t": 0.18, "aura_frame": 2, "Hip": [10, 6, 6], "Chest": [10, 0, 0], "Head": [-6, 0, 0], "UpperArm_R": [-16, 0, 0], "Forearm_R": [-10, 0, 0], "Hand_R": [-6, 0, 0], "Weapon_Back": [0, 0, 0], "UpperArm_L": [-12, 0, 0], "Forearm_L": [10, 0, 0], "Hand_L": [12, 0, 0], "Weapon_Front": [16, 0, 0], "Thigh_R": [-16, 0, 0], "Shin_R": [12, 0, 0], "Foot_R": [4, 0, 0], "Thigh_L": [14, 0, 0], "Shin_L": [12, 0, 0], "Foot_L": [4, 0, 0],
+            {"t": 0.00, "Hip": [-8, 4, -4], "Chest": [-8, 0, 0], "Head": [6, 0, 0], "UpperArm_R": [20, 0, 0], "Forearm_R": [12, 0, 0], "Hand_R": [6, 0, 0], "Weapon_Back": [0, 0, 0], "UpperArm_L": [-48, 0, 0], "Forearm_L": [-20, 0, 0], "Hand_L": [-14, 0, 0], "Weapon_Front": [-18, 0, 0], "Thigh_R": [10, 0, 0], "Shin_R": [10, 0, 0], "Foot_R": [0, 0, 0], "Thigh_L": [-10, 0, 0], "Shin_L": [10, 0, 0], "Foot_L": [0, 0, 0]},
+            {"t": 0.18, "Hip": [10, 6, 6], "Chest": [10, 0, 0], "Head": [-6, 0, 0], "UpperArm_R": [-16, 0, 0], "Forearm_R": [-10, 0, 0], "Hand_R": [-6, 0, 0], "Weapon_Back": [0, 0, 0], "UpperArm_L": [-12, 0, 0], "Forearm_L": [10, 0, 0], "Hand_L": [12, 0, 0], "Weapon_Front": [16, 0, 0], "Thigh_R": [-16, 0, 0], "Shin_R": [12, 0, 0], "Foot_R": [4, 0, 0], "Thigh_L": [14, 0, 0], "Shin_L": [12, 0, 0], "Foot_L": [4, 0, 0],
              "vfx": {"fx_slash": {"pos": [306, 254], "rot": 22, "scale": 0.78, "alpha": 0.94}}},
-            {"t": 0.36, "aura_frame": 2, "Hip": [12, 8, 8], "Chest": [12, 0, 0], "Head": [-8, 0, 0], "UpperArm_R": [-22, 0, 0], "Forearm_R": [-14, 0, 0], "Hand_R": [-8, 0, 0], "Weapon_Back": [0, 0, 0], "UpperArm_L": [4, 0, 0], "Forearm_L": [16, 0, 0], "Hand_L": [14, 0, 0], "Weapon_Front": [24, 0, 0], "Thigh_R": [-20, 0, 0], "Shin_R": [14, 0, 0], "Foot_R": [6, 0, 0], "Thigh_L": [18, 0, 0], "Shin_L": [14, 0, 0], "Foot_L": [6, 0, 0],
+            {"t": 0.36, "Hip": [12, 8, 8], "Chest": [12, 0, 0], "Head": [-8, 0, 0], "UpperArm_R": [-22, 0, 0], "Forearm_R": [-14, 0, 0], "Hand_R": [-8, 0, 0], "Weapon_Back": [0, 0, 0], "UpperArm_L": [4, 0, 0], "Forearm_L": [16, 0, 0], "Hand_L": [14, 0, 0], "Weapon_Front": [24, 0, 0], "Thigh_R": [-20, 0, 0], "Shin_R": [14, 0, 0], "Foot_R": [6, 0, 0], "Thigh_L": [18, 0, 0], "Shin_L": [14, 0, 0], "Foot_L": [6, 0, 0],
              "vfx": {"fx_spark": {"pos": [340, 320], "rot": 0, "scale": 0.72, "alpha": 0.92}}},
-            {"t": 0.52, "aura_frame": 0, "Hip": [2, 2, 1], "Chest": [2, 0, 0], "Head": [-1, 0, 0], "UpperArm_R": [-4, 0, 0], "Forearm_R": [-2, 0, 0], "Hand_R": [0, 0, 0], "Weapon_Back": [0, 0, 0], "UpperArm_L": [-2, 0, 0], "Forearm_L": [0, 0, 0], "Hand_L": [0, 0, 0], "Weapon_Front": [0, 0, 0], "Thigh_R": [-4, 0, 0], "Shin_R": [4, 0, 0], "Foot_R": [0, 0, 0], "Thigh_L": [4, 0, 0], "Shin_L": [4, 0, 0], "Foot_L": [0, 0, 0]}
+            {"t": 0.52, "Hip": [2, 2, 1], "Chest": [2, 0, 0], "Head": [-1, 0, 0], "UpperArm_R": [-4, 0, 0], "Forearm_R": [-2, 0, 0], "Hand_R": [0, 0, 0], "Weapon_Back": [0, 0, 0], "UpperArm_L": [-2, 0, 0], "Forearm_L": [0, 0, 0], "Hand_L": [0, 0, 0], "Weapon_Front": [0, 0, 0], "Thigh_R": [-4, 0, 0], "Shin_R": [4, 0, 0], "Foot_R": [0, 0, 0], "Thigh_L": [4, 0, 0], "Shin_L": [4, 0, 0], "Foot_L": [0, 0, 0]}
         ]
     },
     "cast": {
         "grid": [2, 3], "length": 0.95, "loop": False,
         "frames": [
-            {"t": 0.00, "aura_frame": 0, "Hip": [-10, 6, -4], "Chest": [-8, 0, 0], "Head": [6, 0, 0], "UpperArm_R": [22, 0, 0], "Forearm_R": [14, 0, 0], "Hand_R": [6, 0, 0], "Weapon_Back": [0, 0, 0], "UpperArm_L": [-42, 0, 0], "Forearm_L": [-18, 0, 0], "Hand_L": [-14, 0, 0], "Weapon_Front": [-16, 0, 0], "Thigh_R": [8, 0, 0], "Shin_R": [10, 0, 0], "Foot_R": [0, 0, 0], "Thigh_L": [-10, 0, 0], "Shin_L": [10, 0, 0], "Foot_L": [0, 0, 0],
+            {"t": 0.00, "Hip": [-10, 6, -4], "Chest": [-8, 0, 0], "Head": [6, 0, 0], "UpperArm_R": [22, 0, 0], "Forearm_R": [14, 0, 0], "Hand_R": [6, 0, 0], "Weapon_Back": [0, 0, 0], "UpperArm_L": [-42, 0, 0], "Forearm_L": [-18, 0, 0], "Hand_L": [-14, 0, 0], "Weapon_Front": [-16, 0, 0], "Thigh_R": [8, 0, 0], "Shin_R": [10, 0, 0], "Foot_R": [0, 0, 0], "Thigh_L": [-10, 0, 0], "Shin_L": [10, 0, 0], "Foot_L": [0, 0, 0],
              "vfx": {"fx_dust": {"pos": [218, 412], "rot": 0, "scale": 0.62, "alpha": 0.76}}},
-            {"t": 0.16, "aura_frame": 1, "Hip": [-14, 10, -6], "Chest": [-12, 0, 0], "Head": [10, 0, 0], "UpperArm_R": [28, 0, 0], "Forearm_R": [18, 0, 0], "Hand_R": [8, 0, 0], "Weapon_Back": [0, 0, 0], "UpperArm_L": [-50, 0, 0], "Forearm_L": [-20, 0, 0], "Hand_L": [-16, 0, 0], "Weapon_Front": [-20, 0, 0], "Thigh_R": [12, 0, 0], "Shin_R": [14, 0, 0], "Foot_R": [0, 0, 0], "Thigh_L": [-14, 0, 0], "Shin_L": [14, 0, 0], "Foot_L": [0, 0, 0],
+            {"t": 0.16, "Hip": [-14, 10, -6], "Chest": [-12, 0, 0], "Head": [10, 0, 0], "UpperArm_R": [28, 0, 0], "Forearm_R": [18, 0, 0], "Hand_R": [8, 0, 0], "Weapon_Back": [0, 0, 0], "UpperArm_L": [-50, 0, 0], "Forearm_L": [-20, 0, 0], "Hand_L": [-16, 0, 0], "Weapon_Front": [-20, 0, 0], "Thigh_R": [12, 0, 0], "Shin_R": [14, 0, 0], "Foot_R": [0, 0, 0], "Thigh_L": [-14, 0, 0], "Shin_L": [14, 0, 0], "Foot_L": [0, 0, 0],
              "vfx": {"fx_slash_heavy": {"pos": [224, 188], "rot": 0, "scale": 0.72, "alpha": 0.92}}},
-            {"t": 0.34, "aura_frame": 2, "Hip": [12, 4, 6], "Chest": [10, 0, 0], "Head": [-8, 0, 0], "UpperArm_R": [-18, 0, 0], "Forearm_R": [-12, 0, 0], "Hand_R": [-6, 0, 0], "Weapon_Back": [0, 0, 0], "UpperArm_L": [-12, 0, 0], "Forearm_L": [10, 0, 0], "Hand_L": [12, 0, 0], "Weapon_Front": [16, 0, 0], "Thigh_R": [-18, 0, 0], "Shin_R": [12, 0, 0], "Foot_R": [4, 0, 0], "Thigh_L": [16, 0, 0], "Shin_L": [14, 0, 0], "Foot_L": [6, 0, 0],
+            {"t": 0.34, "Hip": [12, 4, 6], "Chest": [10, 0, 0], "Head": [-8, 0, 0], "UpperArm_R": [-18, 0, 0], "Forearm_R": [-12, 0, 0], "Hand_R": [-6, 0, 0], "Weapon_Back": [0, 0, 0], "UpperArm_L": [-12, 0, 0], "Forearm_L": [10, 0, 0], "Hand_L": [12, 0, 0], "Weapon_Front": [16, 0, 0], "Thigh_R": [-18, 0, 0], "Shin_R": [12, 0, 0], "Foot_R": [4, 0, 0], "Thigh_L": [16, 0, 0], "Shin_L": [14, 0, 0], "Foot_L": [6, 0, 0],
              "vfx": {
                  "fx_slash_heavy": {"pos": [302, 258], "rot": 18, "scale": 0.80, "alpha": 0.96},
                  "fx_dust": {"pos": [196, 412], "rot": 0, "scale": 0.74, "alpha": 0.85},
              }},
-            {"t": 0.52, "aura_frame": 2, "Hip": [16, 8, 8], "Chest": [14, 0, 0], "Head": [-10, 0, 0], "UpperArm_R": [-24, 0, 0], "Forearm_R": [-16, 0, 0], "Hand_R": [-8, 0, 0], "Weapon_Back": [0, 0, 0], "UpperArm_L": [4, 0, 0], "Forearm_L": [16, 0, 0], "Hand_L": [14, 0, 0], "Weapon_Front": [24, 0, 0], "Thigh_R": [-22, 0, 0], "Shin_R": [14, 0, 0], "Foot_R": [6, 0, 0], "Thigh_L": [20, 0, 0], "Shin_L": [16, 0, 0], "Foot_L": [8, 0, 0],
+            {"t": 0.52, "Hip": [16, 8, 8], "Chest": [14, 0, 0], "Head": [-10, 0, 0], "UpperArm_R": [-24, 0, 0], "Forearm_R": [-16, 0, 0], "Hand_R": [-8, 0, 0], "Weapon_Back": [0, 0, 0], "UpperArm_L": [4, 0, 0], "Forearm_L": [16, 0, 0], "Hand_L": [14, 0, 0], "Weapon_Front": [24, 0, 0], "Thigh_R": [-22, 0, 0], "Shin_R": [14, 0, 0], "Foot_R": [6, 0, 0], "Thigh_L": [20, 0, 0], "Shin_L": [16, 0, 0], "Foot_L": [8, 0, 0],
              "vfx": {
                  "fx_slash_heavy": {"pos": [314, 276], "rot": 32, "scale": 0.76, "alpha": 0.88},
                  "fx_spark": {"pos": [342, 322], "rot": 12, "scale": 0.74, "alpha": 0.94},
              }},
-            {"t": 0.70, "aura_frame": 3, "Hip": [8, 4, 4], "Chest": [6, 0, 0], "Head": [-4, 0, 0], "UpperArm_R": [-10, 0, 0], "Forearm_R": [-6, 0, 0], "Hand_R": [-2, 0, 0], "Weapon_Back": [0, 0, 0], "UpperArm_L": [2, 0, 0], "Forearm_L": [6, 0, 0], "Hand_L": [6, 0, 0], "Weapon_Front": [10, 0, 0], "Thigh_R": [-10, 0, 0], "Shin_R": [8, 0, 0], "Foot_R": [2, 0, 0], "Thigh_L": [8, 0, 0], "Shin_L": [8, 0, 0], "Foot_L": [4, 0, 0],
+            {"t": 0.70, "Hip": [8, 4, 4], "Chest": [6, 0, 0], "Head": [-4, 0, 0], "UpperArm_R": [-10, 0, 0], "Forearm_R": [-6, 0, 0], "Hand_R": [-2, 0, 0], "Weapon_Back": [0, 0, 0], "UpperArm_L": [2, 0, 0], "Forearm_L": [6, 0, 0], "Hand_L": [6, 0, 0], "Weapon_Front": [10, 0, 0], "Thigh_R": [-10, 0, 0], "Shin_R": [8, 0, 0], "Foot_R": [2, 0, 0], "Thigh_L": [8, 0, 0], "Shin_L": [8, 0, 0], "Foot_L": [4, 0, 0],
              "vfx": {"fx_spark": {"pos": [346, 326], "rot": 25, "scale": 0.56, "alpha": 0.60}}},
-            {"t": 0.86, "aura_frame": 0, "Hip": [0, 0, 0], "Chest": [0, 0, 0], "Head": [0, 0, 0], "UpperArm_R": [0, 0, 0], "Forearm_R": [0, 0, 0], "Hand_R": [0, 0, 0], "Weapon_Back": [0, 0, 0], "UpperArm_L": [0, 0, 0], "Forearm_L": [0, 0, 0], "Hand_L": [0, 0, 0], "Weapon_Front": [0, 0, 0], "Thigh_R": [0, 0, 0], "Shin_R": [0, 0, 0], "Foot_R": [0, 0, 0], "Thigh_L": [0, 0, 0], "Shin_L": [0, 0, 0], "Foot_L": [0, 0, 0]}
+            {"t": 0.86, "Hip": [0, 0, 0], "Chest": [0, 0, 0], "Head": [0, 0, 0], "UpperArm_R": [0, 0, 0], "Forearm_R": [0, 0, 0], "Hand_R": [0, 0, 0], "Weapon_Back": [0, 0, 0], "UpperArm_L": [0, 0, 0], "Forearm_L": [0, 0, 0], "Hand_L": [0, 0, 0], "Weapon_Front": [0, 0, 0], "Thigh_R": [0, 0, 0], "Shin_R": [0, 0, 0], "Foot_R": [0, 0, 0], "Thigh_L": [0, 0, 0], "Shin_L": [0, 0, 0], "Foot_L": [0, 0, 0]}
         ]
     },
     "hurt": {
         "grid": [2, 2], "length": 0.55, "loop": False,
         "frames": [
-            {"t": 0.00, "aura_frame": 3, "Hip": [-10, 4, -6], "Chest": [-12, 0, 0], "Head": [-14, 0, 0], "UpperArm_R": [14, 0, 0], "Forearm_R": [10, 0, 0], "Hand_R": [6, 0, 0], "Weapon_Back": [0, 0, 0], "UpperArm_L": [14, 0, 0], "Forearm_L": [-8, 0, 0], "Hand_L": [-6, 0, 0], "Weapon_Front": [-8, 0, 0], "Thigh_R": [8, 0, 0], "Shin_R": [6, 0, 0], "Foot_R": [0, 0, 0], "Thigh_L": [-6, 0, 0], "Shin_L": [8, 0, 0], "Foot_L": [0, 0, 0],
+            {"t": 0.00, "Hip": [-10, 4, -6], "Chest": [-12, 0, 0], "Head": [-14, 0, 0], "UpperArm_R": [14, 0, 0], "Forearm_R": [10, 0, 0], "Hand_R": [6, 0, 0], "Weapon_Back": [0, 0, 0], "UpperArm_L": [14, 0, 0], "Forearm_L": [-8, 0, 0], "Hand_L": [-6, 0, 0], "Weapon_Front": [-8, 0, 0], "Thigh_R": [8, 0, 0], "Shin_R": [6, 0, 0], "Foot_R": [0, 0, 0], "Thigh_L": [-6, 0, 0], "Shin_L": [8, 0, 0], "Foot_L": [0, 0, 0],
              "vfx": {"fx_spark": {"pos": [254, 214], "rot": -15, "scale": 0.68, "alpha": 0.90}}},
-            {"t": 0.15, "aura_frame": 1, "Hip": [-16, 8, -8], "Chest": [-14, 0, 0], "Head": [-18, 0, 0], "UpperArm_R": [20, 0, 0], "Forearm_R": [14, 0, 0], "Hand_R": [8, 0, 0], "Weapon_Back": [0, 0, 0], "UpperArm_L": [20, 0, 0], "Forearm_L": [-12, 0, 0], "Hand_L": [-10, 0, 0], "Weapon_Front": [-12, 0, 0], "Thigh_R": [12, 0, 0], "Shin_R": [10, 0, 0], "Foot_R": [0, 0, 0], "Thigh_L": [-10, 0, 0], "Shin_L": [12, 0, 0], "Foot_L": [0, 0, 0]},
-            {"t": 0.32, "aura_frame": 0, "Hip": [-8, 4, -4], "Chest": [-6, 0, 0], "Head": [-8, 0, 0], "UpperArm_R": [8, 0, 0], "Forearm_R": [6, 0, 0], "Hand_R": [4, 0, 0], "Weapon_Back": [0, 0, 0], "UpperArm_L": [8, 0, 0], "Forearm_L": [-4, 0, 0], "Hand_L": [-4, 0, 0], "Weapon_Front": [-4, 0, 0], "Thigh_R": [6, 0, 0], "Shin_R": [4, 0, 0], "Foot_R": [0, 0, 0], "Thigh_L": [-4, 0, 0], "Shin_L": [6, 0, 0], "Foot_L": [0, 0, 0]},
-            {"t": 0.48, "aura_frame": 1, "Hip": [0, 0, 0], "Chest": [0, 0, 0], "Head": [0, 0, 0], "UpperArm_R": [0, 0, 0], "Forearm_R": [0, 0, 0], "Hand_R": [0, 0, 0], "Weapon_Back": [0, 0, 0], "UpperArm_L": [0, 0, 0], "Forearm_L": [0, 0, 0], "Hand_L": [0, 0, 0], "Weapon_Front": [0, 0, 0], "Thigh_R": [0, 0, 0], "Shin_R": [0, 0, 0], "Foot_R": [0, 0, 0], "Thigh_L": [0, 0, 0], "Shin_L": [0, 0, 0], "Foot_L": [0, 0, 0]}
+            {"t": 0.15, "Hip": [-16, 8, -8], "Chest": [-14, 0, 0], "Head": [-18, 0, 0], "UpperArm_R": [20, 0, 0], "Forearm_R": [14, 0, 0], "Hand_R": [8, 0, 0], "Weapon_Back": [0, 0, 0], "UpperArm_L": [20, 0, 0], "Forearm_L": [-12, 0, 0], "Hand_L": [-10, 0, 0], "Weapon_Front": [-12, 0, 0], "Thigh_R": [12, 0, 0], "Shin_R": [10, 0, 0], "Foot_R": [0, 0, 0], "Thigh_L": [-10, 0, 0], "Shin_L": [12, 0, 0], "Foot_L": [0, 0, 0]},
+            {"t": 0.32, "Hip": [-8, 4, -4], "Chest": [-6, 0, 0], "Head": [-8, 0, 0], "UpperArm_R": [8, 0, 0], "Forearm_R": [6, 0, 0], "Hand_R": [4, 0, 0], "Weapon_Back": [0, 0, 0], "UpperArm_L": [8, 0, 0], "Forearm_L": [-4, 0, 0], "Hand_L": [-4, 0, 0], "Weapon_Front": [-4, 0, 0], "Thigh_R": [6, 0, 0], "Shin_R": [4, 0, 0], "Foot_R": [0, 0, 0], "Thigh_L": [-4, 0, 0], "Shin_L": [6, 0, 0], "Foot_L": [0, 0, 0]},
+            {"t": 0.48, "Hip": [0, 0, 0], "Chest": [0, 0, 0], "Head": [0, 0, 0], "UpperArm_R": [0, 0, 0], "Forearm_R": [0, 0, 0], "Hand_R": [0, 0, 0], "Weapon_Back": [0, 0, 0], "UpperArm_L": [0, 0, 0], "Forearm_L": [0, 0, 0], "Hand_L": [0, 0, 0], "Weapon_Front": [0, 0, 0], "Thigh_R": [0, 0, 0], "Shin_R": [0, 0, 0], "Foot_R": [0, 0, 0], "Thigh_L": [0, 0, 0], "Shin_L": [0, 0, 0], "Foot_L": [0, 0, 0]}
         ]
     },
     "death": {
         "grid": [2, 3], "length": 1.10, "loop": False,
         "frames": [
-            {"t": 0.00, "aura_frame": 3, "Hip": [-10, 6, -6], "Chest": [-12, 0, 0], "Head": [-14, 0, 0], "UpperArm_R": [14, 0, 0], "Forearm_R": [8, 0, 0], "Hand_R": [6, 0, 0], "Weapon_Back": [0, 0, 0], "UpperArm_L": [14, 0, 0], "Forearm_L": [-8, 0, 0], "Hand_L": [-6, 0, 0], "Weapon_Front": [-8, 0, 0], "Thigh_R": [10, 0, 0], "Shin_R": [8, 0, 0], "Foot_R": [0, 0, 0], "Thigh_L": [-8, 0, 0], "Shin_L": [10, 0, 0], "Foot_L": [0, 0, 0],
+            {"t": 0.00, "Hip": [-10, 6, -6], "Chest": [-12, 0, 0], "Head": [-14, 0, 0], "UpperArm_R": [14, 0, 0], "Forearm_R": [8, 0, 0], "Hand_R": [6, 0, 0], "Weapon_Back": [0, 0, 0], "UpperArm_L": [14, 0, 0], "Forearm_L": [-8, 0, 0], "Hand_L": [-6, 0, 0], "Weapon_Front": [-8, 0, 0], "Thigh_R": [10, 0, 0], "Shin_R": [8, 0, 0], "Foot_R": [0, 0, 0], "Thigh_L": [-8, 0, 0], "Shin_L": [10, 0, 0], "Foot_L": [0, 0, 0],
              "vfx": {"fx_spark": {"pos": [254, 212], "rot": 0, "scale": 0.72, "alpha": 0.92}}},
-            {"t": 0.22, "aura_frame": 0, "Hip": [-6, 30, 14], "Chest": [16, 0, 0], "Head": [12, 0, 0], "UpperArm_R": [24, 0, 0], "Forearm_R": [12, 0, 0], "Hand_R": [0, 0, 0], "Weapon_Back": [0, 0, 0], "UpperArm_L": [-16, 0, 0], "Forearm_L": [-10, 0, 0], "Hand_L": [-12, 0, 0], "Weapon_Front": [-16, 0, 0], "Thigh_R": [-42, 0, 0], "Shin_R": [64, 0, 0], "Foot_R": [12, 0, 0], "Thigh_L": [-36, 0, 0], "Shin_L": [58, 0, 0], "Foot_L": [10, 0, 0]},
-            {"t": 0.45, "aura_frame": 3, "Hip": [-4, 56, 30], "Chest": [24, 0, 0], "Head": [18, 0, 0], "UpperArm_R": [36, 0, 0], "Forearm_R": [18, 0, 0], "Hand_R": [0, 0, 0], "Weapon_Back": [0, 0, 0], "UpperArm_L": [-32, 0, 0], "Forearm_L": [-16, 0, 0], "Hand_L": [-20, 0, 0], "Weapon_Front": [-26, 0, 0], "Thigh_R": [-66, 0, 0], "Shin_R": [90, 0, 0], "Foot_R": [16, 0, 0], "Thigh_L": [-60, 0, 0], "Shin_L": [84, 0, 0], "Foot_L": [14, 0, 0],
+            {"t": 0.22, "Hip": [-6, 30, 14], "Chest": [16, 0, 0], "Head": [12, 0, 0], "UpperArm_R": [24, 0, 0], "Forearm_R": [12, 0, 0], "Hand_R": [0, 0, 0], "Weapon_Back": [0, 0, 0], "UpperArm_L": [-16, 0, 0], "Forearm_L": [-10, 0, 0], "Hand_L": [-12, 0, 0], "Weapon_Front": [-16, 0, 0], "Thigh_R": [-42, 0, 0], "Shin_R": [64, 0, 0], "Foot_R": [12, 0, 0], "Thigh_L": [-36, 0, 0], "Shin_L": [58, 0, 0], "Foot_L": [10, 0, 0]},
+            {"t": 0.45, "Hip": [-4, 56, 30], "Chest": [24, 0, 0], "Head": [18, 0, 0], "UpperArm_R": [36, 0, 0], "Forearm_R": [18, 0, 0], "Hand_R": [0, 0, 0], "Weapon_Back": [0, 0, 0], "UpperArm_L": [-32, 0, 0], "Forearm_L": [-16, 0, 0], "Hand_L": [-20, 0, 0], "Weapon_Front": [-26, 0, 0], "Thigh_R": [-66, 0, 0], "Shin_R": [90, 0, 0], "Foot_R": [16, 0, 0], "Thigh_L": [-60, 0, 0], "Shin_L": [84, 0, 0], "Foot_L": [14, 0, 0],
              "vfx": {"fx_dust": {"pos": [256, 422], "rot": 0, "scale": 0.85, "alpha": 0.82}}},
-            {"t": 0.68, "aura_frame": 0, "Hip": [-2, 68, 40], "Chest": [28, 0, 0], "Head": [22, 0, 0], "UpperArm_R": [42, 0, 0], "Forearm_R": [20, 0, 0], "Hand_R": [0, 0, 0], "Weapon_Back": [0, 0, 0], "UpperArm_L": [-40, 0, 0], "Forearm_L": [-20, 0, 0], "Hand_L": [-24, 0, 0], "Weapon_Front": [-32, 0, 0], "Thigh_R": [-76, 0, 0], "Shin_R": [100, 0, 0], "Foot_R": [18, 0, 0], "Thigh_L": [-70, 0, 0], "Shin_L": [94, 0, 0], "Foot_L": [16, 0, 0],
+            {"t": 0.68, "Hip": [-2, 68, 40], "Chest": [28, 0, 0], "Head": [22, 0, 0], "UpperArm_R": [42, 0, 0], "Forearm_R": [20, 0, 0], "Hand_R": [0, 0, 0], "Weapon_Back": [0, 0, 0], "UpperArm_L": [-40, 0, 0], "Forearm_L": [-20, 0, 0], "Hand_L": [-24, 0, 0], "Weapon_Front": [-32, 0, 0], "Thigh_R": [-76, 0, 0], "Shin_R": [100, 0, 0], "Foot_R": [18, 0, 0], "Thigh_L": [-70, 0, 0], "Shin_L": [94, 0, 0], "Foot_L": [16, 0, 0],
              "vfx": {"fx_dust": {"pos": [264, 424], "rot": 0, "scale": 0.90, "alpha": 0.65}}, "modulate_a": 0.88},
-            {"t": 0.88, "aura_frame": 3, "Hip": [0, 72, 44], "Chest": [30, 0, 0], "Head": [24, 0, 0], "UpperArm_R": [44, 0, 0], "Forearm_R": [22, 0, 0], "Hand_R": [0, 0, 0], "Weapon_Back": [0, 0, 0], "UpperArm_L": [-42, 0, 0], "Forearm_L": [-22, 0, 0], "Hand_L": [-26, 0, 0], "Weapon_Front": [-34, 0, 0], "Thigh_R": [-78, 0, 0], "Shin_R": [102, 0, 0], "Foot_R": [18, 0, 0], "Thigh_L": [-72, 0, 0], "Shin_L": [96, 0, 0], "Foot_L": [16, 0, 0],
+            {"t": 0.88, "Hip": [0, 72, 44], "Chest": [30, 0, 0], "Head": [24, 0, 0], "UpperArm_R": [44, 0, 0], "Forearm_R": [22, 0, 0], "Hand_R": [0, 0, 0], "Weapon_Back": [0, 0, 0], "UpperArm_L": [-42, 0, 0], "Forearm_L": [-22, 0, 0], "Hand_L": [-26, 0, 0], "Weapon_Front": [-34, 0, 0], "Thigh_R": [-78, 0, 0], "Shin_R": [102, 0, 0], "Foot_R": [18, 0, 0], "Thigh_L": [-72, 0, 0], "Shin_L": [96, 0, 0], "Foot_L": [16, 0, 0],
              "vfx": {"fx_dust": {"pos": [266, 424], "rot": 0, "scale": 0.75, "alpha": 0.45}}, "modulate_a": 0.52},
-            {"t": 1.05, "aura_frame": 3, "Hip": [0, 74, 46], "Chest": [30, 0, 0], "Head": [24, 0, 0], "UpperArm_R": [44, 0, 0], "Forearm_R": [22, 0, 0], "Hand_R": [0, 0, 0], "Weapon_Back": [0, 0, 0], "UpperArm_L": [-42, 0, 0], "Forearm_L": [-22, 0, 0], "Hand_L": [-26, 0, 0], "Weapon_Front": [-34, 0, 0], "Thigh_R": [-78, 0, 0], "Shin_R": [102, 0, 0], "Foot_R": [18, 0, 0], "Thigh_L": [-72, 0, 0], "Shin_L": [96, 0, 0], "Foot_L": [16, 0, 0],
+            {"t": 1.05, "Hip": [0, 74, 46], "Chest": [30, 0, 0], "Head": [24, 0, 0], "UpperArm_R": [44, 0, 0], "Forearm_R": [22, 0, 0], "Hand_R": [0, 0, 0], "Weapon_Back": [0, 0, 0], "UpperArm_L": [-42, 0, 0], "Forearm_L": [-22, 0, 0], "Hand_L": [-26, 0, 0], "Weapon_Front": [-34, 0, 0], "Thigh_R": [-78, 0, 0], "Shin_R": [102, 0, 0], "Foot_R": [18, 0, 0], "Thigh_L": [-72, 0, 0], "Shin_L": [96, 0, 0], "Foot_L": [16, 0, 0],
              "modulate_a": 0.22}
         ]
     }
@@ -270,14 +268,12 @@ def paste_rotated_part(canvas, part_im, wx, wy, wrot_deg, pivot_x, pivot_y, scal
     dest_y = int(round(wy - max_r))
     canvas.alpha_composite(rot_im, (dest_x, dest_y))
 
-def render_w003_pose(frame_pose=None, team_name="team_blue", show_weapon_front=True, show_weapon_back=False, show_aura=True, aura_idx=None, canvas_size=512):
+def render_w003_pose(frame_pose=None, team_name="team_blue", show_weapon_front=True, show_weapon_back=False, canvas_size=512):
     if frame_pose is None:
         frame_pose = {}
     canvas = Image.new("RGBA", (canvas_size, canvas_size), (0, 0, 0, 0))
     world = compute_world_transforms(BONES_W003, frame_pose)
     mod_a = frame_pose.get("modulate_a", 1.0)
-    a_idx = aura_idx if aura_idx is not None else frame_pose.get("aura_frame", 1)
-    anim_weapon_im = W003_ANIM_FRAMES[a_idx % len(W003_ANIM_FRAMES)]
 
     sorted_bones = sorted(BONES_W003, key=lambda b: b["z_index"])
     for b in sorted_bones:
@@ -288,10 +284,7 @@ def render_w003_pose(frame_pose=None, team_name="team_blue", show_weapon_front=T
             continue
         wx, wy, wrot = world[bname][:3]
         if b["is_weapon"]:
-            if show_aura and bname == "Weapon_Front":
-                im = anim_weapon_im
-            else:
-                im = W003_IMAGES[b["part"]]
+            im = w003_anim_0 if bname == "Weapon_Front" else W003_IMAGES[b["part"]]
         else:
             im = TEAM_PARTS[team_name][b["part"]]
 
@@ -329,80 +322,77 @@ except Exception:
     font_title = ImageFont.load_default()
     font_sub = ImageFont.load_default()
 
-print("=== 3. Building W003 3-Step Pipeline Audit Board & 6-Action Overview ===")
+print("=== 3. Building W003 (Cấp N - Static Weapon) Audit Board & 6-Action Overview ===")
 board_w, board_h = 1860, 960
 audit_im = Image.new("RGBA", (board_w, board_h), (16, 19, 26, 255))
 audit_draw = ImageDraw.Draw(audit_im, "RGBA")
 
 team_display = [
-    ("team_blue", "DOI 1: XANH + W003 (Frame 0)", (59, 130, 246, 255), 0, False),
-    ("team_red", "DOI 2: DO + SONG DAO W003 (Frame 1)", (239, 68, 68, 255), 1, True),
-    ("team_green", "DOI 3: XANH LA + W003 (Frame 2)", (34, 197, 94, 255), 2, False),
-    ("team_amber", "DOI 4: VANG CAM + W003 (Frame 3)", (245, 158, 11, 255), 3, False),
+    ("team_blue", "ĐỘI 1: XANH + W003 (Vũ Khí Tĩnh)", (59, 130, 246, 255), False),
+    ("team_red", "ĐỘI 2: ĐỎ + SONG ĐAO W003 (Tĩnh)", (239, 68, 68, 255), True),
+    ("team_green", "ĐỘI 3: XANH LÁ + W003 (Vũ Khí Tĩnh)", (34, 197, 94, 255), False),
+    ("team_amber", "ĐỘI 4: VÀNG CAM + W003 (Vũ Khí Tĩnh)", (245, 158, 11, 255), False),
 ]
 
-for idx, (t_key, t_label, t_col, a_f, dual_w) in enumerate(team_display):
+for idx, (t_key, t_label, t_col, dual_w) in enumerate(team_display):
     ox = 12 + idx * 345
     oy = 12
     audit_draw.rectangle([ox, oy, ox + 335, oy + 450], fill=(26, 31, 42, 255), outline=t_col, width=2)
-    t_pose_im, _ = render_w003_pose({}, team_name=t_key, show_weapon_front=True, show_weapon_back=dual_w, show_aura=True, aura_idx=a_f, canvas_size=512)
+    t_pose_im, _ = render_w003_pose({}, team_name=t_key, show_weapon_front=True, show_weapon_back=dual_w, canvas_size=512)
     t_thumb = t_pose_im.resize((330, 330), Image.Resampling.LANCZOS)
     audit_im.alpha_composite(t_thumb, (ox + 2, oy + 46))
     audit_draw.text((ox + 12, oy + 10), t_label, fill=t_col, font=font_title)
-    sub_txt = "W003 Weapon Anim Spritesheet ON" if not dual_w else "Demo Song Dao W003 Anim ON"
+    sub_txt = "Cấp N — 1 Ảnh Tĩnh (weapon_anim_0)" if not dual_w else "Cấp N — Song Đao Tĩnh (weapon_anim_0)"
     audit_draw.text((ox + 12, oy + 28), f"{sub_txt} | edge_clip=0px", fill=(210, 220, 235, 255), font=font_sub)
 
-# Panel 5 on Top Row: BUOC 3 — W003 Diagonal Card Cover
+# Panel 5 on Top Row: BƯỚC 2 — W003 Diagonal Card Cover
 ox5 = 12 + 4 * 345
 audit_draw.rectangle([ox5, 12, board_w - 12, 462], fill=(26, 31, 42, 255), outline=(245, 158, 11, 255), width=2)
-audit_draw.text((ox5 + 12, 20), "BUOC 3: ANH BIA CARD (884x632 RGB — Tu Ref & Anim)", fill=(252, 211, 77, 255), font=font_title)
+audit_draw.text((ox5 + 12, 20), "BƯỚC 2: ẢNH BÌA CARD (884x632 RGB — Từ Ảnh Ref)", fill=(252, 211, 77, 255), font=font_title)
 card_prev = Image.open(W003_CARD_PNG).convert("RGBA").resize((436, 312), Image.Resampling.LANCZOS)
 audit_im.alpha_composite(card_prev, (ox5 + 14, 48))
 audit_draw.rectangle([ox5 + 14, 48, ox5 + 14 + 436, 48 + 312], outline=(245, 158, 11, 220), width=1)
 audit_draw.text((ox5 + 14, 370), "884x632 RGB PNG & 354x253 WebP (100% Opaque Card Art!)", fill=(252, 211, 77, 255), font=font_sub)
-audit_draw.text((ox5 + 14, 392), f"Grip 1 (Do): ({W003_G1_X}, {W003_G1_Y}) | Grip 2 (Xanh): ({W003_G2_X}, {W003_G2_Y})", fill=(220, 230, 245, 255), font=font_sub)
-audit_draw.text((ox5 + 14, 414), "Flow: 1. Anh Ref -> 2. Spritesheet Anim 2x2 -> 3. Anh Bia Card", fill=(130, 235, 165, 255), font=font_sub)
+audit_draw.text((ox5 + 14, 392), f"Grip 1 (Đỏ): ({W003_G1_X}, {W003_G1_Y}) | Grip 2 (Xanh): ({W003_G2_X}, {W003_G2_Y})", fill=(220, 230, 245, 255), font=font_sub)
+audit_draw.text((ox5 + 14, 414), "Flow Cấp N/R: 1. Ảnh Vũ Khí Tĩnh (weapon_anim_0) -> 2. Ảnh Bìa Card", fill=(130, 235, 165, 255), font=font_sub)
 
-# Bottom Left: BUOC 1 — W003 Reference Weapon with Grip 1 & Grip 2
+# Bottom Left: BƯỚC 1 — W003 Static Weapon (weapon_main.png = weapon_anim_0.png) with Grip 1 & Grip 2
 bx_w = 12
 by_w = 478
 audit_draw.rectangle([bx_w, by_w, bx_w + 440, board_h - 12], fill=(26, 31, 42, 255), outline=(245, 158, 11, 255), width=2)
-audit_draw.text((bx_w + 14, by_w + 12), f"BUOC 1: ANH REF VU KHI ({w003_main.width}x{w003_main.height} — 0px Pad)", fill=(252, 211, 77, 255), font=font_title)
-audit_draw.text((bx_w + 14, by_w + 32), "Cham DO = Grip 1 (Tay Chinh) | Cham XANH = Grip 2 (Tay Phu)", fill=(130, 235, 165, 255), font=font_sub)
+audit_draw.text((bx_w + 14, by_w + 12), f"BƯỚC 1: VŨ KHÍ TĨNH CẤP N ({w003_main.width}x{w003_main.height} — 0px Pad)", fill=(252, 211, 77, 255), font=font_title)
+audit_draw.text((bx_w + 14, by_w + 32), "weapon_main.png = weapon_anim_0.png (Cấp N: Không có animation vũ khí)", fill=(130, 235, 165, 255), font=font_sub)
 wx_p = bx_w + (440 - w003_main.width) // 2
 wy_p = by_w + 68
 audit_im.alpha_composite(w003_main, (wx_p, wy_p))
 audit_draw.rectangle([wx_p, wy_p, wx_p + w003_main.width, wy_p + w003_main.height], outline=(90, 220, 135, 180), width=1)
-g1x, g1y = wx_p + W003_G1_X, wy_p + W003_G1_Y
-g2x, g2y = wx_p + W003_G2_X, wy_p + W003_G2_Y
+g1x, g1y = wx_p + int(W003_G1_X), wy_p + int(W003_G1_Y)
+g2x, g2y = wx_p + int(W003_G2_X), wy_p + int(W003_G2_Y)
 audit_draw.ellipse([g1x - 6, g1y - 6, g1x + 6, g1y + 6], fill=(240, 50, 50, 255), outline=(255, 255, 255, 255), width=2)
 audit_draw.ellipse([g2x - 6, g2y - 6, g2x + 6, g2y + 6], fill=(40, 210, 255, 255), outline=(255, 255, 255, 255), width=2)
+audit_draw.text((bx_w + 14, by_w + 260), f"Vũ khí phụ (weapon_offhand.png — {w003_offhand.width}x{w003_offhand.height}):", fill=(252, 211, 77, 255), font=font_sub)
+audit_im.alpha_composite(w003_offhand, (bx_w + 140, by_w + 286))
 
-# Bottom Right: 4 Frames of Animated Weapon Spritesheet
-anim_titles = [
-    "BUOC 2 - Frame 1 (weapon_anim_0): Resting Dark Steel",
-    "BUOC 2 - Frame 2 (weapon_anim_1): Crimson Blood-Groove Pulse",
-    "BUOC 2 - Frame 3 (weapon_anim_2): Peak Executioner Ember Glint",
-    "BUOC 2 - Frame 4 (weapon_anim_3): Smoldering Reset Loop",
+# Bottom Right: 4 Combat VFX Sprites for W003
+vfx_display = [
+    ("fx_slash", "VFX 1: fx_slash.png (Vệt Chém Đại Đao)"),
+    ("fx_slash_heavy", "VFX 2: fx_slash_heavy.png (Trảm Đoạn Đầu Đài)"),
+    ("fx_spark", "VFX 3: fx_spark.png (Tia Lửa Thép Chạm Đất)"),
+    ("fx_dust", "VFX 4: fx_dust.png (Bụi Đất Chấn Động)"),
 ]
-for idx in range(4):
+for idx, (fx_k, fx_title) in enumerate(vfx_display):
     ax = 468 + idx * 345
     ay = 478
     audit_draw.rectangle([ax, ay, ax + 333, board_h - 12], fill=(22, 26, 36, 255), outline=(239, 68, 68, 200), width=1)
-    audit_draw.text((ax + 10, ay + 12), anim_titles[idx], fill=(252, 211, 77, 255), font=font_sub)
-    wf_im = W003_ANIM_FRAMES[idx]
-    audit_draw.text((ax + 10, ay + 32), f"Size: {wf_im.width}x{wf_im.height} | Căn đồng trục Grip 1/2 (0px lệch)", fill=(130, 235, 165, 255), font=font_sub)
-    audit_im.alpha_composite(wf_im, (ax + (333 - wf_im.width) // 2, ay + 120))
-    audit_draw.rectangle(
-        [ax + (333 - wf_im.width) // 2, ay + 120, ax + (333 - wf_im.width) // 2 + wf_im.width, ay + 120 + wf_im.height],
-        outline=(90, 220, 135, 120),
-        width=1,
-    )
+    audit_draw.text((ax + 10, ay + 12), fx_title, fill=(252, 211, 77, 255), font=font_sub)
+    fx_im = VFX_PARTS[fx_k]
+    audit_draw.text((ax + 10, ay + 32), f"Size: {fx_im.width}x{fx_im.height} | Cấp N: Vũ khí tĩnh weapon_anim_0", fill=(130, 235, 165, 255), font=font_sub)
+    audit_im.alpha_composite(fx_im, (ax + (333 - fx_im.width) // 2, ay + 110))
 
 audit_path = os.path.join(W003_QC_DIR, "w003_weapon_and_aura_audit.png")
 audit_im.save(audit_path)
 shutil.copyfile(audit_path, os.path.join(ARTIFACT_DIR, "w003_weapon_and_aura_audit.png"))
-print("Saved W003 Weapon & Aura Audit ->", audit_path)
+print("Saved W003 Weapon Audit ->", audit_path)
 
 # 3B. All 6 Actions Overview Board (3x2 Panels showing all 24 frames with ground reference line)
 ov_w, ov_h = 3 * 560 + 24, 2 * 560 + 24
@@ -430,7 +420,7 @@ for a_idx, act_name in enumerate(action_order):
     act_clips = 0
     t_for_act = team_cycle[a_idx]
     for f_idx, f_pose in enumerate(frames):
-        f_im, _ = render_w003_pose(f_pose, team_name=t_for_act, show_weapon_front=True, show_weapon_back=False, show_aura=True, canvas_size=512)
+        f_im, _ = render_w003_pose(f_pose, team_name=t_for_act, show_weapon_front=True, show_weapon_back=False, canvas_size=512)
         fa = np.array(f_im)[:, :, 3]
         f_clip = int(fa[0, :].sum() + fa[-1, :].sum() + fa[:, 0].sum() + fa[:, -1].sum())
         act_clips += f_clip
@@ -447,7 +437,7 @@ for a_idx, act_name in enumerate(action_order):
 
     ov_draw.text(
         (bx + 14, by + 10),
-        f"W003 Action {a_idx+1}: {act_name.upper()} ({t_for_act} | {len(frames)}f | Anim Weapon ON | edge_clip={act_clips}px)",
+        f"W003 Action {a_idx+1}: {act_name.upper()} ({t_for_act} | {len(frames)}f | Cấp N Vũ Khí Tĩnh | edge_clip={act_clips}px)",
         fill=(252, 211, 77, 255),
         font=font_title,
     )
@@ -613,8 +603,6 @@ class_name C003_DaoPhuDoiThi
 		if is_inside_tree() and has_node("Skeleton2D/Hip/Chest/UpperArm_R/Forearm_R/Hand_R/Weapon_Back"):
 			$Skeleton2D/Hip/Chest/UpperArm_R/Forearm_R/Hand_R/Weapon_Back.visible = val
 
-@export var weapon_aura_enabled: bool = true
-
 @onready var anim_player: AnimationPlayer = $AnimationPlayer
 @onready var skeleton: Skeleton2D = $Skeleton2D
 
@@ -647,9 +635,6 @@ func play_action(action_name: String) -> void:
 
 func toggle_dual_weapons(enabled: bool) -> void:
 	dual_weapon_enabled = enabled
-
-func toggle_weapon_aura(enabled: bool) -> void:
-	weapon_aura_enabled = enabled
 """
 
 gd_path = os.path.join(W003_GODOT_DIR, "c003_dao_phu_doi_thi.gd")
@@ -657,28 +642,24 @@ with open(gd_path, "w", encoding="utf-8") as f:
     f.write(gd_script)
 print("Saved Godot GD Script ->", gd_path)
 
-# 5. Pack data into JSON for HTML Editor
+# 5. Pack data into JSON for HTML Editor (Cấp N: aura_default=False, only weapon_anim_0)
 def b64_png(path):
     with open(path, "rb") as f:
         return "data:image/png;base64," + base64.b64encode(f.read()).decode("utf-8")
 
 w003_pack = {
     "id": "w003",
-    "name": "W003 — Đại Đao Đồi Thí (Cấp N — Animated Great-Cleaver)",
+    "name": "W003 — Đại Đao Đồi Thí (Cấp N — Vũ Khí Tĩnh)",
     "tscn_name": "c003_dao_phu_doi_thi.tscn",
     "node_name": "C003_DaoPhuDoiThi",
-    "aura_default": True,
+    "aura_default": False,
     "card_b64": b64_png(W003_CARD_PNG),
     "bones": BONES_W003,
     "actions": ACTIONS_W003,
     "images": {
         "weapon_main": b64_png(os.path.join(W003_PARTS_DIR, "weapon_main.png")),
         "weapon_offhand": b64_png(os.path.join(W003_PARTS_DIR, "weapon_offhand.png")),
-        "weapon_aura": b64_png(os.path.join(W003_PARTS_DIR, "weapon_aura.png")),
         "weapon_anim_0": b64_png(os.path.join(W003_PARTS_DIR, "weapon_anim_0.png")),
-        "weapon_anim_1": b64_png(os.path.join(W003_PARTS_DIR, "weapon_anim_1.png")),
-        "weapon_anim_2": b64_png(os.path.join(W003_PARTS_DIR, "weapon_anim_2.png")),
-        "weapon_anim_3": b64_png(os.path.join(W003_PARTS_DIR, "weapon_anim_3.png")),
         "fx_slash": b64_png(os.path.join(W003_PARTS_DIR, "fx_slash.png")),
         "fx_slash_heavy": b64_png(os.path.join(W003_PARTS_DIR, "fx_slash_heavy.png")),
         "fx_spark": b64_png(os.path.join(W003_PARTS_DIR, "fx_spark.png")),
@@ -686,37 +667,33 @@ w003_pack = {
     }
 }
 
-# 6. Update assets/sticker_weapon_editor.html to include/update W003 alongside W001, W002 & W018
+# 6. Update assets/sticker_weapon_editor.html with updated W003_PACK
 editor_path = "/Users/dochung/Desktop/card_g/assets/sticker_weapon_editor.html"
 with open(editor_path, "r", encoding="utf-8") as f:
     editor_html = f.read()
 
 w003_json_str = json.dumps(w003_pack)
-marker = "const W018_PACK ="
-w003_inject = f"const W003_PACK = {w003_json_str};\nconst W018_PACK ="
+w003_line = f"const W003_PACK = {w003_json_str};\n"
 if "const W003_PACK =" in editor_html:
-    editor_html = re.sub(r"const W003_PACK = .*?;\nconst W018_PACK =", lambda _: w003_inject, editor_html, count=1)
-elif marker in editor_html:
-    editor_html = editor_html.replace(marker, w003_inject)
+    editor_html = re.sub(r"const W003_PACK = .*?;\n", lambda _: w003_line, editor_html, count=1)
 
-# Save updated sticker_weapon_editor.html
+# Save updated sticker_weapon_editor.html (defaulting to w003)
 with open(editor_path, "w", encoding="utf-8") as f:
     f.write(editor_html)
 
-# Save standalone w003_editor.html
-w003_editor_path = os.path.join(W003_DIR, "w003_editor.html")
-with open(w003_editor_path, "w", encoding="utf-8") as f:
-    f.write(editor_html)
-
-# Also sync w001, w002, and w018 standalone editors with updated sticker_weapon_editor.html
+# Save standalone editors with their respective default selected weapon
 for wid, wdir, fname in [
     ("w001", "assets/weapons/w001_hac_kiem_tan_binh", "w001_editor.html"),
     ("w002", "assets/weapons/w002_no_thu_cam_lang", "w002_editor.html"),
+    ("w003", "assets/weapons/w003_dao_phu_doi_thi", "w003_editor.html"),
     ("w018", "assets/weapons/w018_huyet_kiem_hanh_quyet", "w018_editor.html")
 ]:
+    custom_html = editor_html.replace('applyWeaponPack("w003");', f'applyWeaponPack("{wid}");')
+    custom_html = custom_html.replace('<option value="w003" selected>', '<option value="w003">')
+    custom_html = custom_html.replace(f'<option value="{wid}">', f'<option value="{wid}" selected>')
     p = os.path.join(REPO_DIR, wdir, fname)
     with open(p, "w", encoding="utf-8") as f:
-        f.write(editor_html)
+        f.write(custom_html)
 
-print("Saved Multi-Weapon Editor ->", editor_path, "and", w003_editor_path)
+print("Saved Multi-Weapon Editor ->", editor_path, "and synced w001/w002/w003/w018_editor.html")
 print("=== ALL W003 BUILD STEPS COMPLETE! ===")

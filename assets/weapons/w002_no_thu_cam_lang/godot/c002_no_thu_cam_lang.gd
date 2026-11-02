@@ -2,9 +2,8 @@ extends Node2D
 
 @onready var anim_player: AnimationPlayer = $AnimationPlayer
 @onready var skeleton: Skeleton2D = $Skeleton2D
-@onready var weapon_front: Bone2D = $Skeleton2D/Chest/UpperArm_L/Forearm_L/Hand_L/Weapon_Front
-@onready var weapon_back: Bone2D = $Skeleton2D/Chest/UpperArm_R/Forearm_R/Hand_R/Weapon_Back
-@onready var weapon_aura: AnimatedSprite2D = $Skeleton2D/Chest/UpperArm_L/Forearm_L/Hand_L/Weapon_Front/WeaponAura
+@onready var weapon_front: Bone2D = $Skeleton2D/Hip/Chest/UpperArm_L/Forearm_L/Hand_L/Weapon_Front
+@onready var weapon_back: Bone2D = $Skeleton2D/Hip/Chest/UpperArm_R/Forearm_R/Hand_R/Weapon_Back
 
 var current_team: String = "team_blue"
 
@@ -22,7 +21,7 @@ func set_team_color(team_key: String) -> void:
 		_update_bone_textures_recursive(bone, base_path)
 
 func _update_bone_textures_recursive(node: Node, base_path: String) -> void:
-	if node is Bone2D and not node.has_meta("is_weapon"):
+	if node is Bone2D and not node.name.begins_with("Weapon"):
 		var sprite := node.get_node_or_null("Sprite") as Sprite2D
 		if sprite:
 			var part_name: String = node.name.to_snake_case()
@@ -37,7 +36,3 @@ func toggle_dual_wield(enabled: bool) -> void:
 		var sp := weapon_back.get_node_or_null("Sprite") as Sprite2D
 		if sp:
 			sp.visible = enabled
-
-func toggle_weapon_aura(enabled: bool) -> void:
-	if weapon_aura:
-		weapon_aura.visible = enabled

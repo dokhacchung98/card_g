@@ -13,15 +13,13 @@ Skill này định nghĩa kiến trúc tối ưu hóa tài nguyên và token cho
   3. **Đội 3 — Xanh Lá (`green` / `#22C55E`)**
   4. **Đội 4 — Vàng Cam (`amber` / `#F59E0B`)**
 - **Mỗi Thẻ Bài (`C01` – `C80`) Tương Ứng Với 1 Bộ Vũ Khí Riêng (`assets/weapons/wXXX_<slug>/`):**
-  - Ngoại hình Vũ Khí phân cấp theo Độ Hiếm:
-    - **Cấp `N` (Common):** Vũ khí sắt/gỗ gỉ sét, sứt mẻ cơ bản (ví dụ `W001`: Hắc Kiếm Tàn Binh — thanh kiếm sắt đen gỉ sét), không phát sáng.
-    - **Cấp `R` (Rare):** Vũ khí tinh luyện sắc bén, chạm khắc chỉnh tề, có điểm nhấn nguyên tố nhẹ.
-    - **Cấp `S` (Epic):** Vũ khí thống lĩnh cầu kỳ, phát sáng năng lượng nguyên tố rõ rệt.
-    - **Cấp `SSR` (Legendary):** Thần binh huyền thoại cực xịn, bắt buộc có **spritesheet animation 4 frame (`2x2`) của chính vũ khí đó (`weapon_anim_0..3.png` / `weapon_aura`)** kèm hiệu ứng kỹ năng hoành tráng.
-  - **Thứ Tự Flow 3 Bước Bắt Buộc Khi Tạo Vũ Khí (`SSR`):**
-    1. **Bước 1 — Vẽ Ảnh Ref của Vũ Khí Trước (`reference/wXXX_ref_raw.png`):** Dùng `layout_guide_1x1.png` vẽ nguyên cây vũ khí trên nền `#FF00FF` (đặt chéo nếu là vũ khí dài), tách nền sạch và trim sát (`0px` margin) thành `weapon_main.png`.
-    2. **Bước 2 — Tạo Ảnh Spritesheet Animation của Vũ Khí (`raw/wXXX_weapon_anim_2x2_raw.png`):** Truyền `reference_images: [wXXX_ref_raw.png, layout_guide_2x2.png]` để vẽ lưới `2x2` (4 frame loop) của chính vũ khí trong ảnh Ref với hiệu ứng năng lượng/lửa/sét chuyển động dọc theo lưỡi vũ khí trên nền `#FF00FF`.
-    3. **Bước 3 — Cuối Cùng Mới Tạo Ảnh Bìa của Card (`card/wXXX_card_preview.png` `884x632` & `.webp` `354x253`):** Truyền `reference_images: [wXXX_ref_raw.png, wXXX_weapon_anim_2x2_raw.png]` để tạo ảnh bìa ngang đặt chéo của vũ khí, đồng nhất 100% thiết kế với ảnh Ref và Spritesheet Animation.
+  - **Quy tắc hiệu ứng Animation của Vũ Khí theo Độ Hiếm (`N` / `R` vs `S` / `SSR`):**
+    - **Cấp `N` (Common) & Cấp `R` (Rare):** **KHÔNG có hiệu ứng animation của vũ khí** (không tạo/không chạy spritesheet `2x2` cho vũ khí; chỉ hiển thị **1 ảnh tĩnh duy nhất** là `weapon_main.png` / `weapon_anim_0.png`, `aura_default: false`). Nếu là vũ khí tầm xa (cung, nỏ, súng...) **không vẽ đạn/mũi tên**.
+    - **Cấp `S` (Epic) & Cấp `SSR` (Legendary):** **CÓ hiệu ứng spritesheet animation 4 frame (`2x2`) của chính vũ khí đó (`weapon_anim_0..3.png` / `weapon_aura`, `aura_default: true`, như `W018`)** kèm hiệu ứng kỹ năng hoành tráng.
+  - **Thứ Tự Flow Bắt Buộc Khi Tạo Vũ Khí:**
+    1. **Bước 1 — Vẽ Ảnh Ref của Vũ Khí Trước (`reference/wXXX_ref_raw.png`):** Dùng `layout_guide_1x1.png` vẽ nguyên cây vũ khí trên nền `#FF00FF` (đặt chéo nếu là vũ khí dài, không vẽ đạn nếu là vũ khí tầm xa), tách nền sạch và trim sát (`0px` margin) thành `weapon_main.png` (và `weapon_anim_0.png` tĩnh).
+    2. **Bước 2 — Tạo Ảnh Spritesheet Animation của Vũ Khí *(CHỈ ÁP DỤNG CHO CẤP `S` VÀ `SSR`, BỎ QUA Ở CẤP `N` VÀ `R`)* (`raw/wXXX_weapon_anim_2x2_raw.png`):** Truyền `reference_images: [wXXX_ref_raw.png, layout_guide_2x2.png]` để vẽ lưới `2x2` (4 frame loop `weapon_anim_0..3.png`) của chính vũ khí trong ảnh Ref với hiệu ứng năng lượng/lửa/sét chuyển động dọc theo lưỡi vũ khí trên nền `#FF00FF`.
+    3. **Bước Cuối — Tạo Ảnh Bìa của Card (`card/wXXX_card_preview.png` `884x632` RGB & `.webp` `354x253` RGB):** Truyền `reference_images` (`[wXXX_ref_raw.png]` cho cấp `N`/`R`, hoặc `[wXXX_ref_raw.png, wXXX_weapon_anim_2x2_raw.png]` cho cấp `S`/`SSR`) để tạo ảnh bìa ngang đặt chéo của vũ khí **có nền bối cảnh dark-fantasy đầy đủ (`mode="RGB"`, 100% không trong suốt)**, đồng nhất 100% thiết kế với ảnh Ref.
   - **Ảnh Preview Thẻ Bài (`wXXX_card_preview.png` `884x632` & `.webp` `354x253`):**
     - Đổi từ chân dung tướng sang **ảnh chữ nhật ngang của chính Vũ Khí đó** (không ghép sẵn khung thẻ).
     - **Nếu vũ khí dài (kiếm, đao, thương, trượng, cung...):** Bắt buộc **vẽ đặt chéo (diagonal composition)** trong khung ngang `884x632` để tối ưu diện tích hiển thị.
