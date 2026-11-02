@@ -824,11 +824,14 @@ if opt_target in editor_html and 'value="w003"' not in editor_html:
     # Remove selected from w002
     editor_html = editor_html.replace('<option value="w002" selected>', '<option value="w002">')
 
-# Inject W003_PACK definition
+# Inject or update W003_PACK definition
+import re
 w003_json_str = json.dumps(w003_pack)
 marker = "const W018_PACK ="
 w003_inject = f"const W003_PACK = {w003_json_str};\nconst W018_PACK ="
-if marker in editor_html and "const W003_PACK =" not in editor_html:
+if "const W003_PACK =" in editor_html:
+    editor_html = re.sub(r"const W003_PACK = .*?;\nconst W018_PACK =", lambda _: w003_inject, editor_html, count=1)
+elif marker in editor_html:
     editor_html = editor_html.replace(marker, w003_inject)
 
 # Update WEAPON_PACK_IMAGES to include w003
