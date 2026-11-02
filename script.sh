@@ -2,8 +2,21 @@
 set -euo pipefail
 
 cd /Users/dochung/Desktop/card_g
-git add -A
-git commit -m "refactor(card): replace pre-baked card image with horizontal portrait preview (884x632 & 354x253) and update skill"
-git push origin main
+
+echo "=== CLEANING UP .DS_Store ==="
+find . -name ".DS_Store" -delete
+
+echo "=== GIT STATUS BEFORE ADD ==="
 git status -s
-git log -n 2 --oneline
+
+echo "=== GIT ADD ==="
+git add .
+
+echo "=== GIT STATUS STAGED ==="
+git status -s
+
+echo "=== COMMIT AND PUSH ==="
+git commit -m "feat(system): add sticker hero 4 teams, C002-C004 heroes, W001 & W018 SSR weapon systems and editors" || echo "Nothing to commit"
+
+echo "=== PUSHING TO ORIGIN MAIN ==="
+git push origin main
