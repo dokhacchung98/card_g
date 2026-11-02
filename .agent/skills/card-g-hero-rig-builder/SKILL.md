@@ -55,3 +55,41 @@ Skill này định nghĩa kiến trúc tối ưu hóa tài nguyên và token cho
      - Chọn **Thẻ Bài / Vũ Khí**, chỉnh tọa độ **2 vị trí cầm (`Grip 1` & `Grip 2`)**, bật/tắt **Vũ khí phụ (`Weapon_Back`)** & **Hiệu ứng bao quanh vũ khí (`WeaponAura`)**.
      - Chọn từng action trong **6 Action (`idle`, `walk`, `attack`, `cast`, `hurt`, `death`)** trên thanh topbar để preview trực tiếp trên Canvas chính.
      - Kéo chỉnh khớp xương & bấm **`Save to .tscn`** lưu thẳng vào file `.tscn` của từng tướng!
+
+---
+
+## 2. Quy Trình One-Shot Tối Ưu 90% Token (`tools/forge_weapon.py` + `assets/weapons/configs/wXXX.json`)
+
+Để giảm số lượt gọi (turns) từ **70–95 turns xuống còn 3–4 turns/vũ khí** (tiết kiệm ~85–90% token cho mỗi lần triển khai vũ khí và spine rig):
+
+1. **TUYỆT ĐỐI KHÔNG viết lại script Python dài 500–650 dòng cho từng vũ khí (`build_wXXX_system.py`):**
+   - Toàn bộ logic xử lý ảnh Muse, tách nền `#FF00FF`, lọc thành phần lớn nhất (không vẽ đạn rời), `0px` tight crop, lắp ráp bộ xương 17 `Bone2D` (`0px` joint gap), 6 action pose theo Archetype, xuất bảng QC, xuất Godot 4 `.tscn`/`.gd` và cập nhật HTML Editor đã được đóng gói vào CLI chuẩn: `/Users/dochung/Desktop/card_g/tools/forge_weapon.py`.
+2. **Tách Dữ Liệu Base64 Ra `assets/weapons_data.js` (`~39 KB` cho mỗi HTML Editor):**
+   - Toàn bộ dữ liệu Base64 của 4 đội Stickman (`window.TEAM_PART_B64`) và danh sách gói vũ khí (`window.WEAPON_REGISTRY`, `window.WEAPON_ORDER`) được lưu tự động tại `/Users/dochung/Desktop/card_g/assets/weapons_data.js` và nạp qua `<script src="weapons_data.js"></script>`.
+   - **CẤM TUYỆT ĐỐI** dùng `read_file` đọc `assets/weapons_data.js` vào ngữ cảnh AI để tránh tràn context window.
+3. **3 Bước Duy Nhất Khi Triển Khai Vũ Khí Mới (`W004` – `W080`):**
+   - **Bước 1:** Tạo file cấu hình JSON nhỏ gọn (~25 dòng) tại `/Users/dochung/Desktop/card_g/assets/weapons/configs/wXXX.json`:
+     ```json
+     {
+       "id": "w004",
+       "slug": "w004_<slug>",
+       "tier": "N",
+       "name": "W004 — <Tên Vũ Khí> (C04 · <Hệ> · <Vai Trò> · Cấp N)",
+       "tscn_name": "c004_<slug>.tscn",
+       "node_name": "C004Hero",
+       "archetype": "melee_cleaver",
+       "target_size": [216, 166],
+       "grip1_norm": [0.16, 0.80],
+       "grip2_norm": [0.30, 0.66],
+       "rest_rot": -10.0,
+       "flip_horizontal": false,
+       "prompt_ref": "<Prompt Bước 1 vẽ vũ khí trên nền #FF00FF với layout_guide_1x1.png>",
+       "prompt_card": "<Prompt Bước Cuối vẽ ảnh bìa thẻ bài 884x632 Opaque RGB>"
+     }
+     ```
+     *(Nếu `"tier"` là `"S"` hoặc `"SSR"`, thêm trường `"prompt_anim_2x2"` để tự động chạy Bước 2 tạo lưới `2x2` animation 4 frame cho vũ khí).*
+   - **Bước 2:** Ghi lệnh vào `/Users/dochung/Desktop/card_g/script.sh` và chạy `bash /Users/dochung/Desktop/card_g/script.sh`:
+     ```bash
+     python3 /Users/dochung/Desktop/card_g/tools/forge_weapon.py --config /Users/dochung/Desktop/card_g/assets/weapons/configs/wXXX.json
+     ```
+   - **Bước 3:** Dùng `read_file` kiểm tra 2 bảng QC (`wXXX_weapon_and_aura_audit.png` & `wXXX_sticker_all_6_actions_overview.png`) và báo cáo kết quả cho người dùng.

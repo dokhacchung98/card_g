@@ -144,3 +144,10 @@ Trước khi tạo bất kỳ asset 2D nào, hãy đọc tài liệu skill tươ
      - Trước khi bắt đầu tạo vũ khí mới, gọi `POST http://127.0.0.1:3456/v1/thread` với body `{"new_thread": true}` để khởi tạo phiên hội thoại mới trên Muse Local Server, tránh bị dính ngữ cảnh cũ.
    - **KHÔNG tạo file `.gif` — BẮT BUỘC tích hợp vào HTML Editor (`sticker_weapon_editor.html` / `<weapon_id>_editor.html`):**
      - File HTML cho phép chọn màu đội (4 màu), chọn thẻ bài/vũ khí, chỉnh 2 vị trí cầm (`Grip 1` & `Grip 2`), bật/tắt vũ khí phụ (`Weapon_Back`) và hiệu ứng bao quanh vũ khí (`WeaponAura`), chọn từng action trong 6 Action (`idle`, `walk`, `attack`, `cast`, `hurt`, `death`) để preview trực tiếp trên Canvas chính, kéo chỉnh khớp xương/keyframe và bấm **`Save to .tscn`** lưu thẳng vào file `.tscn` của từng tướng.
+   - **QUY TRÌNH ONE-SHOT TỐI ƯU 90% TOKEN (`tools/forge_weapon.py` + `assets/weapons/configs/wXXX.json`):**
+     - **TUYỆT ĐỐI KHÔNG** viết mới các script Python dài 500–650 dòng cho từng vũ khí (`build_wXXX_system.py`), và **TUYỆT ĐỐI KHÔNG** dùng `read_file` đọc file dữ liệu Base64 `assets/weapons_data.js` vào ngữ cảnh AI.
+     - Khi tạo vũ khí mới (`w004`..`w080`), chỉ cần thực hiện **3 bước gọn nhẹ (3–4 turns/vũ khí)**:
+       1. Tạo file cấu hình JSON nhỏ gọn (~25 dòng) tại `assets/weapons/configs/wXXX.json` (chứa `id`, `slug`, `tier`, `name`, `archetype`, `grip1_norm`, `grip2_norm`, `prompt_ref`, `prompt_card`, và `prompt_anim_2x2` nếu là cấp `S`/`SSR`).
+       2. Ghi lệnh `python3 /Users/dochung/Desktop/card_g/tools/forge_weapon.py --config /Users/dochung/Desktop/card_g/assets/weapons/configs/wXXX.json` vào `/Users/dochung/Desktop/card_g/script.sh` và chạy `bash /Users/dochung/Desktop/card_g/script.sh`.
+       3. Đọc 2 bảng QC (`wXXX_weapon_and_aura_audit.png` & `wXXX_sticker_all_6_actions_overview.png`) để kiểm định chất lượng và báo cáo kết quả.
+     - Toàn bộ dữ liệu Base64 của 4 đội Stickman và các gói vũ khí được lưu tách biệt tại `assets/weapons_data.js` (nạp qua `<script src="weapons_data.js"></script>`), giữ cho `assets/sticker_weapon_editor.html` và mọi `wXXX_editor.html` luôn nhẹ (~39 KB).

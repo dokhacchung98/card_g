@@ -1,0 +1,30 @@
+{
+  "id": "w003",
+  "slug": "w003_dao_phu_doi_thi",
+  "tier": "N",
+  "name": "W003 — Đại Đao Đồi Thí (Cấp N — Vũ Khí Tĩnh)",
+  "tscn_name": "c003_dao_phu_doi_thi.tscn",
+  "node_name": "C003_DaoPhuDoiThi",
+  "archetype": "melee_cleaver",
+  "target_size": [
+    216,
+    166
+  ],
+  "grip1": [
+    82.0,
+    120.0
+  ],
+  "grip2": [
+    28.0,
+    145.0
+  ],
+  "offhand_grip1": [
+    32.0,
+    32.0
+  ],
+  "offhand_grip2": [
+    16.0,
+    34.0
+  ],
+  "rest_rot": 14.0
+}

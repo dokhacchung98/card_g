@@ -4,6 +4,6 @@ set -euo pipefail
 cd /Users/dochung/Desktop/card_g
 
 git add -A
-git commit -m "chore(weapons,rules): enforce static weapon_anim_0 for N/R tiers and 4-frame weapon animation only for S/SSR tiers"
-git push origin main
 git status -s
+git commit -m "perf(pipeline): implement one-shot forge_weapon.py CLI & external weapons_data.js (~90% token reduction)"
+git push origin main

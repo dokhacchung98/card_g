@@ -21,6 +21,7 @@ Mọi AI Agent (Antigravity, Gemini, Claude, Cursor, Codex, OpenCode...) khi là
 ## QUY TẮC 2: Tạo Ảnh, Sprites, Maps & Game Assets bằng Muse Local API + Skill `agent-sprite-forge`
 
 Khi cần generate ảnh, spritesheet, nhân vật, hiệu ứng (FX/projectile/impact), props, tilemaps, 2D maps hoặc chuyển đổi video sang sprite:
+
 - **TUYỆT ĐỐI KHÔNG** vẽ giả lập bằng code (không dùng PIL drawing, HTML5 Canvas, SVG, CSS hay hình khối placeholder để thay thế asset).
 - **BẮT BUỘC** sử dụng **Muse AI Local Server** kết hợp với quy trình và bộ script hậu xử lý của skill **`agent-sprite-forge`** (`https://github.com/0x0funky/agent-sprite-forge`).
 
@@ -46,7 +47,7 @@ Khi cần generate ảnh, spritesheet, nhân vật, hiệu ứng (FX/projectile/
        "save_path": "/duong/dan/luu/raw-sheet.png"
      }
      ```
-     *(Hoặc truyền `"output_dir"` và `"filename_prefix"`)*
+     _(Hoặc truyền `"output_dir"` và `"filename_prefix"`)_
    - **Image Edit Endpoint (thay thế `image_edit`):**
      `POST http://127.0.0.1:3456/edit-image` (hoặc `POST http://127.0.0.1:3456/v1/images/edits`)
      ```json
@@ -73,6 +74,7 @@ Khi cần generate ảnh, spritesheet, nhân vật, hiệu ứng (FX/projectile/
 ### 2.2. Tuân thủ nghiêm ngặt quy trình Skill `agent-sprite-forge`
 
 Trước khi tạo bất kỳ asset 2D nào, hãy đọc tài liệu skill tương ứng đã được cài đặt sẵn trên máy:
+
 - **Skill chuyên biệt tạo Tướng Xương 2D (18 `Bone2D` + Soft-Opacity VFX + HTML Editor) của dự án `card_g`:** `/Users/dochung/Desktop/card_g/.agent/skills/card-g-hero-rig-builder/SKILL.md` (hoặc `/Users/dochung/.gemini/config/skills/card-g-hero-rig-builder/SKILL.md`)
 - **Tổng quan:** `/Users/dochung/.gemini/config/skills/agent-sprite-forge/SKILL.md`
 - **Tạo Sprite & Animation (`generate2dsprite`):** `/Users/dochung/.gemini/config/skills/generate2dsprite/SKILL.md`
@@ -85,6 +87,7 @@ Trước khi tạo bất kỳ asset 2D nào, hãy đọc tài liệu skill tươ
 - **Chuyển Video thành Sprite (`video2dsprite`):** `/Users/dochung/.gemini/config/skills/video2dsprite/SKILL.md`
 
 #### Các nguyên tắc bắt buộc của `agent-sprite-forge`:
+
 1. **Lập kế hoạch & Viết Prompt thủ công:**
    - Tự xác định `asset_type`, `action`, `view` (`topdown`, `side`, `3/4`), `sheet` (`2x2`, `2x3`, `3x3`, `4x4`), `anchor` (`feet`, `bottom`, `center`), `art_style` (`pixel_art`, `clean_hd`, `retro_pixel`, `project-native`).
    - **Không** dùng dải 1 hàng (`1x4`, `1x6`, `1xN`) khi generate raw sheet cho nhân vật/quái vật (vì dễ lệch tỉ lệ và trôi ngang). Luôn generate theo lưới nhiều hàng (`2x2` cho 4 frame, `2x3` cho 6 frame, `3x3` cho 9 frame, `4x4` cho 16 frame).
@@ -133,7 +136,7 @@ Trước khi tạo bất kỳ asset 2D nào, hãy đọc tài liệu skill tươ
          - **Vũ khí cấp `S` và `SSR` (Epic / Legendary):** **CÓ hiệu ứng animation 4-frame (`2x2`) của chính vũ khí đó** (`weapon_anim_0..3.png` / `weapon_aura`, `aura_default: true`, như `W018`).
        - **Thứ Tự Flow Bắt Buộc Khi Tạo Vũ Khí:**
          1. **Bước 1 — Vẽ Ảnh Ref của Vũ Khí Trước (`wXXX_ref_raw.png` trên nền `#FF00FF` với `layout_guide_1x1.png`):** Vẽ đầy đủ 100% nguyên cây vũ khí (nếu là vũ khí tầm xa không vẽ đạn), đặt chéo nếu là vũ khí dài, tách nền sạch và trim sát (`0px` margin) làm chuẩn thiết kế (`weapon_main.png` / `weapon_anim_0.png`).
-         2. **Bước 2 — Tạo Ảnh Spritesheet Animation của Vũ Khí *(CHỈ ÁP DỤNG CHO CẤP `S` VÀ `SSR`, BỎ QUA Ở CẤP `N` VÀ `R`)* (`wXXX_weapon_anim_2x2_raw.png` trên nền `#FF00FF`):** Truyền **`reference_images: [wXXX_ref_raw.png, layout_guide_2x2.png]`** để tạo lưới `2x2` (4 frame loop `weapon_anim_0..3.png`) của chính thanh vũ khí đó kèm hiệu ứng năng lượng/hào quang chuyển động dọc theo thân vũ khí (giữ đồng nhất 100% hình dáng, tỉ lệ, góc nghiêng và vị trí cầm `Grip 1` / `Grip 2` với ảnh Ref).
+         2. **Bước 2 — Tạo Ảnh Spritesheet Animation của Vũ Khí _(CHỈ ÁP DỤNG CHO CẤP `S` VÀ `SSR`, BỎ QUA Ở CẤP `N` VÀ `R`)_ (`wXXX_weapon_anim_2x2_raw.png` trên nền `#FF00FF`):** Truyền **`reference_images: [wXXX_ref_raw.png, layout_guide_2x2.png]`** để tạo lưới `2x2` (4 frame loop `weapon_anim_0..3.png`) của chính thanh vũ khí đó kèm hiệu ứng năng lượng/hào quang chuyển động dọc theo thân vũ khí (giữ đồng nhất 100% hình dáng, tỉ lệ, góc nghiêng và vị trí cầm `Grip 1` / `Grip 2` với ảnh Ref).
          3. **Bước Cuối — Tạo Ảnh Bìa của Card (`wXXX_card_preview.png` `884x632` RGB & `.webp` `354x253` RGB):** Truyền `reference_images` (gồm `[wXXX_ref_raw.png]` đối với cấp `N`/`R`, hoặc `[wXXX_ref_raw.png, wXXX_weapon_anim_2x2_raw.png]` đối với cấp `S`/`SSR`) để vẽ ảnh bìa chữ nhật ngang đặt chéo của vũ khí **có nền bối cảnh dark-fantasy đầy đủ (`mode="RGB"`, 100% không trong suốt)**, đảm bảo vũ khí trên bìa thẻ bài giống hệt 100% với ảnh Ref.
        - **Ảnh Preview Thẻ Bài (`wXXX_card_preview.png` `884x632` RGB & `.webp` `354x253` RGB):** Bắt buộc là **ảnh minh họa đầy đủ nền (`RGB` opaque, không phải PNG tách nền trong suốt)** của chính Vũ Khí đó (không ghép sẵn khung thẻ). Nếu vũ khí dài (kiếm, đao, thương, trượng...), bắt buộc **vẽ đặt chéo (diagonal)** để tối ưu khung hình chữ nhật ngang.
        - **Ảnh Vũ Khí Thật (`weapon_main.png`, `weapon_offhand.png`, và `weapon_anim_0..3.png` cho cấp `S`/`SSR`):** Phải vẽ **đầy đủ 100% nguyên cây vũ khí** trên nền `#FF00FF`, tách nền sạch (`edge_clip = 0px`).
@@ -144,3 +147,10 @@ Trước khi tạo bất kỳ asset 2D nào, hãy đọc tài liệu skill tươ
      - Trước khi bắt đầu tạo vũ khí mới, gọi `POST http://127.0.0.1:3456/v1/thread` với body `{"new_thread": true}` để khởi tạo phiên hội thoại mới trên Muse Local Server, tránh bị dính ngữ cảnh cũ.
    - **KHÔNG tạo file `.gif` — BẮT BUỘC tích hợp vào HTML Editor (`sticker_weapon_editor.html` / `<weapon_id>_editor.html`):**
      - File HTML cho phép chọn màu đội (4 màu), chọn thẻ bài/vũ khí, chỉnh 2 vị trí cầm (`Grip 1` & `Grip 2`), bật/tắt vũ khí phụ (`Weapon_Back`) và hiệu ứng bao quanh vũ khí (`WeaponAura`), chọn từng action trong 6 Action (`idle`, `walk`, `attack`, `cast`, `hurt`, `death`) để preview trực tiếp trên Canvas chính, kéo chỉnh khớp xương/keyframe và bấm **`Save to .tscn`** lưu thẳng vào file `.tscn` của từng tướng.
+   - **QUY TRÌNH ONE-SHOT TỐI ƯU 90% TOKEN (`tools/forge_weapon.py` + `assets/weapons/configs/wXXX.json`):**
+     - **TUYỆT ĐỐI KHÔNG** viết mới các script Python dài 500–650 dòng cho từng vũ khí (`build_wXXX_system.py`), và **TUYỆT ĐỐI KHÔNG** dùng `read_file` đọc file dữ liệu Base64 `assets/weapons_data.js` vào ngữ cảnh AI.
+     - Khi tạo vũ khí mới (`w004`..`w080`), chỉ cần thực hiện **3 bước gọn nhẹ (3–4 turns/vũ khí)**:
+       1. Tạo file cấu hình JSON nhỏ gọn (~25 dòng) tại `assets/weapons/configs/wXXX.json` (chứa `id`, `slug`, `tier`, `name`, `archetype`, `grip1_norm`, `grip2_norm`, `prompt_ref`, `prompt_card`, và `prompt_anim_2x2` nếu là cấp `S`/`SSR`).
+       2. Ghi lệnh `python3 /Users/dochung/Desktop/card_g/tools/forge_weapon.py --config /Users/dochung/Desktop/card_g/assets/weapons/configs/wXXX.json` vào `/Users/dochung/Desktop/card_g/script.sh` và chạy `bash /Users/dochung/Desktop/card_g/script.sh`.
+       3. Đọc 2 bảng QC (`wXXX_weapon_and_aura_audit.png` & `wXXX_sticker_all_6_actions_overview.png`) để kiểm định chất lượng và báo cáo kết quả.
+     - Toàn bộ dữ liệu Base64 của 4 đội Stickman và các gói vũ khí được lưu tách biệt tại `assets/weapons_data.js` (nạp qua `<script src="weapons_data.js"></script>`), giữ cho `assets/sticker_weapon_editor.html` và mọi `wXXX_editor.html` luôn nhẹ (~39 KB).
