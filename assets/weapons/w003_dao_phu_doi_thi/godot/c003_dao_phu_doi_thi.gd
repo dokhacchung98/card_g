@@ -1,26 +1,27 @@
 extends Node2D
+class_name C003_DaoPhuDoiThi
+
+@export_enum("team_blue", "team_red", "team_green", "team_amber") var current_team: String = "team_blue":
+	set(val):
+		current_team = val
+		if is_inside_tree():
+			set_team(val)
 
 @export var dual_weapon_enabled: bool = false:
-	set(value):
-		dual_weapon_enabled = value
-		if has_node("Skeleton2D/Hip/Chest/UpperArm_R/Forearm_R/Hand_R/Weapon_Back"):
-			$Skeleton2D/Hip/Chest/UpperArm_R/Forearm_R/Hand_R/Weapon_Back.visible = value
+	set(val):
+		dual_weapon_enabled = val
+		if is_inside_tree() and has_node("Skeleton2D/Hip/Chest/UpperArm_R/Forearm_R/Hand_R/Weapon_Back"):
+			$Skeleton2D/Hip/Chest/UpperArm_R/Forearm_R/Hand_R/Weapon_Back.visible = val
 
-@export var weapon_aura_enabled: bool = true:
-	set(value):
-		weapon_aura_enabled = value
-		if has_node("Skeleton2D/Hip/Chest/UpperArm_L/Forearm_L/Hand_L/Weapon_Front/WeaponAura"):
-			$Skeleton2D/Hip/Chest/UpperArm_L/Forearm_L/Hand_L/Weapon_Front/WeaponAura.visible = value
+@export var weapon_aura_enabled: bool = true
 
 @onready var anim_player: AnimationPlayer = $AnimationPlayer
 @onready var skeleton: Skeleton2D = $Skeleton2D
-@onready var weapon_front: Bone2D = $Skeleton2D/Hip/Chest/UpperArm_L/Forearm_L/Hand_L/Weapon_Front
-@onready var weapon_back: Bone2D = $Skeleton2D/Hip/Chest/UpperArm_R/Forearm_R/Hand_R/Weapon_Back
-@onready var weapon_aura: AnimatedSprite2D = $Skeleton2D/Hip/Chest/UpperArm_L/Forearm_L/Hand_L/Weapon_Front/WeaponAura
-
-var current_team: String = "team_blue"
 
 func _ready() -> void:
+	set_team(current_team)
+	if has_node("Skeleton2D/Hip/Chest/UpperArm_R/Forearm_R/Hand_R/Weapon_Back"):
+		$Skeleton2D/Hip/Chest/UpperArm_R/Forearm_R/Hand_R/Weapon_Back.visible = dual_weapon_enabled
 	play_action("idle")
 
 func set_team(team_name: String) -> void:
