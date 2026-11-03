@@ -263,6 +263,17 @@ func _draw() -> void:
 
 	# 8. Card ID Slot (362, 677, 76, 30) & Owned Copy Counter
 	var id_fsize := maxi(9, int(15.0 * sx))
+	var id_outline := maxi(2, int(3.5 * sx))
+	draw_string_outline(
+		font,
+		Vector2(362.0 * sx, 698.0 * sy),
+		card_id,
+		HORIZONTAL_ALIGNMENT_CENTER,
+		76.0 * sx,
+		id_fsize,
+		id_outline,
+		Color(0.02, 0.02, 0.04, 0.96)
+	)
 	draw_string(
 		font,
 		Vector2(362.0 * sx, 698.0 * sy),

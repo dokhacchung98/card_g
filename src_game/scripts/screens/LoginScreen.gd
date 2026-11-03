@@ -41,47 +41,47 @@ func _build_ui() -> void:
 	dark_tint.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 
 	var main_vbox := VBoxContainer.new()
-	main_vbox.position = Vector2(36, 36)
-	main_vbox.size = Vector2(1008, 1848)
-	main_vbox.alignment = BoxContainer.ALIGNMENT_CENTER
-	main_vbox.add_theme_constant_override("separation", 18)
+	main_vbox.position = Vector2(24, 18)
+	main_vbox.size = Vector2(1032, 1884)
+	main_vbox.add_theme_constant_override("separation", 12)
 	add_child(main_vbox)
 
 	# ==========================================================================
 	# TOP BRANDING BANNER: ARCANA FIVE LOGO & SERVER STATUS
 	# ==========================================================================
 	var brand_panel := PanelContainer.new()
-	brand_panel.add_theme_stylebox_override("panel", GameState.make_gui_panel_style("header", 20))
+	brand_panel.add_theme_stylebox_override("panel", GameState.make_gui_panel_style("header", 16))
 	main_vbox.add_child(brand_panel)
 
 	var brand_vbox := VBoxContainer.new()
 	brand_vbox.alignment = BoxContainer.ALIGNMENT_CENTER
-	brand_vbox.add_theme_constant_override("separation", 8)
+	brand_vbox.add_theme_constant_override("separation", 6)
 	brand_panel.add_child(brand_vbox)
 
 	var logo_row := HBoxContainer.new()
 	logo_row.alignment = BoxContainer.ALIGNMENT_CENTER
-	logo_row.add_theme_constant_override("separation", 20)
+	logo_row.add_theme_constant_override("separation", 18)
 	brand_vbox.add_child(logo_row)
 
 	var app_ico := TextureRect.new()
 	app_ico.texture = GameState.tex("res://assets/ui_hud/branding/app_icon.png")
-	app_ico.custom_minimum_size = Vector2(124, 124)
+	app_ico.custom_minimum_size = Vector2(108, 108)
 	app_ico.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	app_ico.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	logo_row.add_child(app_ico)
 
 	var game_logo := TextureRect.new()
 	game_logo.texture = GameState.tex("res://assets/ui_hud/branding/game_logo.png")
-	game_logo.custom_minimum_size = Vector2(360, 150)
+	game_logo.custom_minimum_size = Vector2(320, 126)
 	game_logo.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	game_logo.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	logo_row.add_child(game_logo)
 
 	var lbl_title := Label.new()
 	lbl_title.text = "ARCANA FIVE: WUXING BLOOD CARDS"
+	lbl_title.clip_text = true
 	lbl_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	lbl_title.add_theme_font_size_override("font_size", 28)
+	lbl_title.add_theme_font_size_override("font_size", 25)
 	lbl_title.add_theme_color_override("font_color", Color(1.0, 0.86, 0.32))
 	lbl_title.add_theme_color_override("font_outline_color", Color(0.02, 0.02, 0.04, 0.98))
 	lbl_title.add_theme_constant_override("outline_size", 5)
@@ -89,8 +89,9 @@ func _build_ui() -> void:
 
 	lbl_server_state = Label.new()
 	lbl_server_state.text = "Máy chủ Cloud: https://be-card-g.vercel.app  ·  Hỗ trợ Online & Offline"
+	lbl_server_state.clip_text = true
 	lbl_server_state.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	lbl_server_state.add_theme_font_size_override("font_size", 16)
+	lbl_server_state.add_theme_font_size_override("font_size", 15)
 	lbl_server_state.add_theme_color_override("font_color", Color(0.56, 0.90, 1.0))
 	brand_vbox.add_child(lbl_server_state)
 
@@ -98,11 +99,11 @@ func _build_ui() -> void:
 	# CENTER DIALOG: GOOGLE SIGN-IN & ACCOUNT AUTHENTICATION
 	# ==========================================================================
 	var auth_dialog := PanelContainer.new()
-	auth_dialog.add_theme_stylebox_override("panel", GameState.make_gui_panel_style("dialog", 26))
+	auth_dialog.add_theme_stylebox_override("panel", GameState.make_gui_panel_style("dialog", 22))
 	main_vbox.add_child(auth_dialog)
 
 	var auth_vbox := VBoxContainer.new()
-	auth_vbox.add_theme_constant_override("separation", 16)
+	auth_vbox.add_theme_constant_override("separation", 12)
 	auth_dialog.add_child(auth_vbox)
 
 	var h_title_row := HBoxContainer.new()
@@ -112,14 +113,15 @@ func _build_ui() -> void:
 
 	var star_ico := TextureRect.new()
 	star_ico.texture = GameState.tex("res://assets/ui_hud/icons/icon_star_new.png")
-	star_ico.custom_minimum_size = Vector2(34, 34)
+	star_ico.custom_minimum_size = Vector2(32, 32)
 	star_ico.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	star_ico.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	h_title_row.add_child(star_ico)
 
 	var lbl_auth_header := Label.new()
 	lbl_auth_header.text = "YÊU CẦU ĐĂNG NHẬP TÀI KHOẢN GOOGLE"
-	lbl_auth_header.add_theme_font_size_override("font_size", 26)
+	lbl_auth_header.clip_text = true
+	lbl_auth_header.add_theme_font_size_override("font_size", 24)
 	lbl_auth_header.add_theme_color_override("font_color", Color(1.0, 0.88, 0.36))
 	lbl_auth_header.add_theme_color_override("font_outline_color", Color(0.02, 0.02, 0.05, 0.98))
 	lbl_auth_header.add_theme_constant_override("outline_size", 5)
@@ -129,27 +131,27 @@ func _build_ui() -> void:
 	lbl_auth_desc.text = "Đăng nhập bằng Google để đồng bộ hồ sơ Pháp Sư, bộ sưu tập 500 thẻ bài Ngũ Hành và tham gia ghép trận 2-4 người (tự động bù Bot sau 10s nếu thiếu người hoặc khi chơi Offline)."
 	lbl_auth_desc.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	lbl_auth_desc.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	lbl_auth_desc.add_theme_font_size_override("font_size", 17)
+	lbl_auth_desc.add_theme_font_size_override("font_size", 16)
 	lbl_auth_desc.add_theme_color_override("font_color", Color(0.86, 0.90, 0.96))
 	auth_vbox.add_child(lbl_auth_desc)
 
 	# Email & Commander Name inputs inside hand-drawn slot frames
 	var form_grid := VBoxContainer.new()
-	form_grid.add_theme_constant_override("separation", 12)
+	form_grid.add_theme_constant_override("separation", 10)
 	auth_vbox.add_child(form_grid)
 
 	var email_box := PanelContainer.new()
-	email_box.add_theme_stylebox_override("panel", GameState.make_gui_panel_style("slot_active", 12))
+	email_box.add_theme_stylebox_override("panel", GameState.make_gui_panel_style("slot_active", 10))
 	form_grid.add_child(email_box)
 
 	var email_row := HBoxContainer.new()
-	email_row.add_theme_constant_override("separation", 14)
+	email_row.add_theme_constant_override("separation", 12)
 	email_box.add_child(email_row)
 
 	var lbl_email_tag := Label.new()
 	lbl_email_tag.text = "Tài khoản Google (Email):"
-	lbl_email_tag.custom_minimum_size = Vector2(270, 0)
-	lbl_email_tag.add_theme_font_size_override("font_size", 18)
+	lbl_email_tag.custom_minimum_size = Vector2(250, 0)
+	lbl_email_tag.add_theme_font_size_override("font_size", 17)
 	lbl_email_tag.add_theme_color_override("font_color", Color(1.0, 0.88, 0.42))
 	email_row.add_child(lbl_email_tag)
 
@@ -157,25 +159,25 @@ func _build_ui() -> void:
 	inp_email.text = "dokhacchung98@gmail.com"
 	inp_email.placeholder_text = "Nhập địa chỉ Gmail của bạn..."
 	inp_email.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	inp_email.custom_minimum_size = Vector2(0, 52)
-	inp_email.add_theme_font_size_override("font_size", 20)
+	inp_email.custom_minimum_size = Vector2(0, 48)
+	inp_email.add_theme_font_size_override("font_size", 19)
 	inp_email.add_theme_color_override("font_color", Color(0.96, 0.98, 1.0))
-	inp_email.add_theme_stylebox_override("normal", GameState.make_gui_panel_style("slot_gray", 10))
-	inp_email.add_theme_stylebox_override("focus", GameState.make_gui_panel_style("slot_active", 10))
+	inp_email.add_theme_stylebox_override("normal", GameState.make_gui_panel_style("slot_gray", 8))
+	inp_email.add_theme_stylebox_override("focus", GameState.make_gui_panel_style("slot_active", 8))
 	email_row.add_child(inp_email)
 
 	var name_box := PanelContainer.new()
-	name_box.add_theme_stylebox_override("panel", GameState.make_gui_panel_style("slot_active", 12))
+	name_box.add_theme_stylebox_override("panel", GameState.make_gui_panel_style("slot_active", 10))
 	form_grid.add_child(name_box)
 
 	var name_row := HBoxContainer.new()
-	name_row.add_theme_constant_override("separation", 14)
+	name_row.add_theme_constant_override("separation", 12)
 	name_box.add_child(name_row)
 
 	var lbl_name_tag := Label.new()
 	lbl_name_tag.text = "Danh hiệu Đại Pháp Sư:"
-	lbl_name_tag.custom_minimum_size = Vector2(270, 0)
-	lbl_name_tag.add_theme_font_size_override("font_size", 18)
+	lbl_name_tag.custom_minimum_size = Vector2(250, 0)
+	lbl_name_tag.add_theme_font_size_override("font_size", 17)
 	lbl_name_tag.add_theme_color_override("font_color", Color(0.62, 0.92, 1.0))
 	name_row.add_child(lbl_name_tag)
 
@@ -183,11 +185,11 @@ func _build_ui() -> void:
 	inp_name.text = "Đại Pháp Sư Lam Long"
 	inp_name.placeholder_text = "Nhập tên hiển thị trong trận..."
 	inp_name.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	inp_name.custom_minimum_size = Vector2(0, 52)
-	inp_name.add_theme_font_size_override("font_size", 20)
+	inp_name.custom_minimum_size = Vector2(0, 48)
+	inp_name.add_theme_font_size_override("font_size", 19)
 	inp_name.add_theme_color_override("font_color", Color(0.96, 0.98, 1.0))
-	inp_name.add_theme_stylebox_override("normal", GameState.make_gui_panel_style("slot_gray", 10))
-	inp_name.add_theme_stylebox_override("focus", GameState.make_gui_panel_style("slot_active", 10))
+	inp_name.add_theme_stylebox_override("normal", GameState.make_gui_panel_style("slot_gray", 8))
+	inp_name.add_theme_stylebox_override("focus", GameState.make_gui_panel_style("slot_active", 8))
 	name_row.add_child(inp_name)
 
 	# Prominent Google Login Button
@@ -195,74 +197,84 @@ func _build_ui() -> void:
 	btn_google_login.text = "ĐĂNG NHẬP BẰNG GOOGLE  —  VÀO ĐẠI SẢNH NGŨ HÀNH"
 	btn_google_login.icon = GameState.tex("res://assets/ui_hud/icons/icon_star_new.png")
 	btn_google_login.expand_icon = true
-	btn_google_login.custom_minimum_size = Vector2(0, 92)
-	btn_google_login.add_theme_font_size_override("font_size", 24)
+	btn_google_login.clip_text = true
+	btn_google_login.custom_minimum_size = Vector2(0, 82)
+	btn_google_login.add_theme_font_size_override("font_size", 22)
 	btn_google_login.add_theme_color_override("font_color", Color(1.0, 0.96, 0.82))
-	GameState.apply_gui_button(btn_google_login, "gold", true, 28, 16)
+	GameState.apply_gui_button(btn_google_login, "gold", true, 24, 14)
 	btn_google_login.pressed.connect(_on_google_login_pressed)
 	auth_vbox.add_child(btn_google_login)
 
 	lbl_status = Label.new()
+	lbl_status.clip_text = true
 	lbl_status.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	lbl_status.add_theme_font_size_override("font_size", 17)
+	lbl_status.add_theme_font_size_override("font_size", 16)
 	lbl_status.add_theme_color_override("font_color", Color(0.55, 0.96, 0.68))
 	auth_vbox.add_child(lbl_status)
 
 	# ==========================================================================
-	# BOTTOM SECTION: FIRST-LOGIN 15 DEFAULT STARTER CARDS GIFT PREVIEW
+	# BOTTOM SECTION: FIRST-LOGIN 15 DEFAULT STARTER CARDS GIFT PREVIEW (5x3 Grid)
 	# ==========================================================================
 	var gift_panel := PanelContainer.new()
-	gift_panel.add_theme_stylebox_override("panel", GameState.make_gui_panel_style("section", 18))
+	gift_panel.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	gift_panel.add_theme_stylebox_override("panel", GameState.make_gui_panel_style("section", 14))
 	main_vbox.add_child(gift_panel)
 
 	var gift_vbox := VBoxContainer.new()
-	gift_vbox.add_theme_constant_override("separation", 10)
+	gift_vbox.add_theme_constant_override("separation", 8)
 	gift_panel.add_child(gift_vbox)
 
 	var gift_top := HBoxContainer.new()
-	gift_top.add_theme_constant_override("separation", 12)
+	gift_top.add_theme_constant_override("separation", 10)
 	gift_vbox.add_child(gift_top)
 
 	var chest_ico := TextureRect.new()
 	chest_ico.texture = GameState.tex("res://assets/ui_hud/icons/icon_pack_chest.png")
-	chest_ico.custom_minimum_size = Vector2(36, 36)
+	chest_ico.custom_minimum_size = Vector2(32, 32)
 	chest_ico.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	chest_ico.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	gift_top.add_child(chest_ico)
 
 	var lbl_gift_title := Label.new()
 	lbl_gift_title.text = "QUÀ TÂN THỦ ĐĂNG NHẬP LẦN ĐẦU: TẶNG NGAY 15 THẺ BÀI MẶC ĐỊNH CHUẨN DESIGN"
+	lbl_gift_title.clip_text = true
 	lbl_gift_title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	lbl_gift_title.add_theme_font_size_override("font_size", 19)
+	lbl_gift_title.add_theme_font_size_override("font_size", 18)
 	lbl_gift_title.add_theme_color_override("font_color", Color(1.0, 0.86, 0.34))
 	gift_top.add_child(lbl_gift_title)
 
 	var lbl_gift_sub := Label.new()
-	lbl_gift_sub.text = "Khi mới cài game và chưa có thẻ bài nào (0/500 thẻ), ngay trong lần đầu tiên đăng nhập Google bạn sẽ được tặng trọn bộ 15 Thẻ Khởi Đầu (3 Vật Lý · 3 Phép Thuật · 3 Đỡ Đòn · 3 Hỗ Trợ · 3 Trang Bị trải đều đủ 5 Hệ Kim - Mộc - Thủy - Hỏa - Thổ) và tự động lắp vào Bộ Bài Xuất Chiến 15/15!"
+	lbl_gift_sub.text = "Khi mới cài game (0/500 thẻ), ngay trong lần đầu tiên đăng nhập Google bạn sẽ được tặng trọn bộ 15 Thẻ Khởi Đầu (3 Vật Lý · 3 Phép Thuật · 3 Đỡ Đòn · 3 Hỗ Trợ · 3 Trang Bị trải đều 5 Hệ Kim - Mộc - Thủy - Hỏa - Thổ) và tự động lắp vào Bộ Bài 15/15!"
 	lbl_gift_sub.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	lbl_gift_sub.add_theme_font_size_override("font_size", 15)
+	lbl_gift_sub.add_theme_font_size_override("font_size", 14)
 	lbl_gift_sub.add_theme_color_override("font_color", Color(0.82, 0.88, 0.95))
 	gift_vbox.add_child(lbl_gift_sub)
 
 	var scroll := ScrollContainer.new()
-	scroll.custom_minimum_size = Vector2(0, 366)
-	scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	gift_vbox.add_child(scroll)
 
-	var preview_strip := HBoxContainer.new()
-	preview_strip.add_theme_constant_override("separation", 12)
-	scroll.add_child(preview_strip)
+	var grid_center := CenterContainer.new()
+	grid_center.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	scroll.add_child(grid_center)
+
+	var preview_grid := GridContainer.new()
+	preview_grid.columns = 5
+	preview_grid.add_theme_constant_override("h_separation", 10)
+	preview_grid.add_theme_constant_override("v_separation", 10)
+	grid_center.add_child(preview_grid)
 
 	for uid_entry in GameState.DEFAULT_STARTER_15_UIDS:
 		var uid := str(uid_entry)
 		var base_id := GameState.get_base_card_id(uid)
 		var el := GameState.get_card_element(uid)
 		var cw: Control = CardWidget.new()
-		cw.custom_minimum_size = Vector2(228, 342)
+		cw.custom_minimum_size = Vector2(180, 270)
 		cw.show_lock_if_unowned = false
 		cw.setup(base_id, el)
 		cw.card_clicked.connect(func(c_id, c_el): GameState.emit_signal("card_inspect_requested", c_id, c_el))
-		preview_strip.add_child(cw)
+		preview_grid.add_child(cw)
 
 
 func _refresh_status() -> void:
