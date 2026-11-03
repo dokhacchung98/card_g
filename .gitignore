@@ -11,3 +11,5 @@ __pycache__/
 .godot/
 src_game/.godot/
 src_game/dogfood_screenshots/
+build/
+.firebase/

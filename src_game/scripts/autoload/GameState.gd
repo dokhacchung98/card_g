@@ -236,36 +236,49 @@ func _ready() -> void:
 	_load_or_init_save()
 
 
+func _load_font_from_res(res_path: String) -> FontFile:
+	if FileAccess.file_exists(res_path):
+		var bytes := FileAccess.get_file_as_bytes(res_path)
+		if not bytes.is_empty():
+			var ff := FontFile.new()
+			ff.data = bytes
+			return ff
+	var abs_p := ProjectSettings.globalize_path(res_path)
+	if FileAccess.file_exists(abs_p):
+		var ff2 := FontFile.new()
+		if ff2.load_dynamic_font(abs_p) == OK:
+			return ff2
+	if ResourceLoader.exists(res_path):
+		var loaded = load(res_path)
+		if loaded is FontFile:
+			return loaded.duplicate()
+	return null
+
+
 func _init_fonts() -> void:
 	if _lilita_num_only_font != null and _lilita_full_font != null:
 		return
 	var fallback_sys := ThemeDB.fallback_font
 	_base_text_font = fallback_sys
-	var baloo_abs := ProjectSettings.globalize_path("res://assets/fonts/BalooThambi2-Bold.ttf")
-	if FileAccess.file_exists(baloo_abs):
-		var bf := FontFile.new()
-		if bf.load_dynamic_font(baloo_abs) == OK:
-			if fallback_sys:
-				bf.fallbacks = [fallback_sys]
-			_base_text_font = bf
+	var bf := _load_font_from_res("res://assets/fonts/BalooThambi2-Bold.ttf")
+	if bf != null:
+		if fallback_sys:
+			bf.fallbacks = [fallback_sys]
+		_base_text_font = bf
 
-	var full_abs := ProjectSettings.globalize_path("res://assets/fonts/LilitaOne-Regular.ttf")
-	if FileAccess.file_exists(full_abs):
-		var ff := FontFile.new()
-		if ff.load_dynamic_font(full_abs) == OK:
-			if _base_text_font:
-				ff.fallbacks = [_base_text_font]
-			_lilita_full_font = ff
+	var ff := _load_font_from_res("res://assets/fonts/LilitaOne-Regular.ttf")
+	if ff != null:
+		if _base_text_font:
+			ff.fallbacks = [_base_text_font]
+		_lilita_full_font = ff
 
-	var num_abs := ProjectSettings.globalize_path("res://assets/fonts/LilitaOne-NumbersOnly.ttf")
-	if FileAccess.file_exists(num_abs):
-		var nf := FontFile.new()
-		if nf.load_dynamic_font(num_abs) == OK:
-			if _base_text_font:
-				nf.fallbacks = [_base_text_font]
-			_lilita_num_only_font = nf
-			_ui_theme = Theme.new()
-			_ui_theme.default_font = _lilita_num_only_font
+	var nf := _load_font_from_res("res://assets/fonts/LilitaOne-NumbersOnly.ttf")
+	if nf != null:
+		if _base_text_font:
+			nf.fallbacks = [_base_text_font]
+		_lilita_num_only_font = nf
+		_ui_theme = Theme.new()
+		_ui_theme.default_font = _lilita_num_only_font
 
 
 func get_ui_theme() -> Theme:
@@ -300,11 +313,17 @@ func get_base_card_id(card_id_or_uid: String) -> String:
 
 
 func _load_cards_database() -> void:
-	var db_path := ProjectSettings.globalize_path("res://data/cards_db.json")
-	if not FileAccess.file_exists(db_path):
-		push_error("Missing cards_db.json at " + db_path)
+	var res_db_path := "res://data/cards_db.json"
+	var txt := ""
+	if FileAccess.file_exists(res_db_path):
+		txt = FileAccess.get_file_as_string(res_db_path)
+	else:
+		var db_path := ProjectSettings.globalize_path(res_db_path)
+		if FileAccess.file_exists(db_path):
+			txt = FileAccess.get_file_as_string(db_path)
+	if txt.is_empty():
+		push_error("Missing cards_db.json at " + res_db_path)
 		return
-	var txt := FileAccess.get_file_as_string(db_path)
 	var parsed = JSON.parse_string(txt)
 	if typeof(parsed) == TYPE_ARRAY:
 		base_cards_db = parsed
@@ -753,12 +772,34 @@ func buy_pack(pack_type_id: int = -1, amount: int = 1) -> Dictionary:
 		}
 
 
-# Fast zero-import-lag texture loader from res:// path
+# Fast zero-import-lag texture loader from res:// path (works in Editor + Web/Android/iOS PCK)
 func tex(res_path: String) -> Texture2D:
 	if res_path.is_empty():
 		return null
 	if _tex_cache.has(res_path):
 		return _tex_cache[res_path]
+
+	if ResourceLoader.exists(res_path):
+		var loaded = load(res_path)
+		if loaded is Texture2D:
+			_tex_cache[res_path] = loaded
+			return loaded
+
+	if FileAccess.file_exists(res_path):
+		var buf := FileAccess.get_file_as_bytes(res_path)
+		if not buf.is_empty():
+			var b_img := Image.new()
+			var err := ERR_FILE_UNRECOGNIZED
+			if res_path.ends_with(".png"):
+				err = b_img.load_png_from_buffer(buf)
+			elif res_path.ends_with(".webp"):
+				err = b_img.load_webp_from_buffer(buf)
+			elif res_path.ends_with(".jpg") or res_path.ends_with(".jpeg"):
+				err = b_img.load_jpg_from_buffer(buf)
+			if err == OK and not b_img.is_empty():
+				var b_tex := ImageTexture.create_from_image(b_img)
+				_tex_cache[res_path] = b_tex
+				return b_tex
 
 	var abs_path := ProjectSettings.globalize_path(res_path)
 	if FileAccess.file_exists(abs_path):
@@ -768,11 +809,6 @@ func tex(res_path: String) -> Texture2D:
 			_tex_cache[res_path] = itex
 			return itex
 
-	if ResourceLoader.exists(res_path):
-		var loaded = load(res_path)
-		if loaded is Texture2D:
-			_tex_cache[res_path] = loaded
-			return loaded
 	_tex_cache[res_path] = null
 	return null
 
@@ -780,9 +816,16 @@ func tex(res_path: String) -> Texture2D:
 func get_weapon_config(card_num: int) -> Dictionary:
 	if _weapon_cfg_cache.has(card_num):
 		return _weapon_cfg_cache[card_num]
-	var cfg_path := ProjectSettings.globalize_path("res://assets/weapons/configs/w%03d.json" % card_num)
-	if FileAccess.file_exists(cfg_path):
-		var parsed = JSON.parse_string(FileAccess.get_file_as_string(cfg_path))
+	var res_cfg_path := "res://assets/weapons/configs/w%03d.json" % card_num
+	var raw_json := ""
+	if FileAccess.file_exists(res_cfg_path):
+		raw_json = FileAccess.get_file_as_string(res_cfg_path)
+	else:
+		var cfg_path := ProjectSettings.globalize_path(res_cfg_path)
+		if FileAccess.file_exists(cfg_path):
+			raw_json = FileAccess.get_file_as_string(cfg_path)
+	if not raw_json.is_empty():
+		var parsed = JSON.parse_string(raw_json)
 		if typeof(parsed) == TYPE_DICTIONARY:
 			_weapon_cfg_cache[card_num] = parsed
 			return parsed

@@ -5,7 +5,7 @@ signal matchmaking_updated(room_data: Dictionary)
 signal matchmaking_started_battle(room_data: Dictionary)
 signal room_error(err_msg: String)
 
-const DEFAULT_BACKEND_URL := "http://127.0.0.1:8787"
+const DEFAULT_BACKEND_URL := "https://be-card-g.vercel.app"
 const AUTH_SAVE_PATH := "user://arcana_five_google_auth.json"
 const MATCHMAKING_TIMEOUT_SEC := 10.0
 
