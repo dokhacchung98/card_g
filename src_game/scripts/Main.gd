@@ -1,6 +1,7 @@
 extends Control
 class_name MainController
 
+const LoginScreenScript := preload("res://scripts/screens/LoginScreen.gd")
 const HomeScreenScript := preload("res://scripts/screens/HomeScreen.gd")
 const PackScreenScript := preload("res://scripts/screens/PackScreen.gd")
 const CollectionScreenScript := preload("res://scripts/screens/CollectionScreen.gd")
@@ -22,7 +23,10 @@ func _ready() -> void:
 	GameState.screen_requested.connect(_on_screen_requested)
 	GameState.card_inspect_requested.connect(_on_card_inspect_requested)
 	GameState.guide_requested.connect(_on_guide_requested)
-	_switch_screen("home")
+	if BackendClient.is_logged_in():
+		_switch_screen("home")
+	else:
+		_switch_screen("login")
 
 
 func _build_root_layout() -> void:
@@ -65,6 +69,8 @@ func _switch_screen(screen_name: String) -> void:
 
 	current_screen_name = screen_name
 	match screen_name:
+		"login":
+			current_screen_node = LoginScreenScript.new()
 		"packs":
 			current_screen_node = PackScreenScript.new()
 		"collection":

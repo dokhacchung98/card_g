@@ -5,8 +5,20 @@ signal screen_requested(screen_name: String)
 signal card_inspect_requested(card_id: String, element_override: String)
 signal guide_requested(initial_tab: int)
 
-const SAVE_PATH := "user://arcana_five_save_v2_500cards.json"
+const SAVE_PATH := "user://arcana_five_save_v3_auth_15cards.json"
 const TOTAL_COLLECTION_CARDS := 500        # 100 base card templates x 5 Wuxing elements = 500 distinct cards
+
+# 15 Default Starter Cards gifted on first Google Login when the player has 0 cards:
+# 3 Physical Offense + 3 Magic Offense + 3 Tanker + 3 Support + 3 Items (3 of each Wuxing Element!)
+const DEFAULT_STARTER_15_UIDS := [
+	"C001_kim", "C002_moc", "C003_thuy",
+	"C021_hoa", "C022_tho", "C024_kim",
+	"C041_moc", "C042_thuy", "C047_hoa",
+	"C061_tho", "C063_kim", "C066_moc",
+	"C081_thuy", "C082_hoa", "C085_tho",
+]
+
+var just_granted_starter_15: bool = false
 
 const ELEMENTS := ["kim", "moc", "thuy", "hoa", "tho"]
 
@@ -390,32 +402,71 @@ func _load_or_init_save() -> void:
 			diamonds = int(data.get("diamonds", 600))
 			selected_player_count = clampi(int(data.get("selected_player_count", 4)), 2, 4)
 			player_is_bot = bool(data.get("player_is_bot", true))
-			if is_loadout_valid(loadout_deck).ok:
-				return
+			return
 
-	# Initialize starter collection (25 cards out of 500 across all 5 roles & rarities, each born with a fixed element)
-	var starter_ids := [
-		# Physical Offense (5)
-		"C001", "C002", "C003", "C007", "C018",
-		# Magic Offense (5)
-		"C021", "C022", "C024", "C029", "C033",
-		# Tanker (5)
-		"C041", "C042", "C047", "C050", "C053",
-		# Support (5)
-		"C061", "C063", "C066", "C070", "C073",
-		# Items (5)
-		"C081", "C082", "C085", "C087", "C093",
-	]
-	for i in range(starter_ids.size()):
-		var base_id: String = starter_ids[i]
-		var elem: String = ELEMENTS[i % ELEMENTS.size()]
-		var uid := "%s_%s" % [base_id, elem]
-		owned_counts[uid] = 1
-		card_elements[base_id] = elem
+	# Brand-new unauthenticated state: Player starts with 0 cards until First Google Login!
+	loadout_deck.clear()
+	sync_total_pack_count()
+
+
+# Called upon Google Login: If the player has 0 cards (first-time login),
+# gifts the 15 Default Starter Cards as in design and equips them into the 15-card Loadout Deck!
+func grant_first_login_starter_15_cards() -> bool:
+	if get_owned_unique_count() > 0:
+		if not is_loadout_valid(loadout_deck).ok:
+			auto_build_valid_loadout()
+		return false
+
+	loadout_deck.clear()
+	for uid in DEFAULT_STARTER_15_UIDS:
+		if cards_by_uid.has(uid):
+			owned_counts[uid] = 1
+			var base_id := get_base_card_id(uid)
+			var el := get_card_element(uid)
+			card_elements[base_id] = el
+			loadout_deck.append(uid)
+
+	_rebuild_unlocked_elements_from_owned()
+	just_granted_starter_15 = true
+	save_game()
+	return true
+
+
+func apply_cloud_profile(user_dict: Dictionary, is_first_login_flag: bool = false) -> void:
+	var was_empty := (get_owned_unique_count() == 0)
+	var cloud_owned: Dictionary = user_dict.get("ownedCounts", {})
+	for k in cloud_owned.keys():
+		var uid_str := str(k)
+		# Normalize case if needed (e.g. "c001_kim" -> "C001_kim")
+		if not cards_by_uid.has(uid_str) and uid_str.begins_with("c"):
+			uid_str = "C" + uid_str.substr(1)
+		if cards_by_uid.has(uid_str):
+			var cnt := int(cloud_owned[k])
+			if cnt > 0:
+				owned_counts[uid_str] = maxi(int(owned_counts.get(uid_str, 0)), cnt)
+
 	_rebuild_unlocked_elements_from_owned()
 
-	auto_build_valid_loadout()
-	save_game()
+	if get_owned_unique_count() == 0:
+		grant_first_login_starter_15_cards()
+		return
+
+	if was_empty or is_first_login_flag:
+		just_granted_starter_15 = true
+
+	var cloud_deck: Array = user_dict.get("loadoutDeck", [])
+	if cloud_deck.size() == 15 and loadout_deck.is_empty():
+		for d_entry in cloud_deck:
+			var d_uid := str(d_entry)
+			if not cards_by_uid.has(d_uid) and d_uid.begins_with("c"):
+				d_uid = "C" + d_uid.substr(1)
+			if cards_by_uid.has(d_uid) and int(owned_counts.get(d_uid, 0)) > 0 and not loadout_deck.has(d_uid):
+				loadout_deck.append(d_uid)
+
+	if not is_loadout_valid(loadout_deck).ok:
+		auto_build_valid_loadout()
+	else:
+		save_game()
 
 
 func _rebuild_unlocked_elements_from_owned() -> void:

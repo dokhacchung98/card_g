@@ -19,6 +19,7 @@ var commander_cards: Array[PanelContainer] = []
 var commander_avatars: Array[TextureRect] = []
 var commander_status_lbls: Array[Label] = []
 var lobby_overlay: ColorRect
+var starter_gift_overlay: ColorRect
 var lbl_lobby_title: Label
 var lbl_lobby_timer: Label
 var lbl_lobby_room_code: Label
@@ -153,7 +154,10 @@ func _build_ui() -> void:
 	btn_google_auth.add_theme_color_override("font_color", Color(1.0, 0.96, 0.82))
 	GameState.apply_gui_button(btn_google_auth, "gold", false, 12, 6)
 	btn_google_auth.pressed.connect(func():
-		BackendClient.login_with_google("dokhacchung98@gmail.com", "Đại Pháp Sư Lam Long")
+		if BackendClient.is_logged_in():
+			BackendClient.logout()
+		else:
+			GameState.emit_signal("screen_requested", "login")
 	)
 	right_btn_vbox.add_child(btn_google_auth)
 
@@ -402,6 +406,96 @@ func _build_ui() -> void:
 	scroll.add_child(deck_strip)
 
 	_build_lobby_overlay()
+	_build_starter_gift_overlay()
+
+
+func _build_starter_gift_overlay() -> void:
+	starter_gift_overlay = ColorRect.new()
+	starter_gift_overlay.color = Color(0.01, 0.02, 0.05, 0.90)
+	starter_gift_overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	starter_gift_overlay.visible = GameState.just_granted_starter_15
+	starter_gift_overlay.z_index = 95
+	add_child(starter_gift_overlay)
+
+	var center_box := CenterContainer.new()
+	center_box.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	starter_gift_overlay.add_child(center_box)
+
+	var modal := PanelContainer.new()
+	modal.custom_minimum_size = Vector2(980, 920)
+	modal.add_theme_stylebox_override("panel", GameState.make_gui_panel_style("dialog", 26))
+	center_box.add_child(modal)
+
+	var v := VBoxContainer.new()
+	v.add_theme_constant_override("separation", 16)
+	modal.add_child(v)
+
+	var top_row := HBoxContainer.new()
+	top_row.alignment = BoxContainer.ALIGNMENT_CENTER
+	top_row.add_theme_constant_override("separation", 14)
+	v.add_child(top_row)
+
+	var ico_star := TextureRect.new()
+	ico_star.texture = GameState.tex("res://assets/ui_hud/icons/icon_star_new.png")
+	ico_star.custom_minimum_size = Vector2(40, 40)
+	ico_star.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	ico_star.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	top_row.add_child(ico_star)
+
+	var lbl_gift_title := Label.new()
+	lbl_gift_title.text = "QUÀ ĐĂNG NHẬP GOOGLE LẦN ĐẦU: TẶNG 15 THẺ KHỞI ĐẦU"
+	lbl_gift_title.add_theme_font_size_override("font_size", 26)
+	lbl_gift_title.add_theme_color_override("font_color", Color(1.0, 0.86, 0.32))
+	lbl_gift_title.add_theme_color_override("font_outline_color", Color(0.02, 0.02, 0.04, 0.98))
+	lbl_gift_title.add_theme_constant_override("outline_size", 5)
+	top_row.add_child(lbl_gift_title)
+
+	var desc_pnl := _make_panel("slot_active", 14)
+	v.add_child(desc_pnl)
+
+	var lbl_desc := Label.new()
+	lbl_desc.text = "Chào mừng Đại Pháp Sư đăng nhập lần đầu! Bạn đã được trao tặng trọn bộ 15 Thẻ Bài Mặc Định chuẩn Design (3 Vật Lý · 3 Phép Thuật · 3 Đỡ Đòn · 3 Hỗ Trợ · 3 Trang Bị trải đều 5 Hệ Kim - Mộc - Thủy - Hỏa - Thổ) và tự động trang bị vào Bộ Bài Xuất Chiến 15/15!"
+	lbl_desc.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	lbl_desc.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	lbl_desc.add_theme_font_size_override("font_size", 17)
+	lbl_desc.add_theme_color_override("font_color", Color(0.86, 0.94, 1.0))
+	desc_pnl.add_child(lbl_desc)
+
+	var scroll := ScrollContainer.new()
+	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	scroll.custom_minimum_size = Vector2(0, 560)
+	v.add_child(scroll)
+
+	var grid := GridContainer.new()
+	grid.columns = 5
+	grid.add_theme_constant_override("h_separation", 12)
+	grid.add_theme_constant_override("v_separation", 14)
+	scroll.add_child(grid)
+
+	for uid_entry in GameState.DEFAULT_STARTER_15_UIDS:
+		var uid := str(uid_entry)
+		var base_id := GameState.get_base_card_id(uid)
+		var el := GameState.get_card_element(uid)
+		var cw: Control = CardWidget.new()
+		cw.custom_minimum_size = Vector2(174, 260)
+		cw.show_lock_if_unowned = false
+		cw.setup(base_id, el)
+		cw.card_clicked.connect(func(c_id, c_el): GameState.emit_signal("card_inspect_requested", c_id, c_el))
+		grid.add_child(cw)
+
+	var btn_claim := Button.new()
+	btn_claim.text = "NHẬN 15 THẺ MẶC ĐỊNH & BẮT ĐẦU CHINH CHIẾN"
+	btn_claim.icon = GameState.tex("res://assets/ui_hud/icons/icon_star_new.png")
+	btn_claim.expand_icon = true
+	btn_claim.custom_minimum_size = Vector2(0, 74)
+	btn_claim.add_theme_font_size_override("font_size", 22)
+	btn_claim.add_theme_color_override("font_color", Color(1.0, 0.96, 0.82))
+	GameState.apply_gui_button(btn_claim, "gold", true, 24, 14)
+	btn_claim.pressed.connect(func():
+		GameState.just_granted_starter_15 = false
+		starter_gift_overlay.visible = false
+	)
+	v.add_child(btn_claim)
 
 
 func _build_lobby_overlay() -> void:
@@ -680,13 +774,16 @@ func refresh_ui() -> void:
 	var u_info := BackendClient.current_user
 	var net_mode := "Online" if BackendClient.is_online else "Offline"
 	if bool(u_info.get("isGoogleLinked", false)):
-		lbl_sub.text = "Google: %s (%s)  ·  Hạng: Huyền Thoại" % [str(u_info.get("email", "")), net_mode]
-		btn_google_auth.text = "ĐÃ LIÊN KẾT GOOGLE"
+		lbl_sub.text = "Google: %s (%s)  ·  %s" % [str(u_info.get("email", "")), net_mode, str(u_info.get("displayName", "Đại Pháp Sư"))]
+		btn_google_auth.text = "ĐỔI TK GOOGLE"
 		GameState.apply_gui_button(btn_google_auth, "green", false, 12, 6)
 	else:
 		lbl_sub.text = "%s (%s)  ·  Chơi Online & Offline" % [str(u_info.get("displayName", "Đại Pháp Sư Lam Long")), net_mode]
-		btn_google_auth.text = "LIÊN KẾT GOOGLE"
+		btn_google_auth.text = "ĐĂNG NHẬP GOOGLE"
 		GameState.apply_gui_button(btn_google_auth, "gold", false, 12, 6)
+
+	if starter_gift_overlay != null:
+		starter_gift_overlay.visible = GameState.just_granted_starter_15
 
 	lbl_owned_stat.text = "Coin: %d   ·   Sở hữu: %d/500 Thẻ (%d Bản)" % [GameState.gold, owned_u, total_c]
 	lbl_pack_stat.text = "Kim Cương: %d   ·   Rương: %d Pack" % [

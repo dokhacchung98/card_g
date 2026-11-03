@@ -1,12 +1,13 @@
 extends Node
 
 signal auth_state_changed(user_profile: Dictionary)
+signal login_succeeded(user_profile: Dictionary, is_first_login: bool)
 signal matchmaking_updated(room_data: Dictionary)
 signal matchmaking_started_battle(room_data: Dictionary)
 signal room_error(err_msg: String)
 
 const DEFAULT_BACKEND_URL := "https://be-card-g.vercel.app"
-const AUTH_SAVE_PATH := "user://arcana_five_google_auth.json"
+const AUTH_SAVE_PATH := "user://arcana_five_google_auth_v2.json"
 const MATCHMAKING_TIMEOUT_SEC := 10.0
 
 # Firebase Project Metadata (arcana-five-card-g)
@@ -74,6 +75,10 @@ func _process(delta: float) -> void:
 		_complete_match_with_bot_fallback("timeout_10s_filled_with_bots")
 
 
+func is_logged_in() -> bool:
+	return bool(current_user.get("isGoogleLinked", false))
+
+
 func _load_saved_auth() -> void:
 	if not FileAccess.file_exists(AUTH_SAVE_PATH):
 		return
@@ -84,6 +89,8 @@ func _load_saved_auth() -> void:
 		if parsed.has("user") and typeof(parsed["user"]) == TYPE_DICTIONARY:
 			for k in parsed["user"].keys():
 				current_user[k] = parsed["user"][k]
+	if is_logged_in() and GameState.get_owned_unique_count() == 0:
+		GameState.grant_first_login_starter_15_cards()
 
 
 func _save_auth() -> void:
@@ -93,6 +100,22 @@ func _save_auth() -> void:
 			"token": session_token,
 			"user": current_user,
 		}, "\t"))
+
+
+func logout() -> void:
+	session_token = ""
+	current_user = {
+		"uid": "local_commander_01",
+		"googleId": "",
+		"email": "",
+		"displayName": "Đại Pháp Sư Lam Long",
+		"isGoogleLinked": false,
+		"elo": 1200,
+	}
+	if FileAccess.file_exists(AUTH_SAVE_PATH):
+		DirAccess.remove_absolute(ProjectSettings.globalize_path(AUTH_SAVE_PATH))
+	emit_signal("auth_state_changed", current_user)
+	GameState.emit_signal("screen_requested", "login")
 
 
 func check_server_health() -> void:
@@ -124,18 +147,20 @@ func login_with_google(email_input: String = "", display_name_input: String = ""
 	if clean_name.is_empty():
 		clean_name = clean_email.split("@")[0].capitalize()
 
+	var had_zero_cards_before := (GameState.get_owned_unique_count() == 0)
 	var payload := {
-		"googleId": "g_" + str(clean_email.hash()),
+		"googleId": "g_" + str(abs(clean_email.hash())),
 		"email": clean_email,
 		"displayName": clean_name,
 		"platform": OS.get_name().to_lower(),
-		"offlineProfile": {
+	}
+	if not had_zero_cards_before:
+		payload["offlineProfile"] = {
 			"gold": GameState.gold,
 			"diamonds": GameState.diamonds,
 			"ownedCounts": GameState.owned_counts,
 			"loadoutDeck": GameState.loadout_deck,
 		}
-	}
 
 	var http := HTTPRequest.new()
 	http.timeout = 4.0
@@ -148,6 +173,7 @@ func login_with_google(email_input: String = "", display_name_input: String = ""
 				is_online = true
 				session_token = str(data.get("token", ""))
 				var u: Dictionary = data.get("user", {})
+				var is_first := bool(data.get("isFirstLogin", had_zero_cards_before)) or had_zero_cards_before
 				current_user = {
 					"uid": str(u.get("uid", "google_user")),
 					"googleId": str(u.get("googleId", "")),
@@ -156,12 +182,15 @@ func login_with_google(email_input: String = "", display_name_input: String = ""
 					"isGoogleLinked": true,
 					"elo": int(u.get("elo", 1200)),
 				}
+				GameState.apply_cloud_profile(u, is_first)
 				_save_auth()
 				emit_signal("auth_state_changed", current_user)
+				emit_signal("login_succeeded", current_user, is_first)
 				return
 
-		# Offline Google Account Link Fallback (works 100% offline, syncs when back online)
+		# Offline Google Account Link Fallback (works 100% offline, gifts 15 starter cards on first login)
 		is_online = false
+		var gifted_offline := GameState.grant_first_login_starter_15_cards()
 		current_user = {
 			"uid": "google_" + str(abs(clean_email.hash())),
 			"googleId": "g_" + str(abs(clean_email.hash())),
@@ -172,16 +201,19 @@ func login_with_google(email_input: String = "", display_name_input: String = ""
 		}
 		_save_auth()
 		emit_signal("auth_state_changed", current_user)
+		emit_signal("login_succeeded", current_user, gifted_offline or had_zero_cards_before)
 	)
 	var headers := PackedStringArray(["Content-Type: application/json"])
 	var err := http.request(backend_url + "/api/v1/auth/google", headers, HTTPClient.METHOD_POST, JSON.stringify(payload))
 	if err != OK:
 		http.queue_free()
+		var gifted_err := GameState.grant_first_login_starter_15_cards()
 		current_user["email"] = clean_email
 		current_user["displayName"] = clean_name
 		current_user["isGoogleLinked"] = true
 		_save_auth()
 		emit_signal("auth_state_changed", current_user)
+		emit_signal("login_succeeded", current_user, gifted_err or had_zero_cards_before)
 
 
 func sync_profile_to_cloud() -> void:
