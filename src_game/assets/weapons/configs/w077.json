@@ -1,0 +1,21 @@
+{
+  "id": "w077",
+  "slug": "w077_ke_trao_doi_menh",
+  "tscn_name": "c077_ke_trao_doi_menh.tscn",
+  "node_name": "C077_KeTraoDoiMenh",
+  "name": "C077 Kẻ Trao Đổi Mệnh (Quyền Trượng Thiên Bình Sinh Mệnh)",
+  "tier": "S",
+  "archetype": "magic_staff",
+  "grip1_norm": [
+    0.46,
+    0.56
+  ],
+  "grip2_norm": [
+    0.34,
+    0.68
+  ],
+  "scale_mult": 1.22,
+  "prompt_ref": "Create a single-cell 1x1 reference sheet of an Epic dark-fantasy Soul-Balancer's scale of life scepter staff (Quyền Trượng Thiên Bình Sinh Mệnh - C077 Kẻ Trao Đổi Mệnh) following the exact square cell of the attached reference layout_guide_1x1.png.\n\nCOMPOSITION & ORIENTATION (100% MANDATORY):\n- Draw ONE complete balance-scale staff oriented DIAGONALLY from bottom-left (fluted antique gold and dark ironwood shaft) to top-right (an ornate golden balance beam crosspiece suspending two glowing crystal chalices filled with equalized emerald-and-gold life essence connected by a luminous spirit bridge).\n- Must show 100% of the entire staff from bottom tip to top twin-scale crest with generous padding inside the frame (occupying 65%-75% of the canvas).\n- Zero clipping at canvas edges.\n\nCOLOR & BACKGROUND (100% MANDATORY):\n- Background MUST be flat solid pure magenta (#FF00FF) edge-to-edge.\n- DO NOT use any magenta/pink tones on the staff itself (use burnished gold, dark ironwood, silver chains, and glowing emerald-turquoise & golden vitality light).\n- No character hands, no text, no borders.",
+  "prompt_anim_2x2": "Create a 2x2 sprite sheet (4 frames total: row 1 left-to-right, row 2 left-to-right) of the EXACT SAME Scale of Life Balance Staff from the first attached reference image, following the 2x2 grid layout of the second attached reference image (layout_guide_2x2.png).\n\n100% CONSISTENCY & ANIMATION RULES:\n- Every cell must show the exact same diagonal golden balance-scale staff at the exact same angle, size, and position.\n- Animate a looping 4-frame spirit-equilibrium aura: streams of emerald-and-gold life energy flowing back and forth between the two suspended chalices with glowing sacred geometry rings.\n- Background MUST be flat solid pure magenta (#FF00FF) in all 4 cells. DO NOT draw the blue layout guide lines or cell borders. Keep each frame strictly inside its cell with zero clipping.",
+  "prompt_card": "Create a wide horizontal 16:11 dark-fantasy card illustration featuring the exact same Scale of Life Balance Staff (Quyền Trượng Thiên Bình Sinh Mệnh - C077 Kẻ Trao Đổi Mệnh) from the attached reference images.\n\nCOMPOSITION & BACKGROUND (100% MANDATORY):\n- Place the golden balance-scale staff diagonally across the center of the horizontal frame.\n- Full atmospheric dark-fantasy background (100% opaque RGB illustration, NO magenta, NO transparency): a sacred temple hall where arcs of emerald-and-gold soul energy link multiple spirit vessels in perfect equilibrium around the staff.\n- Do NOT draw any card frame, borders, or text."
+}

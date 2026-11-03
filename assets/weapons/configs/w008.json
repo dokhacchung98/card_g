@@ -1,0 +1,25 @@
+{
+  "id": "w008",
+  "slug": "w008_tho_san_dau_nguoi",
+  "tier": "R",
+  "name": "W008 — Lao Móc Săn Đầu (Cấp R — Vũ Khí Tĩnh)",
+  "tscn_name": "c008_tho_san_dau_nguoi.tscn",
+  "node_name": "C008_ThoSanDauNguoi",
+  "archetype": "melee_spear",
+  "target_size": [
+    224,
+    174
+  ],
+  "grip1_norm": [
+    0.36,
+    0.64
+  ],
+  "grip2_norm": [
+    0.14,
+    0.85
+  ],
+  "rest_rot": 20.0,
+  "flip_horizontal": false,
+  "prompt_ref": "A single standalone 2D game weapon sprite on a pure solid magenta #FF00FF background, following the attached layout_guide_1x1.png safe zone (centered inside 65% of the canvas, zero border clipping). The weapon is W008 'Lao Móc Săn Đầu' (Headhunter's Barbed Harpoon Javelin / Trophy-Hunter War Spear, Tier R Rare weapon), placed diagonally from bottom-left (iron butt-spike and tether ring) to top-right (cruel barbed harpoon point). Design details: a savage dark-fantasy headhunter javelin with a long, wicked blackened steel harpoon head featuring two pairs of recurved bone-ripping barbs, a deep crimson blood-groove along the center ridge, and a bone-fetish collar with beast fangs lashed in dark red sinew below the blade; the sturdy charred dark-wood shaft is tightly wrapped in criss-crossed crimson and brown leather straps at Grip 1 and Grip 2, ending in a spiked iron counterweight ring at the bottom-left end. Crisp dark outlines, stylized 2D hand-painted game art matching Arcana Five aesthetic, NO character, NO hands, NO separate flying projectiles, NO floating aura particles, 100% flat solid #FF00FF magenta background.",
+  "prompt_card": "Close-up hero weapon showcase illustration (horizontal rectangular 4:3, 884x632, 100% opaque RGB full scenic painting, NO transparent background, NO card frame or text UI). THE GIANT BARBED HARPOON JAVELIN (Lao Móc Săn Đầu) from the attached reference image MUST FILL 75% OF THE FOREGROUND, placed prominently diagonally from bottom-left (spiked iron tether ring and leather-wrapped shaft) to top-right (wicked blackened steel harpoon head with twin recurved barbs, crimson blood-groove, and beast-fang collar). Behind the giant foreground harpoon javelin is a grim dark-fantasy headhunter swamp-forest setting at night: gnarled dead trees, trophy totem stakes shrouded in eerie green-blue marsh mist, and cold moonlight. Focus 100% on the giant diagonal barbed javelin in the center-foreground matching the reference weapon geometry."
+}

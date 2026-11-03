@@ -1,0 +1,25 @@
+{
+  "id": "w004",
+  "slug": "w004_ky_binh_gi_set",
+  "tier": "N",
+  "name": "W004 — Thương Kỵ Gỉ Sét (Cấp N — Vũ Khí Tĩnh)",
+  "tscn_name": "c004_ky_binh_gi_set.tscn",
+  "node_name": "C004_KyBinhGiSet",
+  "archetype": "melee_spear",
+  "target_size": [
+    228,
+    176
+  ],
+  "grip1_norm": [
+    0.34,
+    0.66
+  ],
+  "grip2_norm": [
+    0.14,
+    0.85
+  ],
+  "rest_rot": 22.0,
+  "flip_horizontal": false,
+  "prompt_ref": "A single standalone 2D game weapon sprite on a pure solid magenta #FF00FF background, following the attached layout_guide_1x1.png safe zone (centered inside 65% of the canvas, zero border clipping). The weapon is W004 'Thương Kỵ Gỉ Sét' (Rusted Cavalry War Lance / Heavy Iron Jousting Spear, Tier N Normal weapon), placed diagonally from bottom-left (pommel butt-spike) to top-right (heavy armor-piercing lance tip). Design details: a brutal dark-fantasy heavy cavalry lance with a thick four-ridged blackened iron spearhead with battle nicks and patches of weathered reddish-brown rust, a riveted conical iron vamplate hand-guard with short iron studs, a sturdy dark ash-wood shaft reinforced with iron rings and worn brown leather grip wraps for Grip 1 and Grip 2, and a heavy iron counterweight butt-cap at the bottom-left end. Crisp dark outlines, stylized 2D hand-painted game art matching Arcana Five aesthetic, NO character, NO hands, NO aura, NO glowing magic particles, 100% flat solid #FF00FF magenta background.",
+  "prompt_card": "Horizontal rectangular 2D dark-fantasy card illustration (aspect ratio 4:3, 884x632, 100% opaque RGB full scenic painting, NO transparent background, NO card frame or text UI) featuring the exact Rusted Cavalry War Lance (Thương Kỵ Gỉ Sét) from the reference image placed diagonally across the frame from bottom-left to top-right. The heavy iron jousting lance with its weathered reddish-brown rust patches, riveted conical iron vamplate hand-guard, and leather-wrapped iron-banded shaft gleams coldly against a dramatic dark-fantasy battlefield backdrop: shattered wooden barricades, mist-shrouded mud trenches, tattered war banners, and cold moonlight breaking through storm clouds. Rich atmospheric lighting, rim highlights on the battle-scarred steel, 100% faithful to the reference weapon geometry."
+}

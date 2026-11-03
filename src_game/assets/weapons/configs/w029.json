@@ -1,0 +1,25 @@
+{
+  "id": "w029",
+  "slug": "w029_phap_su_trong_truong",
+  "tier": "R",
+  "name": "W029 — Trượng Cầu Trọng Trường (Cấp R — Vũ Khí Tĩnh)",
+  "tscn_name": "c029_phap_su_trong_truong.tscn",
+  "node_name": "C029_PhapSuTrongTruong",
+  "archetype": "magic_staff",
+  "target_size": [
+    222,
+    176
+  ],
+  "grip1_norm": [
+    0.34,
+    0.66
+  ],
+  "grip2_norm": [
+    0.14,
+    0.86
+  ],
+  "rest_rot": 22.0,
+  "flip_horizontal": false,
+  "prompt_ref": "A single standalone 2D game weapon sprite on a pure solid magenta #FF00FF background, following the attached layout_guide_1x1.png safe zone (centered inside 65% of the canvas, zero border clipping). The weapon is W029 'Trượng Cầu Trọng Trường' (Graviton Mage's Black-Hole Gyroscope Staff, Tier R Rare weapon), placed diagonally from bottom-left (heavy meteor-iron counterweight at the base of the shaft) to top-right (concentric armillary gravity-sphere head). Design details: an arcane dark-fantasy gravity mage staff topped with interlocking dark-gold and blackened-meteorite armillary rings physically holding a dense, dark-indigo and obsidian singularity sphere at the center; the heavy meteoric-iron shaft is etched with gold geometric runes and wrapped in dark violet leather at Grip 1 and Grip 2, ending in a heavy octagonal counterweight pommel at the bottom-left. Crisp dark outlines, stylized 2D hand-painted game art matching Arcana Five aesthetic, NO character, NO hands, NO detached floating pieces, 100% flat solid #FF00FF magenta background.",
+  "prompt_card": "Extreme close-up macro weapon portrait (horizontal rectangular 4:3, 884x632, 100% opaque RGB painting, NO transparent background, NO UI frame). ONE GIANT GRAVITON ARMILLARY STAFF (Trượng Cầu Trọng Trường) identical to the attached reference image MUST FILL 85% OF THE FRAME diagonally from bottom-left (rune-etched meteoric-iron shaft) to top-right (interlocking dark-gold armillary rings holding the dense dark-indigo gravity sphere). Keep the dark-fantasy cosmic sanctum background softly blurred in deep violet-black shadow so the giant diagonal gravity staff is the sole hero subject in the foreground."
+}

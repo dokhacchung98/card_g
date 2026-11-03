@@ -1,0 +1,30 @@
+{
+  "id": "w002",
+  "slug": "w002_no_thu_cam_lang",
+  "tier": "N",
+  "name": "W002 — Nỏ Câm Lặng (Cấp N — Vũ Khí Tĩnh)",
+  "tscn_name": "c002_no_thu_cam_lang.tscn",
+  "node_name": "C002_NoThuCamLang",
+  "archetype": "ranged_crossbow",
+  "target_size": [
+    210,
+    115
+  ],
+  "grip1": [
+    73.5,
+    58.0
+  ],
+  "grip2": [
+    128.0,
+    52.0
+  ],
+  "offhand_grip1": [
+    18.0,
+    26.0
+  ],
+  "offhand_grip2": [
+    12.0,
+    30.0
+  ],
+  "rest_rot": 38.0
+}

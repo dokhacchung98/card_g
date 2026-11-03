@@ -1,0 +1,26 @@
+{
+  "id": "w057",
+  "slug": "w057_thu_ve_cong_huong",
+  "tier": "S",
+  "name": "W057 — Đại Khiên Pha Lê Cộng Hưởng (Cấp S — Vũ Khí Động 2x2)",
+  "tscn_name": "c057_thu_ve_cong_huong.tscn",
+  "node_name": "C057_ThuVeCongHuong",
+  "archetype": "great_shield",
+  "target_size": [
+    176,
+    214
+  ],
+  "grip1_norm": [
+    0.32,
+    0.48
+  ],
+  "grip2_norm": [
+    0.45,
+    0.72
+  ],
+  "rest_rot": 35.0,
+  "flip_horizontal": false,
+  "prompt_ref": "A single standalone 2D game tower-shield sprite on a pure solid magenta #FF00FF background, following the attached layout_guide_1x1.png safe zone (centered inside 65% of the canvas, zero border clipping). The weapon is W057 'Đại Khiên Pha Lê Cộng Hưởng' (Resonance Guardian's Harmonic Crystal Greatshield, Tier S Epic shield), standing upright in 3/4 side-front perspective facing right. Design details: a magnificent dark-fantasy arcane-bastion tower shield forged from platinum-silver armor plates and dark bronze tuning frames, housing a cluster of giant faceted turquoise-and-gold resonance crystals in the center that amplify and broadcast shields to all allies. Crisp dark outlines, stylized 2D hand-painted game art matching Arcana Five aesthetic, NO character, NO hands, NO detached floating particles, 100% flat solid #FF00FF magenta background.",
+  "prompt_anim_2x2": "A 2x2 sprite sheet (4 frames in a 2-row by 2-column grid) on a pure solid magenta #FF00FF background, strictly following the second attached reference image layout_guide_2x2.png and keeping the exact shield design, size, and upright 3/4 angle of the first attached reference image (W057 Đại Khiên Pha Lê Cộng Hưởng). Each of the 4 cells shows the exact same Harmonic Crystal Greatshield in the exact same position, with a 4-frame looping animation of glowing turquoise-and-gold harmonic resonance rings and crystal energy arcs pulsing across the shield face. DO NOT draw the blue layout guide lines, zero cell border clipping, NO character, 100% solid #FF00FF background.",
+  "prompt_card": "Extreme close-up macro shield portrait (horizontal rectangular 4:3, 884x632, 100% opaque RGB painting, NO transparent background, NO UI frame). ONE GIANT HARMONIC CRYSTAL RESONANCE GREATSHIELD (Đại Khiên Pha Lê Cộng Hưởng) identical to the attached reference images MUST FILL 85% OF THE FRAME angled heroically in the foreground (platinum-and-bronze tower shield with giant glowing turquoise-and-gold resonance crystals). Keep the dark-fantasy arcane bastion sanctum background softly blurred in deep teal-indigo shadow so the giant crystal shield is the sole hero subject in the foreground."
+}

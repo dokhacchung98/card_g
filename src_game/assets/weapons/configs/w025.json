@@ -1,0 +1,25 @@
+{
+  "id": "w025",
+  "slug": "w025_phap_su_lang_kinh",
+  "tier": "N",
+  "name": "W025 — Trượng Pha Lê Lăng Kính (Cấp N — Vũ Khí Tĩnh)",
+  "tscn_name": "c025_phap_su_lang_kinh.tscn",
+  "node_name": "C025_PhapSuLangKinh",
+  "archetype": "magic_staff",
+  "target_size": [
+    220,
+    174
+  ],
+  "grip1_norm": [
+    0.34,
+    0.66
+  ],
+  "grip2_norm": [
+    0.14,
+    0.86
+  ],
+  "rest_rot": 22.0,
+  "flip_horizontal": false,
+  "prompt_ref": "A single standalone 2D game weapon sprite on a pure solid magenta #FF00FF background, following the attached layout_guide_1x1.png safe zone (centered inside 65% of the canvas, zero border clipping). The weapon is W025 'Trượng Pha Lê Lăng Kính' (Prism Mage's Faceted Quartz Refraction Staff, Tier N Normal weapon), placed diagonally from bottom-left (pointed silver-iron pommel at the base of the shaft) to top-right (octagonal prism crystal head). Design details: a refined dark-fantasy mage staff topped with a sharp, multi-faceted translucent ice-blue and silver-white diamond prism crystal securely mounted inside a gothic blackened-silver astrolabe frame; the straight dark ironwood shaft is wrapped in navy-blue leather grips with silver rings at Grip 1 and Grip 2, ending in a tapered silver-iron ferrule at the bottom-left. Crisp dark outlines, stylized 2D hand-painted game art matching Arcana Five aesthetic, NO character, NO hands, NO detached floating pieces, 100% flat solid #FF00FF magenta background.",
+  "prompt_card": "Extreme close-up macro weapon portrait (horizontal rectangular 4:3, 884x632, 100% opaque RGB painting, NO transparent background, NO UI frame). ONE GIANT PRISM CRYSTAL MAGE STAFF (Trượng Pha Lê Lăng Kính) identical to the attached reference image MUST FILL 85% OF THE FRAME diagonally from bottom-left (navy-leather wrapped shaft) to top-right (gothic blackened-silver frame holding the sharp multi-faceted ice-blue prism crystal). Keep the dark-fantasy observatory background softly blurred in deep sapphire-slate shadow so the giant diagonal prism staff is the sole hero subject in the foreground."
+}

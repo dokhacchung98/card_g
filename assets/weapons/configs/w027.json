@@ -1,0 +1,25 @@
+{
+  "id": "w027",
+  "slug": "w027_phu_thuy_nguyen_rua",
+  "tier": "R",
+  "name": "W027 — Trượng Gai Nguyền Rủa (Cấp R — Vũ Khí Tĩnh)",
+  "tscn_name": "c027_phu_thuy_nguyen_rua.tscn",
+  "node_name": "C027_PhuThuyNguyenRua",
+  "archetype": "magic_staff",
+  "target_size": [
+    222,
+    176
+  ],
+  "grip1_norm": [
+    0.34,
+    0.66
+  ],
+  "grip2_norm": [
+    0.14,
+    0.86
+  ],
+  "rest_rot": 22.0,
+  "flip_horizontal": false,
+  "prompt_ref": "A single standalone 2D game weapon sprite on a pure solid magenta #FF00FF background, following the attached layout_guide_1x1.png safe zone (centered inside 65% of the canvas, zero border clipping). The weapon is W027 'Trượng Gai Nguyền Rủa' (Curse-Witch's Briar-Thorn Hex Staff, Tier R Rare weapon), placed diagonally from bottom-left (gnarled root-iron pommel at the base of the shaft) to top-right (spiked raven-skull and cursed emerald briar crown). Design details: a sinister dark-fantasy witch staff formed from twisted blackened briar-wood and thorny dark bronze, crowned with a horned raven skull and entangled iron thorns clutching a sickly toxic-green hex crystal; the shaft is bound in cursed talisman parchment strips and dark leather wraps at Grip 1 and Grip 2, ending in a clawed iron root-spike at the bottom-left. Crisp dark outlines, stylized 2D hand-painted game art matching Arcana Five aesthetic, NO character, NO hands, NO detached floating particles, 100% flat solid #FF00FF magenta background.",
+  "prompt_card": "Extreme close-up macro weapon portrait (horizontal rectangular 4:3, 884x632, 100% opaque RGB painting, NO transparent background, NO UI frame). ONE GIANT BRIAR-THORN CURSE STAFF (Trượng Gai Nguyền Rủa) identical to the attached reference image MUST FILL 85% OF THE FRAME diagonally from bottom-left (talisman-bound briar shaft) to top-right (horned raven skull and iron thorns clutching the toxic-green hex crystal). Keep the dark-fantasy swamp coven background softly blurred in dark emerald-charcoal shadow so the giant diagonal curse staff is the sole hero subject in the foreground."
+}

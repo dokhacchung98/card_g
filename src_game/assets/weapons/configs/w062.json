@@ -1,0 +1,20 @@
+{
+  "id": "w062",
+  "slug": "w062_linh_muc_mu",
+  "name": "C062 Linh Mục Mù (Trượng Chuông Bạc Thanh Tẩy)",
+  "tier": "N",
+  "archetype": "magic_staff",
+  "grip1_norm": [
+    0.46,
+    0.56
+  ],
+  "grip2_norm": [
+    0.34,
+    0.68
+  ],
+  "scale_mult": 1.12,
+  "prompt_ref": "Create a single-cell 1x1 reference sheet of a dark-fantasy Blind Priest's silver bell purification staff (Trượng Chuông Bạc Thanh Tẩy - C062 Linh Mục Mù) following the exact square cell of the attached reference layout_guide_1x1.png.\n\nCOMPOSITION & ORIENTATION (100% MANDATORY):\n- Draw ONE complete purification staff oriented DIAGONALLY from bottom-left (silver-shod ashwood shaft) to top-right (ornate circular silver halo ring housing three sacred engraved silver chimes and pale cyan-white cleansing runes).\n- Must show 100% of the entire staff from bottom tip to top silver bell halo with generous padding inside the frame (occupying 65%-75% of the canvas).\n- Zero clipping at canvas edges.\n\nCOLOR & BACKGROUND (100% MANDATORY):\n- Background MUST be flat solid pure magenta (#FF00FF) edge-to-edge.\n- DO NOT use any magenta/pink tones on the staff itself (use tarnished antique silver, pale ashwood, white silk cloth wraps, and soft cyan-white runic glow).\n- No character hands, no text, no borders.",
+  "prompt_card": "Create a wide horizontal 16:11 dark-fantasy card illustration featuring the exact same Silver Bell Purification Staff (Trượng Chuông Bạc Thanh Tẩy - C062 Linh Mục Mù) from the attached reference image.\n\nCOMPOSITION & BACKGROUND (100% MANDATORY):\n- Place the silver bell halo staff diagonally across the center of the horizontal frame.\n- Full atmospheric dark-fantasy background (100% opaque RGB illustration, NO magenta, NO transparency): an ancient stone shrine where ripples of silver-cyan soundwaves and cleansing runes radiate from the sacred chimes, dissolving dark curse smoke.\n- Do NOT draw any card frame, borders, or text.",
+  "tscn_name": "c062_linh_muc_mu.tscn",
+  "node_name": "C062_LinhMucMu"
+}

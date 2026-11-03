@@ -1,0 +1,34 @@
+{
+  "id": "w059",
+  "slug": "w059_hien_te_thu_ve",
+  "tier": "SSR",
+  "name": "W059 — Bộ Huyết Thương & Thần Khiên Bất Tử (Cấp SSR — Vũ Khí Động 2x2)",
+  "tscn_name": "c059_hien_te_thu_ve.tscn",
+  "node_name": "C059_HienTeThuVe",
+  "archetype": "sword_and_shield",
+  "dual_wield_default": true,
+  "target_size": [
+    224,
+    180
+  ],
+  "offhand_target_size": [
+    152,
+    184
+  ],
+  "grip1_norm": [
+    0.32,
+    0.68
+  ],
+  "grip2_norm": [
+    0.14,
+    0.86
+  ],
+  "rest_rot": -22.0,
+  "offhand_rest_rot": 77.0,
+  "offhand_z_index": 16,
+  "flip_horizontal": false,
+  "prompt_ref": "A single standalone 2D game mythic weapon sprite on a pure solid magenta #FF00FF background, following the attached layout_guide_1x1.png safe zone (centered inside 65% of the canvas, zero border clipping). The weapon is the main-hand sacrificial war-lance of W059 'Hiến Tế Thủ Vệ' (Sacrificial Guardian's Immortal Lifelink Halberd-Lance, Tier SSR Mythic weapon), placed diagonally from bottom-left (golden-crimson chain pommel) to top-right (ornate seraphic-gold and crimson blood-crystal spearhead with lifelink chains). Crisp dark outlines, stylized 2D hand-painted game art matching Arcana Five aesthetic, NO character, NO hands, 100% flat solid #FF00FF magenta background.",
+  "prompt_offhand": "A single standalone 2D game mythic shield sprite on a pure solid magenta #FF00FF background, following the attached layout_guide_1x1.png safe zone (centered inside 65% of the canvas, zero border clipping). The shield is the off-hand mythic shield of W059 'Thần Khiên Liên Kết Bất Tử' (Sacrificial Guardian's Immortal Lifelink Aegis Shield, Tier SSR Mythic shield), standing upright in 3/4 front-right view. Design details: a legendary SSR dark-fantasy sanctuary shield forged from celestial gold, obsidian, and crimson ruby, featuring sculpted angel wings and golden lifelink chains binding a blazing scarlet-gold heart core. Crisp dark outlines, stylized 2D hand-painted game art matching Arcana Five aesthetic, NO character, NO hands, 100% flat solid #FF00FF magenta background.",
+  "prompt_anim_2x2": "A 2x2 sprite sheet (4 frames in a 2-row by 2-column grid) on a pure solid magenta #FF00FF background, strictly following the second attached reference image layout_guide_2x2.png and keeping the exact lance design, size, and diagonal angle of the first attached reference image (W059 Huyết Thương Liên Kết Bất Tử). Each of the 4 cells shows the exact same diagonal Immortal Lifelink Lance in the exact same position, with a 4-frame looping mythic animation of crimson-gold lifelink soulfire and radiant chains pulsing along the blade and shaft. DO NOT draw the blue layout guide lines, zero cell border clipping, NO character, 100% solid #FF00FF background.",
+  "prompt_card": "Extreme close-up macro mythic shield-and-lance portrait (horizontal rectangular 4:3, 884x632, 100% opaque RGB painting, NO transparent background, NO UI frame). ONE GIANT MYTHIC IMMORTAL LIFELINK SHIELD AND SACRIFICIAL HALBERD-LANCE (Bộ Huyết Thương & Thần Khiên Bất Tử) identical to the attached reference images MUST FILL 85% OF THE FRAME together in the foreground (the winged celestial-gold and crimson heart shield alongside the blazing lifelink lance). Keep the dark-fantasy blood-sanctuary cathedral background softly blurred in deep crimson-gold shadow so the SSR shield and lance are the sole hero subjects in the foreground."
+}

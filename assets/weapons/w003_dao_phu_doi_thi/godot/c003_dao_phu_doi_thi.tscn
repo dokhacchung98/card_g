@@ -19,10 +19,10 @@
 [ext_resource type="Texture2D" path="res://assets/sticker_hero/godot/parts/team_blue/arm_lower_front.png" id="17_arm_lower_front"]
 [ext_resource type="Texture2D" path="res://assets/sticker_hero/godot/parts/team_blue/hand_front.png" id="18_hand_front"]
 [ext_resource type="Texture2D" path="res://assets/weapons/w003_dao_phu_doi_thi/parts/weapon_main.png" id="19_weapon_main"]
-[ext_resource type="Texture2D" path="res://assets/weapons/w003_dao_phu_doi_thi/parts/fx_slash.png" id="20_fx_slash"]
-[ext_resource type="Texture2D" path="res://assets/weapons/w003_dao_phu_doi_thi/parts/fx_slash_heavy.png" id="21_fx_slash_heavy"]
-[ext_resource type="Texture2D" path="res://assets/weapons/w003_dao_phu_doi_thi/parts/fx_spark.png" id="22_fx_spark"]
-[ext_resource type="Texture2D" path="res://assets/weapons/w003_dao_phu_doi_thi/parts/fx_dust.png" id="23_fx_dust"]
+[ext_resource type="Texture2D" path="res://assets/vfx_shared/fx_slash.png" id="20_fx_slash"]
+[ext_resource type="Texture2D" path="res://assets/vfx_shared/fx_slash_heavy.png" id="21_fx_slash_heavy"]
+[ext_resource type="Texture2D" path="res://assets/vfx_shared/fx_spark.png" id="22_fx_spark"]
+[ext_resource type="Texture2D" path="res://assets/vfx_shared/fx_dust.png" id="23_fx_dust"]
 
 [sub_resource type="Animation" id="Animation_idle"]
 resource_name = "idle"

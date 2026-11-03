@@ -1,0 +1,26 @@
+{
+  "id": "w015",
+  "slug": "w015_sat_thu_vo_hinh",
+  "tier": "S",
+  "name": "W015 — Đoản Đao Vô Hình (Cấp S — Animated 2x2 Spritesheet)",
+  "tscn_name": "c015_sat_thu_vo_hinh.tscn",
+  "node_name": "C015_SatThuVoHinh",
+  "archetype": "melee_sword",
+  "target_size": [
+    208,
+    172
+  ],
+  "grip1_norm": [
+    0.26,
+    0.75
+  ],
+  "grip2_norm": [
+    0.12,
+    0.88
+  ],
+  "rest_rot": 24.0,
+  "flip_horizontal": false,
+  "prompt_ref": "A single standalone 2D game weapon sprite on a pure solid magenta #FF00FF background, following the attached layout_guide_1x1.png safe zone (centered inside 65% of the canvas, zero border clipping). The weapon is W015 'Đoản Đao Vô Hình' (Phantom Stealth Assassin Kris Dagger-Sword, Tier S Epic weapon), placed diagonally from bottom-left (spiked shadow-silver pommel at the base of the handle) to top-right (lethal recurved phantom blade tip). Design details: an epic dark-fantasy assassin long-dagger with a wicked double-edged recurved blackened mythril blade inlaid with glowing spectral cyan-indigo stealth runes and a semi-translucent void-crystal cutting edge; an ornate bat-wing shadow guard set with a glowing violet-cyan eye gem at the center; and a sleek two-grip assassin handle wrapped in dark night-leather and silver wire for Grip 1 and Grip 2. Crisp dark outlines, stylized 2D hand-painted game art matching Arcana Five aesthetic, NO character, NO hands, 100% flat solid #FF00FF magenta background.",
+  "prompt_anim_2x2": "A 2x2 animated weapon spritesheet (4 frames arranged in 2 rows by 2 columns, following the attached layout_guide_2x2.png grid) on a pure solid magenta #FF00FF background. Each of the 4 cells MUST show the EXACT SAME W015 'Đoản Đao Vô Hình' (Phantom Stealth Assassin Kris Dagger-Sword) from the attached reference weapon image at the EXACT same diagonal angle, scale, and position inside each cell's safe zone (zero border clipping), while animating a 4-frame looping spectral stealth energy aura tightly wrapping around the blade: Frame 1 (top-left) glowing cyan-indigo stealth runes and faint void mist along the blade; Frame 2 (top-right) swirling spectral cyan-violet phantom vapor and phase-lightning surging from the eye-gem guard up the recurved blade; Frame 3 (bottom-left) peak ethereal void-flame and shimmering mirage distortion around the blade tip; Frame 4 (bottom-right) dissipating spectral wisps cycling smoothly back to Frame 1. Keep the background 100% flat solid #FF00FF magenta with NO grid lines drawn in the final image.",
+  "prompt_card": "Close-up hero weapon showcase illustration (horizontal rectangular 4:3, 884x632, 100% opaque RGB full scenic painting, NO transparent background, NO card frame or text UI). THE GIANT PHANTOM STEALTH ASSASSIN DAGGER-SWORD (Đoản Đao Vô Hình) from the attached reference images MUST FILL 75% OF THE FOREGROUND, placed prominently diagonally from bottom-left (night-leather handle and spiked pommel) to top-right (recurved blackened mythril and void-crystal blade glowing with spectral cyan-violet stealth runes and swirling phantom mist). Behind the giant foreground blade is an atmospheric dark-fantasy royal throne hall shrouded in midnight shadow and ghostly cyan-indigo stealth fog. Focus 100% on the giant diagonal phantom blade in the center-foreground matching the reference weapon geometry."
+}

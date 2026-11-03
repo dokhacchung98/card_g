@@ -1,0 +1,26 @@
+{
+  "id": "w014",
+  "slug": "w014_do_te_bat_tu",
+  "tier": "S",
+  "name": "W014 — Huyết Phủ Bất Tử (Cấp S — Animated 2x2 Spritesheet)",
+  "tscn_name": "c014_do_te_bat_tu.tscn",
+  "node_name": "C014_DoTeBatTu",
+  "archetype": "melee_cleaver",
+  "target_size": [
+    224,
+    178
+  ],
+  "grip1_norm": [
+    0.35,
+    0.66
+  ],
+  "grip2_norm": [
+    0.14,
+    0.86
+  ],
+  "rest_rot": 18.0,
+  "flip_horizontal": false,
+  "prompt_ref": "A single standalone 2D game weapon sprite on a pure solid magenta #FF00FF background, following the attached layout_guide_1x1.png safe zone (centered inside 65% of the canvas, zero border clipping). The weapon is W014 'Huyết Phủ Bất Tử' (Immortal Butcher's Vampiric Blood-Cleaver Greataxe, Tier S Epic weapon), placed diagonally from bottom-left (spiked skull-iron pommel at the base of the handle) to top-right (massive jagged butcher cleaver-axe head). Design details: a monstrous dark-fantasy berserker butcher greataxe with a thick, heavy blackened steel cleaver-axe blade featuring a glowing crimson blood-heart crystal embedded in arib-cage iron socket, glowing red vein-runes branching across the jagged meat-cleaving blade edge, and a wicked rear meat-hook fluke; the heavy dark bone-and-ironwood shaft is wrapped in blood-stained leather straps for Grip 1 and Grip 2. Crisp dark outlines, stylized 2D hand-painted game art matching Arcana Five aesthetic, NO character, NO hands, 100% flat solid #FF00FF magenta background.",
+  "prompt_anim_2x2": "A 2x2 animated weapon spritesheet (4 frames arranged in 2 rows by 2 columns, following the attached layout_guide_2x2.png grid) on a pure solid magenta #FF00FF background. Each of the 4 cells MUST show the EXACT SAME W014 'Huyết Phủ Bất Tử' (Immortal Butcher's Vampiric Blood-Cleaver Greataxe) from the attached reference weapon image at the EXACT same diagonal angle, scale, and position inside each cell's safe zone (zero border clipping), while animating a 4-frame looping vampiric bloodthirst energy aura tightly wrapping around the axe head: Frame 1 (top-left) glowing crimson vein-runes and pulsing blood-heart core on the axe blade; Frame 2 (top-right) surging scarlet blood-flame and vampiric life-drain tendrils coiling around the jagged cleaver edge; Frame 3 (bottom-left) peak berserk crimson lightning and boiling blood-aura around the axe head; Frame 4 (bottom-right) receding dark-red energy tendrils cycling smoothly back to Frame 1. Keep the background 100% flat solid #FF00FF magenta with NO grid lines drawn in the final image.",
+  "prompt_card": "Extreme close-up macro weapon portrait (horizontal rectangular 4:3, 884x632, 100% opaque RGB painting, NO transparent background, NO UI frame). ONE GIANT VAMPIRIC BLOOD-CLEAVER GREATAXE (Huyết Phủ Bất Tử) identical to the attached reference images MUST FILL 85% OF THE FRAME diagonally from bottom-left (leather-wrapped bone-and-ironwood shaft) to top-right (massive blackened steel butcher cleaver-axe head with glowing crimson blood-heart core, red vein-runes, and surging scarlet blood-aura). Keep the dark-fantasy catacomb background softly blurred in crimson shadow so the giant diagonal greataxe is the sole hero subject in the foreground."
+}

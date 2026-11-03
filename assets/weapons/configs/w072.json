@@ -1,0 +1,20 @@
+{
+  "id": "w072",
+  "slug": "w072_thay_boi_chien_tran",
+  "name": "C072 Thầy Bói Chiến Trận (Trượng Bánh Xe Định Mệnh Tiên Tri)",
+  "tier": "R",
+  "archetype": "magic_staff",
+  "grip1_norm": [
+    0.46,
+    0.56
+  ],
+  "grip2_norm": [
+    0.34,
+    0.68
+  ],
+  "scale_mult": 1.15,
+  "prompt_ref": "Create a single-cell 1x1 reference sheet of a dark-fantasy Battle Diviner's wheel-of-fate astrolabe staff (Trượng Bánh Xe Định Mệnh Tiên Tri - C072 Thầy Bói Chiến Trận) following the exact square cell of the attached reference layout_guide_1x1.png.\n\nCOMPOSITION & ORIENTATION (100% MANDATORY):\n- Draw ONE complete diviner staff oriented DIAGONALLY from bottom-left (engraved bronze and ebony shaft) to top-right (an ornate eight-spoked golden Wheel of Fate astrolabe with carved tarot runes and a glowing cyan-white clairvoyance crystal at the hub).\n- Must show 100% of the entire staff from bottom tip to top astrolabe wheel with generous padding inside the frame (occupying 65%-75% of the canvas).\n- Zero clipping at canvas edges.\n\nCOLOR & BACKGROUND (100% MANDATORY):\n- Background MUST be flat solid pure magenta (#FF00FF) edge-to-edge.\n- DO NOT use any magenta/pink tones on the staff itself (use ebony wood, antique gold, silver compass needles, and luminous cyan-white crystal).\n- No character hands, no text, no borders.",
+  "prompt_card": "Create a wide horizontal 16:11 dark-fantasy card illustration featuring the exact same Wheel of Fate Astrolabe Staff (Trượng Bánh Xe Định Mệnh Tiên Tri - C072 Thầy Bói Chiến Trận) from the attached reference image.\n\nCOMPOSITION & BACKGROUND (100% MANDATORY):\n- Place the golden Wheel of Fate astrolabe staff diagonally across the center of the horizontal frame.\n- Full atmospheric dark-fantasy background (100% opaque RGB illustration, NO magenta, NO transparency): a war-tent divination altar where floating golden tarot runes and cyan foresight mirages swirl around the spinning astrolabe wheel.\n- Do NOT draw any card frame, borders, or text.",
+  "tscn_name": "c072_thay_boi_chien_tran.tscn",
+  "node_name": "C072_ThayBoiChienTran"
+}

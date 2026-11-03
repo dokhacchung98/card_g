@@ -1,0 +1,20 @@
+{
+  "id": "w067",
+  "slug": "w067_thay_thuoc_dich_benh",
+  "name": "C067 Thầy Thuốc Dịch Bệnh (Trượng Mỏ Quạ Bình Hương Y Sư)",
+  "tier": "R",
+  "archetype": "magic_staff",
+  "grip1_norm": [
+    0.46,
+    0.56
+  ],
+  "grip2_norm": [
+    0.34,
+    0.68
+  ],
+  "scale_mult": 1.15,
+  "prompt_ref": "Create a single-cell 1x1 reference sheet of a dark-fantasy Plague Doctor's raven-beak incense staff (Trượng Mỏ Quạ Bình Hương Y Sư - C067 Thầy Thuốc Dịch Bệnh) following the exact square cell of the attached reference layout_guide_1x1.png.\n\nCOMPOSITION & ORIENTATION (100% MANDATORY):\n- Draw ONE complete plague-doctor staff oriented DIAGONALLY from bottom-left (dark walnut and riveted brass shaft) to top-right (a sculpted bronze raven-beak plague mask headpiece with a swinging perforated brass incense thurible glowing with emerald-teal healing vapor inside).\n- Must show 100% of the entire staff from bottom tip to top raven-beak head and hanging censer with generous padding inside the frame (occupying 65%-75% of the canvas).\n- Zero clipping at canvas edges.\n\nCOLOR & BACKGROUND (100% MANDATORY):\n- Background MUST be flat solid pure magenta (#FF00FF) edge-to-edge.\n- DO NOT use any magenta/pink tones on the staff itself (use dark walnut, aged brass, blackened iron, and bright emerald-green alchemical glow).\n- No character hands, no text, no borders.",
+  "prompt_card": "Create a wide horizontal 16:11 dark-fantasy card illustration featuring the exact same Plague Doctor Raven-Beak Incense Staff (Trượng Mỏ Quạ Bình Hương Y Sư - C067 Thầy Thuốc Dịch Bệnh) from the attached reference image.\n\nCOMPOSITION & BACKGROUND (100% MANDATORY):\n- Place the raven-beak staff with its swinging brass incense censer diagonally across the center of the horizontal frame.\n- Full atmospheric dark-fantasy background (100% opaque RGB illustration, NO magenta, NO transparency): a cobblestone plague-ward alley at night where luminous emerald-teal restorative incense mist billows from the swinging brass censer.\n- Do NOT draw any card frame, borders, or text.",
+  "tscn_name": "c067_thay_thuoc_dich_benh.tscn",
+  "node_name": "C067_ThayThuocDichBenh"
+}

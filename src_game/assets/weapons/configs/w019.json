@@ -1,0 +1,27 @@
+{
+  "id": "w019",
+  "slug": "w019_anh_ve_song_sinh",
+  "tier": "SSR",
+  "name": "W019 — Song Sinh Ảnh Nhận (Cấp SSR — Animated 2x2 Spritesheet)",
+  "tscn_name": "c019_anh_ve_song_sinh.tscn",
+  "node_name": "C019_AnhVeSongSinh",
+  "archetype": "dual_blades",
+  "dual_wield_default": true,
+  "target_size": [
+    214,
+    174
+  ],
+  "grip1_norm": [
+    0.26,
+    0.75
+  ],
+  "grip2_norm": [
+    0.12,
+    0.88
+  ],
+  "rest_rot": 24.0,
+  "flip_horizontal": false,
+  "prompt_ref": "A single standalone 2D game weapon sprite on a pure solid magenta #FF00FF background, following the attached layout_guide_1x1.png safe zone (centered inside 65% of the canvas, zero border clipping). The weapon is W019 'Song Sinh Ảnh Nhận' (Twin Shadow-Guard's Eclipse Split-Blade / Dual-Soul Astral Katana-Saber, Tier SSR Legendary weapon), placed diagonally from bottom-left (ornate eclipse-ring pommel at the base of the hilt) to top-right (twin-pronged astral shadow-blade tip). Design details: a legendary dark-fantasy assassin split-blade forged from half obsidian-void steel and half luminous astral-gold mythril running parallel with a glowing purple-gold rift channel down the center of the blade; an ornate twin-mask eclipse handguard with a blazing violet-gold singularity gem; and a royal shadow-silk wrapped two-grip hilt for Grip 1 and Grip 2. Draw ONE complete legendary eclipse split-blade cleanly. Crisp dark outlines, stylized 2D hand-painted game art matching Arcana Five aesthetic, NO character, NO hands, 100% flat solid #FF00FF magenta background.",
+  "prompt_anim_2x2": "A 2x2 animated weapon spritesheet (4 frames arranged in 2 rows by 2 columns, following the attached layout_guide_2x2.png grid) on a pure solid magenta #FF00FF background. Each of the 4 cells MUST show the EXACT SAME W019 'Song Sinh Ảnh Nhận' (Twin Shadow-Guard's Eclipse Split-Blade) from the attached reference weapon image at the EXACT same diagonal angle, scale, and position inside each cell's safe zone (zero border clipping), while animating a 4-frame looping SSR legendary twin-shadow & astral-gold eclipse aura tightly wrapping the blade: Frame 1 (top-left) glowing violet-gold rift channel and pulsing eclipse singularity core; Frame 2 (top-right) intertwining dark-violet shadow flames and radiant astral-gold lightning coiling up the split blade; Frame 3 (bottom-left) peak SSR mirage clone-afterimage shimmer and blazing purple-gold dimensional arcs around the blade tip; Frame 4 (bottom-right) receding astral sparks and shadow wisps cycling smoothly back to Frame 1. Keep the background 100% flat solid #FF00FF magenta with NO grid lines drawn in the final image.",
+  "prompt_card": "Extreme close-up macro weapon portrait (horizontal rectangular 4:3, 884x632, 100% opaque RGB painting, NO transparent background, NO UI frame). A MATCHED PAIR OF GIANT LEGENDARY ECLIPSE SPLIT-BLADES (Song Sinh Ảnh Nhận) identical to the attached reference images MUST FILL 85% OF THE FRAME, crossed diagonally in the immediate foreground with their half-obsidian half-astral-gold split blades, glowing violet-gold singularity cores, and intertwining shadow-and-gold lightning aura. Keep the dark-fantasy eclipse temple background softly blurred so the giant twin legendary blades are the sole hero subject in the foreground."
+}

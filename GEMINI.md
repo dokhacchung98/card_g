@@ -20,8 +20,13 @@ Mọi AI Agent (Antigravity, Gemini, Claude, Cursor, Codex, OpenCode...) khi là
 
 ## QUY TẮC 2: Tạo Ảnh, Sprites, Maps & Game Assets bằng Muse Local API + Skill `agent-sprite-forge`
 
-Khi cần generate ảnh, spritesheet, nhân vật, hiệu ứng (FX/projectile/impact), props, tilemaps, 2D maps hoặc chuyển đổi video sang sprite:
+Khi cần generate ảnh, spritesheet, nhân vật, hiệu ứng (FX/projectile/impact), props, tilemaps, 2D maps, GUI/HUD icons hoặc chuyển đổi video sang sprite:
 - **TUYỆT ĐỐI KHÔNG** vẽ giả lập bằng code (không dùng PIL drawing, HTML5 Canvas, SVG, CSS hay hình khối placeholder để thay thế asset).
+- **TUYỆT ĐỐI KHÔNG dùng Icon Text / Emoji / Ký tự Unicode** (như `⚔️`, `🛡️`, `✨`, `📦`, `📚`, `🔒`, `♥`, `⚡`, `🤖`, `🔄`, `◀`, `✕`, `🌟`, `🎉`, `👆`, `📥`, `➕`, `➖`...) để làm icon trên giao diện game, nút bấm, HUD hay thẻ bài. Thiếu bất kỳ icon nào **BẮT BUỘC** phải gọi **Muse Local API** vẽ thành file ảnh `.png` tách nền trong suốt (`#FF00FF` chroma-key).
+- **Quy tắc Chuẩn Assets Game Tối Đa 8 Màu (`Max 8-Color Fantasy Standard`) & GUI Vẽ Tay Ít Chi Tiết (`Hand-Crafted Low-Detail 2D Game GUI`):**
+  - Toàn bộ các hình vẽ game assets hiện tại (đặc biệt là icon Nguyên Tố Ngũ Hành, icon Hệ/Vai Trò, icon Chỉ Số, icon UI/HUD kích thước nhỏ `14x14` – `48x48` px, cũng như **toàn bộ hình ảnh GUI: button background, dialog background, panel frame, header banner**) **BẮT BUỘC giữ đúng phong cách 2D dark-fantasy như người vẽ thật (`hand-drawn 2D fantasy game art`) nhưng tối giản chi tiết, mảng khối to rõ, viền dày sắc nét và chỉ dùng TỐI ĐA 8 MÀU (`strict maximum 8-color palette`, cel-shaded flat fantasy, zero micro-filigree)**.
+  - **TUYỆT ĐỐI KHÔNG** dùng thiết kế kiểu "AI design" (không tự dựng background button hay dialog background bằng code hộp phẳng `StyleBoxFlat` như CSS, và không vẽ hoa văn AI rồng phượng/xoắn ốc rối mắt trên nút bấm). Mọi button, dialog, panel trong game phải dùng ảnh GUI vẽ tay ít chi tiết, đồng bộ cùng 1 phong cách (`StyleBoxTexture` 9-slice / `TextureRect`).
+  - Khi gọi Muse Local API phải ghi rõ ràng yêu cầu `hand-drawn 2D dark-fantasy game art, simplified bold silhouette, few details, flat cel-shaded, strict maximum 8 colors` và ở bước hậu xử lý (`post-processing`) **BẮT BUỘC lượng tử hóa bảng màu (`palette quantization <= 8 colors`)** để đảm bảo 100% file asset xuất ra không vượt quá 8 màu, giúp hiển thị ở mọi kích thước cực kỳ rõ nét.
 - **BẮT BUỘC** sử dụng **Muse AI Local Server** kết hợp với quy trình và bộ script hậu xử lý của skill **`agent-sprite-forge`** (`https://github.com/0x0funky/agent-sprite-forge`).
 
 ### 2.1. Kết nối và sử dụng Muse AI Local Server (`/Users/dochung/Desktop/muse-local-api`)

@@ -1,0 +1,21 @@
+{
+  "id": "w079",
+  "slug": "w079_thanh_nu_hoi_sinh",
+  "tscn_name": "c079_thanh_nu_hoi_sinh.tscn",
+  "node_name": "C079_ThanhNuHoiSinh",
+  "name": "C079 Thánh Nữ Hồi Sinh (Thánh Trượng Khế Ước Phục Sinh)",
+  "tier": "SSR",
+  "archetype": "magic_staff",
+  "grip1_norm": [
+    0.46,
+    0.56
+  ],
+  "grip2_norm": [
+    0.34,
+    0.68
+  ],
+  "scale_mult": 1.25,
+  "prompt_ref": "Create a single-cell 1x1 reference sheet of a Mythic SSR dark-fantasy Resurrection Saintess's phoenix-ankh grand scepter (Thánh Trượng Khế Ước Phục Sinh - C079 Thánh Nữ Hồi Sinh) following the exact square cell of the attached reference layout_guide_1x1.png.\n\nCOMPOSITION & ORIENTATION (100% MANDATORY):\n- Draw ONE complete mythic resurrection staff oriented DIAGONALLY from bottom-left (ivory-platinum and celestial gold filigree shaft) to top-right (a majestic golden Seraph-Winged Ankh Cross encircling a blazing golden-emerald Phoenix Soul-Tear gem).\n- Must show 100% of the entire staff from bottom tip to top winged-ankh crown with generous padding inside the frame (occupying 65%-75% of the canvas).\n- Zero clipping at canvas edges.\n\nCOLOR & BACKGROUND (100% MANDATORY):\n- Background MUST be flat solid pure magenta (#FF00FF) edge-to-edge.\n- DO NOT use any magenta/pink tones on the staff itself (use pure celestial gold, ivory platinum, pearl white feathers, and radiant golden-amber & emerald resurrection light).\n- No character hands, no text, no borders.",
+  "prompt_anim_2x2": "Create a 2x2 sprite sheet (4 frames total: row 1 left-to-right, row 2 left-to-right) of the EXACT SAME Resurrection Saintess Winged-Ankh Staff from the first attached reference image, following the 2x2 grid layout of the second attached reference image (layout_guide_2x2.png).\n\n100% CONSISTENCY & ANIMATION RULES:\n- Every cell must show the exact same diagonal golden winged-ankh staff at the exact same angle, size, and position.\n- Animate a looping 4-frame mythic resurrection halo: blazing golden-white seraphic rays, ascending emerald-gold soul feathers, and sacred revival runes pulsing around the ankh crest.\n- Background MUST be flat solid pure magenta (#FF00FF) in all 4 cells. DO NOT draw the blue layout guide lines or cell borders. Keep each frame strictly inside its cell with zero clipping.",
+  "prompt_card": "Create a wide horizontal 16:11 dark-fantasy card illustration featuring the exact same Resurrection Saintess Winged-Ankh Staff (Thánh Trượng Khế Ước Phục Sinh - C079 Thánh Nữ Hồi Sinh) from the attached reference images.\n\nCOMPOSITION & BACKGROUND (100% MANDATORY):\n- Place the mythic golden winged-ankh resurrection staff diagonally across the center of the horizontal frame.\n- Full atmospheric dark-fantasy background (100% opaque RGB illustration, NO magenta, NO transparency): a darkened battlefield cathedral pierced by a pillar of heavenly golden-emerald resurrection light and rising phoenix feathers around the staff.\n- Do NOT draw any card frame, borders, or text."
+}

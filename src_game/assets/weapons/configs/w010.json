@@ -1,0 +1,25 @@
+{
+  "id": "w010",
+  "slug": "w010_thuong_thu_pha_tran",
+  "tier": "R",
+  "name": "W010 — Trường Thương Phá Trận (Cấp R — Vũ Khí Tĩnh)",
+  "tscn_name": "c010_thuong_thu_pha_tran.tscn",
+  "node_name": "C010_ThuongThuPhaTran",
+  "archetype": "melee_spear",
+  "target_size": [
+    228,
+    176
+  ],
+  "grip1_norm": [
+    0.36,
+    0.65
+  ],
+  "grip2_norm": [
+    0.14,
+    0.86
+  ],
+  "rest_rot": 20.0,
+  "flip_horizontal": false,
+  "prompt_ref": "A single standalone 2D game weapon sprite on a pure solid magenta #FF00FF background, following the attached layout_guide_1x1.png safe zone (centered inside 65% of the canvas, zero border clipping). The weapon is W010 'Trường Thương Phá Trận' (Line-Breaker Heavy Partisan War Spear / Armor-Piercing Winged Halberd-Spear, Tier R Rare weapon), placed diagonally from bottom-left (spiked iron butt-cap at the base of the shaft) to top-right (long armor-piercing spearhead). Design details: an imposing East-meets-West dark-fantasy vanguard war spear featuring a long, diamond-ridged blackened steel central spearhead with gleaming silver beveled edges, flanked at the base by twin symmetrical upward-curving crescent steel side-wings (partisan lugs) with dark bronze engravings and a compact tattered dark-crimson war tassel tied tightly around the socket collar; the heavy dark ironwood shaft is reinforced with riveted steel bands and wrapped in dark brown leather grips at Grip 1 and Grip 2, ending in a conical iron counterweight spike at the bottom-left. Crisp dark outlines, stylized 2D hand-painted game art matching Arcana Five aesthetic, NO character, NO hands, NO floating aura particles, 100% flat solid #FF00FF magenta background.",
+  "prompt_card": "Extreme close-up macro weapon portrait (horizontal rectangular 4:3, 884x632, 100% opaque RGB painting, NO transparent background, NO UI frame). ONE GIANT WINGED PARTISAN WAR SPEAR (Trường Thương Phá Trận) identical to the attached reference image MUST FILL 85% OF THE FRAME diagonally from bottom-left (iron butt-cap and leather-wrapped shaft) to top-right (diamond-ridged blackened steel spearhead with twin crescent side-wings and crimson tassel). Keep the background dark, moody, and softly out-of-focus with cold storm light and embers so the giant diagonal spear is the sole subject in the foreground."
+}

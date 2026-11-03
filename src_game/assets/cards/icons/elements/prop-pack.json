@@ -1,0 +1,267 @@
+{
+  "input": "/Users/dochung/Desktop/card_g/assets/cards/raw/element_icons_2x3_raw.png",
+  "rows": 2,
+  "cols": 3,
+  "threshold": 100,
+  "edge_threshold": 150,
+  "component_mode": "largest",
+  "component_padding": 4,
+  "min_component_area": 100,
+  "edge_touch_margin": 0,
+  "accepted": [
+    {
+      "index": 0,
+      "label": "kim",
+      "grid": [
+        0,
+        0
+      ],
+      "source_box": [
+        0,
+        0,
+        640,
+        640
+      ],
+      "component_mode": "largest",
+      "component_count": 1,
+      "selected_component_area": 251612,
+      "selected_component_bbox": [
+        41,
+        37,
+        614,
+        613
+      ],
+      "crop_bbox": [
+        41,
+        37,
+        614,
+        613
+      ],
+      "padded_crop_bbox": [
+        37,
+        33,
+        618,
+        617
+      ],
+      "edge_touch": false,
+      "output_size": [
+        581,
+        584
+      ],
+      "status": "accepted",
+      "image": "/Users/dochung/Desktop/card_g/assets/cards/icons/elements/kim/prop.png"
+    },
+    {
+      "index": 1,
+      "label": "moc",
+      "grid": [
+        0,
+        1
+      ],
+      "source_box": [
+        640,
+        0,
+        1280,
+        640
+      ],
+      "component_mode": "largest",
+      "component_count": 1,
+      "selected_component_area": 251514,
+      "selected_component_bbox": [
+        35,
+        40,
+        600,
+        609
+      ],
+      "crop_bbox": [
+        35,
+        40,
+        600,
+        609
+      ],
+      "padded_crop_bbox": [
+        31,
+        36,
+        604,
+        613
+      ],
+      "edge_touch": false,
+      "output_size": [
+        573,
+        577
+      ],
+      "status": "accepted",
+      "image": "/Users/dochung/Desktop/card_g/assets/cards/icons/elements/moc/prop.png"
+    },
+    {
+      "index": 2,
+      "label": "thuy",
+      "grid": [
+        0,
+        2
+      ],
+      "source_box": [
+        1280,
+        0,
+        1920,
+        640
+      ],
+      "component_mode": "largest",
+      "component_count": 1,
+      "selected_component_area": 252308,
+      "selected_component_bbox": [
+        13,
+        31,
+        600,
+        621
+      ],
+      "crop_bbox": [
+        13,
+        31,
+        600,
+        621
+      ],
+      "padded_crop_bbox": [
+        9,
+        27,
+        604,
+        625
+      ],
+      "edge_touch": false,
+      "output_size": [
+        595,
+        598
+      ],
+      "status": "accepted",
+      "image": "/Users/dochung/Desktop/card_g/assets/cards/icons/elements/thuy/prop.png"
+    },
+    {
+      "index": 3,
+      "label": "hoa",
+      "grid": [
+        1,
+        0
+      ],
+      "source_box": [
+        0,
+        640,
+        640,
+        1280
+      ],
+      "component_mode": "largest",
+      "component_count": 1,
+      "selected_component_area": 251946,
+      "selected_component_bbox": [
+        38,
+        15,
+        616,
+        600
+      ],
+      "crop_bbox": [
+        38,
+        15,
+        616,
+        600
+      ],
+      "padded_crop_bbox": [
+        34,
+        11,
+        620,
+        604
+      ],
+      "edge_touch": false,
+      "output_size": [
+        586,
+        593
+      ],
+      "status": "accepted",
+      "image": "/Users/dochung/Desktop/card_g/assets/cards/icons/elements/hoa/prop.png"
+    },
+    {
+      "index": 4,
+      "label": "tho",
+      "grid": [
+        1,
+        1
+      ],
+      "source_box": [
+        640,
+        640,
+        1280,
+        1280
+      ],
+      "component_mode": "largest",
+      "component_count": 1,
+      "selected_component_area": 250551,
+      "selected_component_bbox": [
+        35,
+        24,
+        602,
+        592
+      ],
+      "crop_bbox": [
+        35,
+        24,
+        602,
+        592
+      ],
+      "padded_crop_bbox": [
+        31,
+        20,
+        606,
+        596
+      ],
+      "edge_touch": false,
+      "output_size": [
+        575,
+        576
+      ],
+      "status": "accepted",
+      "image": "/Users/dochung/Desktop/card_g/assets/cards/icons/elements/tho/prop.png"
+    },
+    {
+      "index": 5,
+      "label": "ngu-hanh",
+      "grid": [
+        1,
+        2
+      ],
+      "source_box": [
+        1280,
+        640,
+        1920,
+        1280
+      ],
+      "component_mode": "largest",
+      "component_count": 1,
+      "selected_component_area": 252648,
+      "selected_component_bbox": [
+        18,
+        18,
+        596,
+        599
+      ],
+      "crop_bbox": [
+        18,
+        18,
+        596,
+        599
+      ],
+      "padded_crop_bbox": [
+        14,
+        14,
+        600,
+        603
+      ],
+      "edge_touch": false,
+      "output_size": [
+        586,
+        589
+      ],
+      "status": "accepted",
+      "image": "/Users/dochung/Desktop/card_g/assets/cards/icons/elements/ngu-hanh/prop.png"
+    }
+  ],
+  "rejected": [],
+  "edge_touch_props": []
+}

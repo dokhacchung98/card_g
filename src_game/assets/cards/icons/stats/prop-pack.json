@@ -1,0 +1,350 @@
+{
+  "input": "/Users/dochung/Desktop/card_g/assets/cards/raw/stat_icons_3x3_raw.png",
+  "rows": 3,
+  "cols": 3,
+  "threshold": 100,
+  "edge_threshold": 150,
+  "component_mode": "all",
+  "component_padding": 6,
+  "min_component_area": 30,
+  "edge_touch_margin": 0,
+  "accepted": [
+    {
+      "index": 0,
+      "label": "hp",
+      "grid": [
+        0,
+        0
+      ],
+      "source_box": [
+        0,
+        0,
+        533,
+        533
+      ],
+      "component_mode": "all",
+      "component_count": 1,
+      "selected_component_area": null,
+      "selected_component_bbox": null,
+      "crop_bbox": [
+        54,
+        70,
+        480,
+        461
+      ],
+      "padded_crop_bbox": [
+        48,
+        64,
+        486,
+        467
+      ],
+      "edge_touch": false,
+      "output_size": [
+        438,
+        403
+      ],
+      "status": "accepted",
+      "image": "/Users/dochung/Desktop/card_g/assets/cards/icons/stats/hp/prop.png"
+    },
+    {
+      "index": 1,
+      "label": "mana",
+      "grid": [
+        0,
+        1
+      ],
+      "source_box": [
+        533,
+        0,
+        1066,
+        533
+      ],
+      "component_mode": "all",
+      "component_count": 1,
+      "selected_component_area": null,
+      "selected_component_bbox": null,
+      "crop_bbox": [
+        91,
+        57,
+        440,
+        487
+      ],
+      "padded_crop_bbox": [
+        85,
+        51,
+        446,
+        493
+      ],
+      "edge_touch": false,
+      "output_size": [
+        361,
+        442
+      ],
+      "status": "accepted",
+      "image": "/Users/dochung/Desktop/card_g/assets/cards/icons/stats/mana/prop.png"
+    },
+    {
+      "index": 2,
+      "label": "shield",
+      "grid": [
+        0,
+        2
+      ],
+      "source_box": [
+        1066,
+        0,
+        1599,
+        533
+      ],
+      "component_mode": "all",
+      "component_count": 1,
+      "selected_component_area": null,
+      "selected_component_bbox": null,
+      "crop_bbox": [
+        44,
+        48,
+        475,
+        487
+      ],
+      "padded_crop_bbox": [
+        38,
+        42,
+        481,
+        493
+      ],
+      "edge_touch": false,
+      "output_size": [
+        443,
+        451
+      ],
+      "status": "accepted",
+      "image": "/Users/dochung/Desktop/card_g/assets/cards/icons/stats/shield/prop.png"
+    },
+    {
+      "index": 3,
+      "label": "dame",
+      "grid": [
+        1,
+        0
+      ],
+      "source_box": [
+        0,
+        533,
+        533,
+        1066
+      ],
+      "component_mode": "all",
+      "component_count": 1,
+      "selected_component_area": null,
+      "selected_component_bbox": null,
+      "crop_bbox": [
+        49,
+        30,
+        506,
+        495
+      ],
+      "padded_crop_bbox": [
+        43,
+        24,
+        512,
+        501
+      ],
+      "edge_touch": false,
+      "output_size": [
+        469,
+        477
+      ],
+      "status": "accepted",
+      "image": "/Users/dochung/Desktop/card_g/assets/cards/icons/stats/dame/prop.png"
+    },
+    {
+      "index": 4,
+      "label": "aspd",
+      "grid": [
+        1,
+        1
+      ],
+      "source_box": [
+        533,
+        533,
+        1066,
+        1066
+      ],
+      "component_mode": "all",
+      "component_count": 2,
+      "selected_component_area": null,
+      "selected_component_bbox": null,
+      "crop_bbox": [
+        36,
+        11,
+        491,
+        489
+      ],
+      "padded_crop_bbox": [
+        30,
+        5,
+        497,
+        495
+      ],
+      "edge_touch": false,
+      "output_size": [
+        467,
+        490
+      ],
+      "status": "accepted",
+      "image": "/Users/dochung/Desktop/card_g/assets/cards/icons/stats/aspd/prop.png"
+    },
+    {
+      "index": 5,
+      "label": "range",
+      "grid": [
+        1,
+        2
+      ],
+      "source_box": [
+        1066,
+        533,
+        1599,
+        1066
+      ],
+      "component_mode": "all",
+      "component_count": 7,
+      "selected_component_area": null,
+      "selected_component_bbox": null,
+      "crop_bbox": [
+        32,
+        4,
+        501,
+        525
+      ],
+      "padded_crop_bbox": [
+        26,
+        0,
+        507,
+        525
+      ],
+      "edge_touch": true,
+      "output_size": [
+        481,
+        525
+      ],
+      "status": "accepted",
+      "image": "/Users/dochung/Desktop/card_g/assets/cards/icons/stats/range/prop.png"
+    },
+    {
+      "index": 6,
+      "label": "def",
+      "grid": [
+        2,
+        0
+      ],
+      "source_box": [
+        0,
+        1066,
+        533,
+        1599
+      ],
+      "component_mode": "all",
+      "component_count": 1,
+      "selected_component_area": null,
+      "selected_component_bbox": null,
+      "crop_bbox": [
+        23,
+        67,
+        518,
+        478
+      ],
+      "padded_crop_bbox": [
+        17,
+        61,
+        524,
+        484
+      ],
+      "edge_touch": false,
+      "output_size": [
+        507,
+        423
+      ],
+      "status": "accepted",
+      "image": "/Users/dochung/Desktop/card_g/assets/cards/icons/stats/def/prop.png"
+    },
+    {
+      "index": 7,
+      "label": "mdef",
+      "grid": [
+        2,
+        1
+      ],
+      "source_box": [
+        533,
+        1066,
+        1066,
+        1599
+      ],
+      "component_mode": "all",
+      "component_count": 16,
+      "selected_component_area": null,
+      "selected_component_bbox": null,
+      "crop_bbox": [
+        72,
+        41,
+        456,
+        482
+      ],
+      "padded_crop_bbox": [
+        66,
+        35,
+        462,
+        488
+      ],
+      "edge_touch": false,
+      "output_size": [
+        396,
+        453
+      ],
+      "status": "accepted",
+      "image": "/Users/dochung/Desktop/card_g/assets/cards/icons/stats/mdef/prop.png"
+    },
+    {
+      "index": 8,
+      "label": "mspd",
+      "grid": [
+        2,
+        2
+      ],
+      "source_box": [
+        1066,
+        1066,
+        1599,
+        1599
+      ],
+      "component_mode": "all",
+      "component_count": 7,
+      "selected_component_area": null,
+      "selected_component_bbox": null,
+      "crop_bbox": [
+        10,
+        57,
+        507,
+        446
+      ],
+      "padded_crop_bbox": [
+        4,
+        51,
+        513,
+        452
+      ],
+      "edge_touch": false,
+      "output_size": [
+        509,
+        401
+      ],
+      "status": "accepted",
+      "image": "/Users/dochung/Desktop/card_g/assets/cards/icons/stats/mspd/prop.png"
+    }
+  ],
+  "rejected": [],
+  "edge_touch_props": [
+    "range"
+  ]
+}

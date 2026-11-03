@@ -1,0 +1,25 @@
+{
+  "id": "w031",
+  "slug": "w031_phu_thuy_dich_chuyen",
+  "tier": "R",
+  "name": "W031 — Trượng Không Gian Hoán Vị (Cấp R — Vũ Khí Tĩnh)",
+  "tscn_name": "c031_phu_thuy_dich_chuyen.tscn",
+  "node_name": "C031_PhuThuyDichChuyen",
+  "archetype": "magic_staff",
+  "target_size": [
+    220,
+    176
+  ],
+  "grip1_norm": [
+    0.34,
+    0.66
+  ],
+  "grip2_norm": [
+    0.14,
+    0.86
+  ],
+  "rest_rot": 22.0,
+  "flip_horizontal": false,
+  "prompt_ref": "A single standalone 2D game weapon sprite on a pure solid magenta #FF00FF background, following the attached layout_guide_1x1.png safe zone (centered inside 65% of the canvas, zero border clipping). The weapon is W031 'Trượng Không Gian Hoán Vị' (Teleportation Warlock's Spatial Rift Staff, Tier R Rare weapon), placed diagonally from bottom-left (pointed silver-astrolabe counterweight pommel at the base of the shaft) to top-right (interlocking dual-portal ring staff head). Design details: an ornate dark-fantasy spatial mage staff topped with two intersecting silver-and-obsidian astrolabe portal rings framing a faceted cyan-indigo rift crystal suspended at the center; the sleek dark meteoric-iron shaft is etched with geometric teleportation runes and wrapped in midnight-blue leather at Grip 1 and Grip 2, ending in a sharp compass-spike pommel at the bottom-left. Crisp dark outlines, stylized 2D hand-painted game art matching Arcana Five aesthetic, NO character, NO hands, NO detached floating particles, 100% flat solid #FF00FF magenta background.",
+  "prompt_card": "Extreme close-up macro weapon portrait (horizontal rectangular 4:3, 884x632, 100% opaque RGB painting, NO transparent background, NO UI frame). ONE GIANT SPATIAL RIFT ASTROLABE STAFF (Trượng Không Gian Hoán Vị) identical to the attached reference image MUST FILL 85% OF THE FRAME diagonally from bottom-left (meteoric-iron shaft with midnight-blue leather grips) to top-right (intersecting silver-and-obsidian portal rings holding the faceted cyan-indigo rift crystal). Keep the dark-fantasy warped dimensional chamber background softly blurred in deep indigo shadow so the giant diagonal staff is the sole hero subject in the foreground."
+}

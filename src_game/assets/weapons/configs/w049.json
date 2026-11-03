@@ -1,0 +1,25 @@
+{
+  "id": "w049",
+  "slug": "w049_gac_cong_am_phu",
+  "tier": "R",
+  "name": "W049 — Đại Khiên Cổng Chắn Âm Giới (Cấp R — Vũ Khí Tĩnh)",
+  "tscn_name": "c049_gac_cong_am_phu.tscn",
+  "node_name": "C049_GacCongAmPhu",
+  "archetype": "great_shield",
+  "target_size": [
+    174,
+    212
+  ],
+  "grip1_norm": [
+    0.45,
+    0.48
+  ],
+  "grip2_norm": [
+    0.45,
+    0.72
+  ],
+  "rest_rot": 35.0,
+  "flip_horizontal": false,
+  "prompt_ref": "A single standalone 2D game tower-shield sprite on a pure solid magenta #FF00FF background, following the attached layout_guide_1x1.png safe zone (centered inside 65% of the canvas, zero border clipping). The weapon is W049 'Đại Khiên Cổng Chắn Âm Giới' (Underworld Gatekeeper's Spirit-Gate Greatshield, Tier R Rare shield), standing upright in 3/4 side-front perspective facing right. Design details: an imposing dark-fantasy underworld guardian tower shield shaped like an arched blackened-iron portcullis gate crowned with horned skull gargoyles, with glowing ghostly teal-emerald spirit-wall energy shining behind the heavy wrought-iron gate bars and spiked bottom gate-posts. Crisp dark outlines, stylized 2D hand-painted game art matching Arcana Five aesthetic, NO character, NO hands, NO detached floating particles, 100% flat solid #FF00FF magenta background.",
+  "prompt_card": "Extreme close-up macro shield portrait (horizontal rectangular 4:3, 884x632, 100% opaque RGB painting, NO transparent background, NO UI frame). ONE GIANT UNDERWORLD SPIRIT-GATE GREATSHIELD (Đại Khiên Cổng Chắn Âm Giới) identical to the attached reference image MUST FILL 85% OF THE FRAME angled heroically in the foreground (arched blackened-iron portcullis gate tower shield crowned with skull gargoyles and glowing with spectral teal-emerald spirit barrier energy). Keep the dark-fantasy underworld river-gate background softly blurred in eerie spectral teal shadow so the giant gate-shield is the sole hero subject in the foreground."
+}

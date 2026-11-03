@@ -1,0 +1,41 @@
+{
+  "id": "w042",
+  "slug": "w042_ky_si_khien_gi",
+  "tier": "N",
+  "name": "W042 — Bộ Chùy & Khiên Sắt Gỉ Kỵ Sĩ (Cấp N — Vũ Khí Tĩnh)",
+  "tscn_name": "c042_ky_si_khien_gi.tscn",
+  "node_name": "C042_KySiKhienGi",
+  "archetype": "sword_and_shield",
+  "dual_wield_default": true,
+  "target_size": [
+    208,
+    164
+  ],
+  "offhand_target_size": [
+    144,
+    176
+  ],
+  "grip1_norm": [
+    0.32,
+    0.68
+  ],
+  "grip2_norm": [
+    0.14,
+    0.86
+  ],
+  "offhand_grip1_norm": [
+    0.48,
+    0.48
+  ],
+  "offhand_grip2_norm": [
+    0.48,
+    0.70
+  ],
+  "rest_rot": 18.0,
+  "offhand_rest_rot": 58.0,
+  "offhand_z_index": 11,
+  "flip_horizontal": false,
+  "prompt_ref": "A single standalone 2D game weapon sprite on a pure solid magenta #FF00FF background, following the attached layout_guide_1x1.png safe zone (centered inside 65% of the canvas, zero border clipping). The weapon is the main-hand war mace of W042 'Kỵ Sĩ Khiên Gỉ' (Rusted Shield-Knight's Flanged War Mace, Tier N Normal weapon), placed diagonally from bottom-left (iron pommel cap) to top-right (heavy rusted iron flanged mace head). Crisp dark outlines, stylized 2D hand-painted game art matching Arcana Five aesthetic, NO character, NO hands, 100% flat solid #FF00FF magenta background.",
+  "prompt_offhand": "A single standalone 2D game knight shield sprite on a pure solid magenta #FF00FF background, following the attached layout_guide_1x1.png safe zone (centered inside 65% of the canvas, zero border clipping). The shield is the off-hand shield of W042 'Khiên Sắt Gỉ Khiêu Khích' (Rusted Shield-Knight's Roaring Lion Heater Shield, Tier N Normal shield), standing upright in 3/4 front-right view. Design details: a battle-scarred dark-fantasy knight heater shield forged from weathered rusted iron and aged oak, reinforced with thick riveted iron rims and a central roaring bronze-iron lion boss plate dented from taunting enemy strikes. Crisp dark outlines, stylized 2D hand-painted game art matching Arcana Five aesthetic, NO character, NO hands, NO detached floating particles, 100% flat solid #FF00FF magenta background.",
+  "prompt_card": "Extreme close-up macro weapon-and-shield portrait (horizontal rectangular 4:3, 884x632, 100% opaque RGB painting, NO transparent background, NO UI frame). ONE GIANT RUSTED IRON LION-BOSS KNIGHT SHIELD AND FLANGED WAR MACE (Bộ Chùy & Khiên Sắt Gỉ Kỵ Sĩ) identical to the two attached reference images MUST FILL 85% OF THE FRAME together in the foreground (the battle-scarred rusted iron heater shield with its roaring lion boss alongside the heavy flanged war mace). Keep the dark-fantasy muddy siege rampart background softly blurred in warm torchlit shadow so the shield and mace are the sole hero subjects in the foreground."
+}

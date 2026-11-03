@@ -1,0 +1,25 @@
+{
+  "id": "w021",
+  "slug": "w021_thuat_si_tro_tan",
+  "tier": "N",
+  "name": "W021 — Trượng Tro Tàn (Cấp N — Vũ Khí Tĩnh)",
+  "tscn_name": "c021_thuat_si_tro_tan.tscn",
+  "node_name": "C021_ThuatSiTroTan",
+  "archetype": "magic_staff",
+  "target_size": [
+    220,
+    174
+  ],
+  "grip1_norm": [
+    0.34,
+    0.66
+  ],
+  "grip2_norm": [
+    0.14,
+    0.86
+  ],
+  "rest_rot": 22.0,
+  "flip_horizontal": false,
+  "prompt_ref": "A single standalone 2D game weapon sprite on a pure solid magenta #FF00FF background, following the attached layout_guide_1x1.png safe zone (centered inside 65% of the canvas, zero border clipping). The weapon is W021 'Trượng Tro Tàn' (Ashen Warlock's Charred Cinder Staff, Tier N Normal weapon), placed diagonally from bottom-left (iron ferrule cap at the base of the shaft) to top-right (twisted iron-and-charred-wood staff head). Design details: a gritty dark-fantasy apprentice warlock staff crafted from blackened, fire-charred ashwood with twisted dark iron prongs at the top clutching a rough, dimly smoldering ember-coal stone (physically held inside the iron claws, NO detached floating fireballs or loose particles); the sturdy wooden shaft is wrapped in worn grey-brown linen and leather straps at Grip 1 and Grip 2, ending in a simple blackened iron butt-cap at the bottom-left. Crisp dark outlines, stylized 2D hand-painted game art matching Arcana Five aesthetic, NO character, NO hands, NO separate projectiles, NO floating aura particles, 100% flat solid #FF00FF magenta background.",
+  "prompt_card": "Extreme close-up macro weapon portrait (horizontal rectangular 4:3, 884x632, 100% opaque RGB painting, NO transparent background, NO UI frame). ONE GIANT CHARRED CINDER MAGIC STAFF (Trượng Tro Tàn) identical to the attached reference image MUST FILL 85% OF THE FRAME diagonally from bottom-left (linen-wrapped charred wood shaft) to top-right (twisted iron claws holding the rough smoldering coal-stone head). Keep the dark-fantasy burned ruin background softly blurred in dark ash and warm dim amber light so the giant diagonal staff is the sole hero subject in the foreground."
+}

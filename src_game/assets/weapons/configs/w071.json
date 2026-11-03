@@ -1,0 +1,20 @@
+{
+  "id": "w071",
+  "slug": "w071_ke_danh_dau_yeu_diem",
+  "name": "C071 Kẻ Đánh Dấu Yếu Điểm (Trượng Huyết Nhãn Điểm Yếu)",
+  "tier": "R",
+  "archetype": "magic_staff",
+  "grip1_norm": [
+    0.46,
+    0.56
+  ],
+  "grip2_norm": [
+    0.34,
+    0.68
+  ],
+  "scale_mult": 1.15,
+  "prompt_ref": "Create a single-cell 1x1 reference sheet of a dark-fantasy Blood-Mark Oracle's crimson-eye targeting staff (Trượng Huyết Nhãn Điểm Yếu - C071 Kẻ Đánh Dấu Yếu Điểm) following the exact square cell of the attached reference layout_guide_1x1.png.\n\nCOMPOSITION & ORIENTATION (100% MANDATORY):\n- Draw ONE complete occult targeting staff oriented DIAGONALLY from bottom-left (spiked blackened steel shaft) to top-right (an iron crosshair caliper ring framing a glaring crimson-gold reptilian Blood Eye crystal).\n- Must show 100% of the entire staff from bottom spike to top crosshair eye crest with generous padding inside the frame (occupying 65%-75% of the canvas).\n- Zero clipping at canvas edges.\n\nCOLOR & BACKGROUND (100% MANDATORY):\n- Background MUST be flat solid pure magenta (#FF00FF) edge-to-edge.\n- DO NOT use any magenta/pink tones on the staff itself (use blackened obsidian steel, antique brass crosshair rings, and deep blood-red & fiery amber eye crystal).\n- No character hands, no text, no borders.",
+  "prompt_card": "Create a wide horizontal 16:11 dark-fantasy card illustration featuring the exact same Crimson-Eye Weakpoint Staff (Trượng Huyết Nhãn Điểm Yếu - C071 Kẻ Đánh Dấu Yếu Điểm) from the attached reference image.\n\nCOMPOSITION & BACKGROUND (100% MANDATORY):\n- Place the spiked iron crosshair staff with its glaring blood-eye crystal diagonally across the center of the horizontal frame.\n- Full atmospheric dark-fantasy background (100% opaque RGB illustration, NO magenta, NO transparency): a dark battlefield shadow-realm where glowing red-orange hunter target sigils and vampiric blood-threads lock onto unseen prey.\n- Do NOT draw any card frame, borders, or text.",
+  "tscn_name": "c071_ke_danh_dau_yeu_diem.tscn",
+  "node_name": "C071_KeDanhDauYeuDiem"
+}

@@ -1,0 +1,26 @@
+{
+  "id": "w035",
+  "slug": "w035_chua_te_ao_anh",
+  "tier": "S",
+  "name": "W035 — Quyền Trượng Gương Phân Thân (Cấp S — Vũ Khí Động 2x2)",
+  "tscn_name": "c035_chua_te_ao_anh.tscn",
+  "node_name": "C035_ChuaTeAoAnh",
+  "archetype": "magic_staff",
+  "target_size": [
+    224,
+    180
+  ],
+  "grip1_norm": [
+    0.34,
+    0.66
+  ],
+  "grip2_norm": [
+    0.14,
+    0.86
+  ],
+  "rest_rot": 22.0,
+  "flip_horizontal": false,
+  "prompt_ref": "A single standalone 2D game weapon sprite on a pure solid magenta #FF00FF background, following the attached layout_guide_1x1.png safe zone (centered inside 65% of the canvas, zero border clipping). The weapon is W035 'Quyền Trượng Gương Phân Thân' (Lord of Illusions' Prismatic Mirage Scepter, Tier S Epic weapon), placed diagonally from bottom-left (pointed silver-filigree pommel at the base of the shaft) to top-right (ornate twin-mask mirror crest at the top). Design details: an aristocratic dark-fantasy illusionist scepter topped with a gilded baroque diamond-mirror frame flanked by twin silver theater masks, reflecting a glowing turquoise-and-gold mirage core; the fluted dark silver-and-ebony shaft is wrapped in royal navy velvet leather at Grip 1 and Grip 2, ending in a sharp prism-spike pommel at the bottom-left. Crisp dark outlines, stylized 2D hand-painted game art matching Arcana Five aesthetic, NO character, NO hands, NO detached floating particles, 100% flat solid #FF00FF magenta background.",
+  "prompt_anim_2x2": "A 2x2 sprite sheet (4 frames in a 2-row by 2-column grid) on a pure solid magenta #FF00FF background, strictly following the second attached reference image layout_guide_2x2.png and keeping the exact weapon design, size, diagonal angle, and grip positions of the first attached reference image (W035 Quyền Trượng Gương Phân Thân). Each of the 4 cells shows the exact same diagonal Prismatic Mirage Scepter in the exact same position, with a 4-frame looping animation of shimmering turquoise-and-gold illusionary mirror ripples and holographic light arcs pulsing tightly around the baroque mirror head and shaft. Zero cell border clipping, NO character, 100% solid #FF00FF background.",
+  "prompt_card": "Extreme close-up macro weapon portrait (horizontal rectangular 4:3, 884x632, 100% opaque RGB painting, NO transparent background, NO UI frame). ONE GIANT PRISMATIC MIRAGE SCEPTER (Quyền Trượng Gương Phân Thân) identical to the attached reference images MUST FILL 85% OF THE FRAME diagonally from bottom-left (fluted silver-and-ebony shaft) to top-right (gilded baroque diamond-mirror crest with twin silver masks glowing with turquoise-gold illusion magic). Keep the dark-fantasy hall of shattered mirrors background softly blurred in deep midnight-blue shadow so the giant diagonal scepter is the sole hero subject in the foreground."
+}

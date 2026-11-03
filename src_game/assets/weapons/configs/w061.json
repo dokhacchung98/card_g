@@ -1,0 +1,20 @@
+{
+  "id": "w061",
+  "slug": "w061_tu_si_hac_am",
+  "name": "C061 Tu Sĩ Hắc Ám (Trượng Lồng Đèn Cứu Rỗi)",
+  "tier": "N",
+  "archetype": "magic_staff",
+  "grip1_norm": [
+    0.46,
+    0.56
+  ],
+  "grip2_norm": [
+    0.34,
+    0.68
+  ],
+  "scale_mult": 1.12,
+  "prompt_ref": "Create a single-cell 1x1 reference sheet of a dark-fantasy Support Healer's lantern staff (Trượng Lồng Đèn Cứu Rỗi - C061 Tu Sĩ Hắc Ám) following the exact square cell of the attached reference layout_guide_1x1.png.\n\nCOMPOSITION & ORIENTATION (100% MANDATORY):\n- Draw ONE complete wrought-iron monk staff oriented DIAGONALLY from bottom-left (iron butt cap and wrapped leather shaft) to top-right (hooked iron crook suspending a glowing golden-white sanctuary lantern that radiates warm healing light).\n- Must show 100% of the entire staff from bottom tip to top lantern crook with generous padding inside the frame (occupying 65%-75% of the canvas).\n- Zero clipping at canvas edges.\n\nCOLOR & BACKGROUND (100% MANDATORY):\n- Background MUST be flat solid pure magenta (#FF00FF) edge-to-edge.\n- DO NOT use any magenta/pink tones on the staff itself (use dark forged iron, aged oak wood, warm brass, and golden-amber healing lantern glow).\n- No character hands, no text, no borders.",
+  "prompt_card": "Create a wide horizontal 16:11 dark-fantasy card illustration featuring the exact same Sanctuary Lantern Staff (Trượng Lồng Đèn Cứu Rỗi - C061 Tu Sĩ Hắc Ám) from the attached reference image.\n\nCOMPOSITION & BACKGROUND (100% MANDATORY):\n- Place the wrought-iron monk staff with its hanging golden-white sanctuary lantern diagonally across the center of the horizontal frame.\n- Full atmospheric dark-fantasy background (100% opaque RGB illustration, NO magenta, NO transparency): a shadowy gothic chapel nave where warm golden-white rays of salvation light stream out from the lantern, banishing dark mist.\n- Do NOT draw any card frame, borders, or text.",
+  "tscn_name": "c061_tu_si_hac_am.tscn",
+  "node_name": "C061_TuSiHacAm"
+}

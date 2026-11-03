@@ -1,0 +1,20 @@
+{
+  "id": "w063",
+  "slug": "w063_ke_thi_tham",
+  "name": "C063 Kẻ Thì Thầm (Quyền Trượng Đàn Cốt Cầm)",
+  "tier": "N",
+  "archetype": "magic_staff",
+  "grip1_norm": [
+    0.46,
+    0.56
+  ],
+  "grip2_norm": [
+    0.34,
+    0.68
+  ],
+  "scale_mult": 1.12,
+  "prompt_ref": "Create a single-cell 1x1 reference sheet of a dark-fantasy Whisperer's bone-lyre scepter staff (Quyền Trượng Đàn Cốt Cầm - C063 Kẻ Thì Thầm) following the exact square cell of the attached reference layout_guide_1x1.png.\n\nCOMPOSITION & ORIENTATION (100% MANDATORY):\n- Draw ONE complete bardic bone-lyre staff oriented DIAGONALLY from bottom-left (dark bronze and carved bone shaft) to top-right (a horned skull-and-ribcage lyre frame strung with glowing golden-amber acoustic strings).\n- Must show 100% of the entire staff from bottom tip to top bone-lyre head with generous padding inside the frame (occupying 65%-75% of the canvas).\n- Zero clipping at canvas edges.\n\nCOLOR & BACKGROUND (100% MANDATORY):\n- Background MUST be flat solid pure magenta (#FF00FF) edge-to-edge.\n- DO NOT use any magenta/pink tones on the staff itself (use aged ivory bone, dark antique bronze, crimson leather grip, and warm amber-gold strings).\n- No character hands, no text, no borders.",
+  "prompt_card": "Create a wide horizontal 16:11 dark-fantasy card illustration featuring the exact same Bone-Lyre Whisperer Staff (Quyền Trượng Đàn Cốt Cầm - C063 Kẻ Thì Thầm) from the attached reference image.\n\nCOMPOSITION & BACKGROUND (100% MANDATORY):\n- Place the bone-lyre scepter staff diagonally across the center of the horizontal frame.\n- Full atmospheric dark-fantasy background (100% opaque RGB illustration, NO magenta, NO transparency): a shadowy catacomb amphitheater where golden-amber musical soundwaves and battle-frenzy runes vibrate from the bone lyre strings.\n- Do NOT draw any card frame, borders, or text.",
+  "tscn_name": "c063_ke_thi_tham.tscn",
+  "node_name": "C063_KeThiTham"
+}

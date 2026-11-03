@@ -1,0 +1,41 @@
+{
+  "id": "w045",
+  "slug": "w045_ve_binh_thap_canh",
+  "tier": "N",
+  "name": "W045 — Bộ Kích & Khiên Vệ Binh Tháp Canh (Cấp N — Vũ Khí Tĩnh)",
+  "tscn_name": "c045_ve_binh_thap_canh.tscn",
+  "node_name": "C045_VeBinhThapCanh",
+  "archetype": "sword_and_shield",
+  "dual_wield_default": true,
+  "target_size": [
+    218,
+    172
+  ],
+  "offhand_target_size": [
+    144,
+    178
+  ],
+  "grip1_norm": [
+    0.34,
+    0.66
+  ],
+  "grip2_norm": [
+    0.14,
+    0.86
+  ],
+  "offhand_grip1_norm": [
+    0.48,
+    0.48
+  ],
+  "offhand_grip2_norm": [
+    0.48,
+    0.70
+  ],
+  "rest_rot": 20.0,
+  "offhand_rest_rot": 58.0,
+  "offhand_z_index": 11,
+  "flip_horizontal": false,
+  "prompt_ref": "A single standalone 2D game weapon sprite on a pure solid magenta #FF00FF background, following the attached layout_guide_1x1.png safe zone (centered inside 65% of the canvas, zero border clipping). The weapon is the main-hand poleaxe of W045 'Vệ Binh Tháp Canh' (Watchtower Sentinel's Intercept Halberd-Spear, Tier N Normal weapon), placed diagonally from bottom-left (steel butt-spike) to top-right (dark steel crescent garrison axe-blade and stout spear point). Crisp dark outlines, stylized 2D hand-painted game art matching Arcana Five aesthetic, NO character, NO hands, 100% flat solid #FF00FF magenta background.",
+  "prompt_offhand": "A single standalone 2D game knight shield sprite on a pure solid magenta #FF00FF background, following the attached layout_guide_1x1.png safe zone (centered inside 65% of the canvas, zero border clipping). The shield is the off-hand shield of W045 'Khiên Vệ Binh Tháp Canh' (Watchtower Sentinel's Garrison Kite Shield, Tier N Normal shield), standing upright in 3/4 front-right view. Design details: a sturdy dark-fantasy garrison kite shield forged from dark slate-blue steel with weathered brass border trim, heavy iron corner studs, and an embossed watchtower-and-torch heraldic emblem in the center. Crisp dark outlines, stylized 2D hand-painted game art matching Arcana Five aesthetic, NO character, NO hands, NO detached floating particles, 100% flat solid #FF00FF magenta background.",
+  "prompt_card": "Extreme close-up macro shield-and-poleaxe portrait (horizontal rectangular 4:3, 884x632, 100% opaque RGB painting, NO transparent background, NO UI frame). ONE GIANT WATCHTOWER GARRISON KITE SHIELD AND INTERCEPT POLEAXE (Bộ Kích & Khiên Vệ Binh Tháp Canh) identical to the two attached reference images MUST FILL 85% OF THE FRAME together in the foreground (the dark slate-blue steel kite shield with brass watchtower emblem crossed with the garrison halberd-poleaxe). Keep the dark-fantasy rain-swept stone watchtower battlement background softly blurred in dusk slate-blue shadow so the shield and poleaxe are the sole hero subjects in the foreground."
+}

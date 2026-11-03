@@ -1,0 +1,26 @@
+{
+  "id": "w056",
+  "slug": "w056_golem_hac_dien",
+  "tier": "S",
+  "name": "W056 — Đại Chùy Hắc Diện Địa Chấn (Cấp S — Vũ Khí Động 2x2)",
+  "tscn_name": "c056_golem_hac_dien.tscn",
+  "node_name": "C056_GolemHacDien",
+  "archetype": "melee_cleaver",
+  "target_size": [
+    226,
+    182
+  ],
+  "grip1_norm": [
+    0.32,
+    0.68
+  ],
+  "grip2_norm": [
+    0.14,
+    0.86
+  ],
+  "rest_rot": 18.0,
+  "flip_horizontal": false,
+  "prompt_ref": "A single standalone 2D game weapon sprite on a pure solid magenta #FF00FF background, following the attached layout_guide_1x1.png safe zone (centered inside 65% of the canvas, zero border clipping). The weapon is W056 'Đại Chùy Hắc Diện Địa Chấn' (Obsidian Golem's Earthshaker Monolith Greathammer, Tier S Epic weapon), placed diagonally from bottom-left (obsidian spike pommel at the base of the handle) to top-right (colossal jagged black-obsidian golem face hammerhead). Design details: an intimidating dark-fantasy colossus greathammer forged from razor-edged black volcanic obsidian glass and dark gold, sculpted with a fierce armored golem mask on the hammerhead and glowing molten magma-orange tectonic fissures running across its surface; heavy obsidian-iron shaft wrapped in dark leather at Grip 1 and Grip 2. Crisp dark outlines, stylized 2D hand-painted game art matching Arcana Five aesthetic, NO character, NO hands, NO detached floating particles, 100% flat solid #FF00FF magenta background.",
+  "prompt_anim_2x2": "A 2x2 sprite sheet (4 frames in a 2-row by 2-column grid) on a pure solid magenta #FF00FF background, strictly following the second attached reference image layout_guide_2x2.png and keeping the exact weapon design, size, diagonal angle, and grip positions of the first attached reference image (W056 Đại Chùy Hắc Diện Địa Chấn). Each of the 4 cells shows the exact same diagonal Obsidian Earthshaker Greathammer in the exact same position, with a 4-frame looping animation of molten magma-orange seismic energy and gravity-lock runes surging along the obsidian hammerhead and shaft. DO NOT draw the blue layout guide lines, zero cell border clipping, NO character, 100% solid #FF00FF background.",
+  "prompt_card": "Extreme close-up macro weapon portrait (horizontal rectangular 4:3, 884x632, 100% opaque RGB painting, NO transparent background, NO UI frame). ONE GIANT OBSIDIAN EARTHSHAKER GREATHAMMER (Đại Chùy Hắc Diện Địa Chấn) identical to the attached reference images MUST FILL 85% OF THE FRAME diagonally from bottom-left (obsidian-iron shaft) to top-right (jagged black-obsidian golem hammerhead blazing with molten magma-orange tectonic fissures). Keep the dark-fantasy volcanic chasm background softly blurred in deep obsidian-red shadow so the giant greathammer is the sole hero subject in the foreground."
+}

@@ -1,0 +1,25 @@
+{
+  "id": "w022",
+  "slug": "w022_phap_su_mo_dia",
+  "tier": "N",
+  "name": "W022 — Trượng Xương Mộ Địa (Cấp N — Vũ Khí Tĩnh)",
+  "tscn_name": "c022_phap_su_mo_dia.tscn",
+  "node_name": "C022_PhapSuMoDia",
+  "archetype": "magic_staff",
+  "target_size": [
+    220,
+    174
+  ],
+  "grip1_norm": [
+    0.34,
+    0.66
+  ],
+  "grip2_norm": [
+    0.14,
+    0.86
+  ],
+  "rest_rot": 22.0,
+  "flip_horizontal": false,
+  "prompt_ref": "A single standalone 2D game weapon sprite on a pure solid magenta #FF00FF background, following the attached layout_guide_1x1.png safe zone (centered inside 65% of the canvas, zero border clipping). The weapon is W022 'Trượng Xương Mộ Địa' (Graveyard Necromancer's Crypt-Skull Staff, Tier N Normal weapon), placed diagonally from bottom-left (iron grave-spike at the base of the shaft) to top-right (horned crypt-skull staff head). Design details: a grim dark-fantasy necromancer staff topped with a weathered ivory bone skull caged inside rusted cemetery iron bars with a dull green crypt-stone set in its forehead; the crooked dark bog-oak shaft is reinforced with iron rings and wrapped in dark brown leather straps at Grip 1 and Grip 2, ending in a pointed iron grave-digger ferrule at the bottom-left. Crisp dark outlines, stylized 2D hand-painted game art matching Arcana Five aesthetic, NO character, NO hands, NO detached floating particles, 100% flat solid #FF00FF magenta background.",
+  "prompt_card": "Extreme close-up macro weapon portrait (horizontal rectangular 4:3, 884x632, 100% opaque RGB painting, NO transparent background, NO UI frame). ONE GIANT GRAVEYARD CRYPT-SKULL STAFF (Trượng Xương Mộ Địa) identical to the attached reference image MUST FILL 85% OF THE FRAME diagonally from bottom-left (leather-wrapped bog-oak shaft) to top-right (weathered bone skull caged in cemetery iron bars with its green crypt-stone). Keep the dark-fantasy misty graveyard background softly blurred in eerie slate-green night shadow so the giant diagonal staff is the sole hero subject in the foreground."
+}

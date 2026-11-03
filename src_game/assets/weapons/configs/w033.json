@@ -1,0 +1,26 @@
+{
+  "id": "w033",
+  "slug": "w033_dai_phap_su_hu_khong",
+  "tier": "S",
+  "name": "W033 — Quyền Trượng Vẫn Thạch Hư Không (Cấp S — Vũ Khí Động 2x2)",
+  "tscn_name": "c033_dai_phap_su_hu_khong.tscn",
+  "node_name": "C033_DaiPhapSuHuKhong",
+  "archetype": "magic_staff",
+  "target_size": [
+    224,
+    180
+  ],
+  "grip1_norm": [
+    0.34,
+    0.66
+  ],
+  "grip2_norm": [
+    0.14,
+    0.86
+  ],
+  "rest_rot": 22.0,
+  "flip_horizontal": false,
+  "prompt_ref": "A single standalone 2D game weapon sprite on a pure solid magenta #FF00FF background, following the attached layout_guide_1x1.png safe zone (centered inside 65% of the canvas, zero border clipping). The weapon is W033 'Quyền Trượng Vẫn Thạch Hư Không' (Archmage of the Void's Astral Meteor Grand Scepter, Tier S Epic weapon), placed diagonally from bottom-left (golden-obsidian star pommel at the base of the shaft) to top-right (floating fractured void-meteorite staff head). Design details: a majestic dark-fantasy archmage scepter crowned with horned celestial-gold and black-obsidian claws suspending a cracked purple-magenta astral meteorite core; the royal obsidian shaft is inlaid with glowing violet constellations and wrapped in violet-gold silk and leather at Grip 1 and Grip 2, ending in a spiked star-tail pommel at the bottom-left. Crisp dark outlines, stylized 2D hand-painted game art matching Arcana Five aesthetic, NO character, NO hands, NO detached floating particles, 100% flat solid #FF00FF magenta background.",
+  "prompt_anim_2x2": "A 2x2 sprite sheet (4 frames in a 2-row by 2-column grid) on a pure solid magenta #FF00FF background, strictly following the second attached reference image layout_guide_2x2.png and keeping the exact weapon design, size, diagonal angle, and grip positions of the first attached reference image (W033 Quyền Trượng Vẫn Thạch Hư Không). Each of the 4 cells shows the exact same diagonal Astral Meteor Grand Scepter in the exact same position, with a 4-frame looping animation of cosmic purple-violet void flames and molten starfire swirling tightly around the meteorite head and runes along the shaft. Frame 1: void core igniting; Frame 2: astral flames flaring along the golden-obsidian horns; Frame 3: peak cosmic meteoric aura; Frame 4: subsiding back into loop. Zero cell border clipping, NO character, 100% solid #FF00FF background.",
+  "prompt_card": "Extreme close-up macro weapon portrait (horizontal rectangular 4:3, 884x632, 100% opaque RGB painting, NO transparent background, NO UI frame). ONE GIANT ASTRAL METEOR VOID SCEPTER (Quyền Trượng Vẫn Thạch Hư Không) identical to the attached reference images MUST FILL 85% OF THE FRAME diagonally from bottom-left (obsidian shaft with violet constellations) to top-right (celestial-gold and obsidian claws holding the blazing purple-violet void meteorite core). Keep the dark-fantasy shattered astral observatory background softly blurred in deep cosmic purple shadow so the giant diagonal scepter is the sole hero subject in the foreground."
+}

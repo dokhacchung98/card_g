@@ -1,0 +1,21 @@
+{
+  "id": "w076",
+  "slug": "w076_chua_te_chuyen_nguyen",
+  "tscn_name": "c076_chua_te_chuyen_nguyen.tscn",
+  "node_name": "C076_ChuaTeChuyenNguyen",
+  "name": "C076 Chúa Tể Chuyển Nguyền (Quyền Trượng Hấp Nguyền Chuyển Họa)",
+  "tier": "S",
+  "archetype": "magic_staff",
+  "grip1_norm": [
+    0.46,
+    0.56
+  ],
+  "grip2_norm": [
+    0.34,
+    0.68
+  ],
+  "scale_mult": 1.22,
+  "prompt_ref": "Create a single-cell 1x1 reference sheet of an Epic dark-fantasy Curse-Lord's hex-transference scepter staff (Quyền Trượng Hấp Nguyền Chuyển Họa - C076 Chúa Tể Chuyển Nguyền) following the exact square cell of the attached reference layout_guide_1x1.png.\n\nCOMPOSITION & ORIENTATION (100% MANDATORY):\n- Draw ONE complete occult hex-staff oriented DIAGONALLY from bottom-left (dark bronze and bone-spiked shaft) to top-right (a twin-serpent Ouroboros cage holding a split yin-yang crystal orb: half toxic dark-violet curse energy and half luminous emerald-gold healing light).\n- Must show 100% of the entire staff from bottom spike to top Ouroboros orb crest with generous padding inside the frame (occupying 65%-75% of the canvas).\n- Zero clipping at canvas edges.\n\nCOLOR & BACKGROUND (100% MANDATORY):\n- Background MUST be flat solid pure magenta (#FF00FF) edge-to-edge.\n- DO NOT use any magenta/pink tones on the staff itself (use blackened bronze, weathered bone, deep indigo-violet, and bright emerald-gold).\n- No character hands, no text, no borders.",
+  "prompt_anim_2x2": "Create a 2x2 sprite sheet (4 frames total: row 1 left-to-right, row 2 left-to-right) of the EXACT SAME Curse-Transference Ouroboros Staff from the first attached reference image, following the 2x2 grid layout of the second attached reference image (layout_guide_2x2.png).\n\n100% CONSISTENCY & ANIMATION RULES:\n- Every cell must show the exact same diagonal Ouroboros staff at the exact same angle, size, and position.\n- Animate a looping 4-frame curse-reflection vortex: dark-indigo hex chains being sucked into the orb and transmuted into swirling emerald-gold vitality runes.\n- Background MUST be flat solid pure magenta (#FF00FF) in all 4 cells. DO NOT draw the blue layout guide lines or cell borders. Keep each frame strictly inside its cell with zero clipping.",
+  "prompt_card": "Create a wide horizontal 16:11 dark-fantasy card illustration featuring the exact same Curse-Transference Ouroboros Staff (Quyền Trượng Hấp Nguyền Chuyển Họa - C076 Chúa Tể Chuyển Nguyền) from the attached reference images.\n\nCOMPOSITION & BACKGROUND (100% MANDATORY):\n- Place the Ouroboros twin-serpent staff diagonally across the center of the horizontal frame.\n- Full atmospheric dark-fantasy background (100% opaque RGB illustration, NO magenta, NO transparency): a cursed gothic ritual sanctum where dark violet hex-chains are absorbed into the staff and hurled outward while warm emerald-gold healing light radiates behind it.\n- Do NOT draw any card frame, borders, or text."
+}

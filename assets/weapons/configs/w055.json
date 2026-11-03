@@ -1,0 +1,34 @@
+{
+  "id": "w055",
+  "slug": "w055_ky_si_loi_the",
+  "tier": "S",
+  "name": "W055 — Bộ Thánh Kiếm & Khiên Lời Thề (Cấp S — Vũ Khí Động 2x2)",
+  "tscn_name": "c055_ky_si_loi_the.tscn",
+  "node_name": "C055_KySiLoiThe",
+  "archetype": "sword_and_shield",
+  "dual_wield_default": true,
+  "target_size": [
+    218,
+    174
+  ],
+  "offhand_target_size": [
+    148,
+    180
+  ],
+  "grip1_norm": [
+    0.28,
+    0.72
+  ],
+  "grip2_norm": [
+    0.14,
+    0.86
+  ],
+  "rest_rot": -22.0,
+  "offhand_rest_rot": 77.0,
+  "offhand_z_index": 16,
+  "flip_horizontal": false,
+  "prompt_ref": "A single standalone 2D game sword sprite on a pure solid magenta #FF00FF background, following the attached layout_guide_1x1.png safe zone (centered inside 65% of the canvas, zero border clipping). The weapon is the main-hand oathsworn paladin sword of W055 'Kỵ Sĩ Lời Thề' (Oath-Knight's Sacred Covenant Greatsword, Tier S Epic weapon), placed diagonally from bottom-left (winged gold pommel and royal blue leather grip) to top-right (broad silver-steel blade engraved with glowing golden-cyan oath runes and winged crossguard). Crisp dark outlines, stylized 2D hand-painted game art matching Arcana Five aesthetic, NO character, NO hands, 100% flat solid #FF00FF magenta background.",
+  "prompt_offhand": "A single standalone 2D game paladin shield sprite on a pure solid magenta #FF00FF background, following the attached layout_guide_1x1.png safe zone (centered inside 65% of the canvas, zero border clipping). The shield is the off-hand shield of W055 'Khiên Lời Thề Bảo Hộ' (Oath-Knight's Sacred Covenant Aegis Shield, Tier S Epic shield), standing upright in 3/4 front-right view. Design details: a noble dark-fantasy paladin kite shield forged from silver-steel and royal gold filigree, featuring twin sculpted guardian wings embracing a glowing golden-cyan soul-link crystal in the center. Crisp dark outlines, stylized 2D hand-painted game art matching Arcana Five aesthetic, NO character, NO hands, 100% flat solid #FF00FF magenta background.",
+  "prompt_anim_2x2": "A 2x2 sprite sheet (4 frames in a 2-row by 2-column grid) on a pure solid magenta #FF00FF background, strictly following the second attached reference image layout_guide_2x2.png and keeping the exact sword design, size, and diagonal angle of the first attached reference image (W055 Thánh Kiếm Lời Thề). Each of the 4 cells shows the exact same diagonal Sacred Covenant Greatsword in the exact same position, with a 4-frame looping animation of radiant golden-cyan oath fire and protective rune light surging along the blade and winged crossguard. DO NOT draw the blue layout guide lines, zero cell border clipping, NO character, 100% solid #FF00FF background.",
+  "prompt_card": "Extreme close-up macro sword-and-shield portrait (horizontal rectangular 4:3, 884x632, 100% opaque RGB painting, NO transparent background, NO UI frame). ONE GIANT SACRED COVENANT AEGIS SHIELD AND OATHSWORN GREATSWORD (Bộ Thánh Kiếm & Khiên Lời Thề) identical to the attached reference images MUST FILL 85% OF THE FRAME together in the foreground (the winged silver-and-gold paladin shield glowing with cyan-gold soul-link light alongside the rune-inscribed greatsword). Keep the dark-fantasy cathedral sanctuary background softly blurred in deep royal-blue and gold shadow so the shield and sword are the sole hero subjects in the foreground."
+}

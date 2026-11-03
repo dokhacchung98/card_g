@@ -1,0 +1,25 @@
+{
+  "id": "w050",
+  "slug": "w050_chien_binh_huyet_khien",
+  "tier": "R",
+  "name": "W050 — Đại Khiên Huyết Tế (Cấp R — Vũ Khí Tĩnh)",
+  "tscn_name": "c050_chien_binh_huyet_khien.tscn",
+  "node_name": "C050_ChienBinhHuyetKhien",
+  "archetype": "great_shield",
+  "target_size": [
+    172,
+    210
+  ],
+  "grip1_norm": [
+    0.32,
+    0.48
+  ],
+  "grip2_norm": [
+    0.45,
+    0.72
+  ],
+  "rest_rot": 35.0,
+  "flip_horizontal": false,
+  "prompt_ref": "A single standalone 2D game tower-shield sprite on a pure solid magenta #FF00FF background, following the attached layout_guide_1x1.png safe zone (centered inside 65% of the canvas, zero border clipping). The weapon is W050 'Đại Khiên Huyết Tế' (Blood-Shield Warrior's Crimson Sacrifice Greatshield, Tier R Rare shield), standing upright in 3/4 side-front perspective facing right. Design details: an intimidating dark-fantasy tower shield forged from blackened crimson steel and bone-iron ribs, featuring a central glowing ruby blood-chalice relief with deep crimson sacrificial channels running across the armor plates and sharp fang-spikes along the bottom rim. Crisp dark outlines, stylized 2D hand-painted game art matching Arcana Five aesthetic, NO character, NO hands, NO detached floating particles, 100% flat solid #FF00FF magenta background.",
+  "prompt_card": "Extreme close-up macro shield portrait (horizontal rectangular 4:3, 884x632, 100% opaque RGB painting, NO transparent background, NO UI frame). ONE GIANT CRIMSON SACRIFICE GREATSHIELD (Đại Khiên Huyết Tế) identical to the attached reference image MUST FILL 85% OF THE FRAME angled heroically in the foreground (blackened crimson steel tower shield with bone-iron ribs and glowing ruby blood-chalice emblem). Keep the dark-fantasy blood-altar battlefield background softly blurred in deep crimson-charcoal shadow so the giant blood shield is the sole hero subject in the foreground."
+}

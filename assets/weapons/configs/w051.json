@@ -1,0 +1,33 @@
+{
+  "id": "w051",
+  "slug": "w051_thu_ve_phan_don",
+  "tier": "R",
+  "name": "W051 — Bộ Kiếm & Khiên Phản Kích (Cấp R — Vũ Khí Tĩnh)",
+  "tscn_name": "c051_thu_ve_phan_don.tscn",
+  "node_name": "C051_ThuVePhanDon",
+  "archetype": "sword_and_shield",
+  "dual_wield_default": true,
+  "target_size": [
+    212,
+    168
+  ],
+  "offhand_target_size": [
+    144,
+    176
+  ],
+  "grip1_norm": [
+    0.28,
+    0.72
+  ],
+  "grip2_norm": [
+    0.14,
+    0.86
+  ],
+  "rest_rot": -22.0,
+  "offhand_rest_rot": 77.0,
+  "offhand_z_index": 16,
+  "flip_horizontal": false,
+  "prompt_ref": "A single standalone 2D game sword sprite on a pure solid magenta #FF00FF background, following the attached layout_guide_1x1.png safe zone (centered inside 65% of the canvas, zero border clipping). The weapon is the main-hand counter-strike broadsword of W051 'Thủ Vệ Phản Đòn' (Parry Defender's Riposte Broadsword, Tier R Rare weapon), placed diagonally from bottom-left (heavy brass wheel pommel and leather grip) to top-right (wide double-edged dark-steel broadsword blade with golden parry-crossguard). Crisp dark outlines, stylized 2D hand-painted game art matching Arcana Five aesthetic, NO character, NO hands, 100% flat solid #FF00FF magenta background.",
+  "prompt_offhand": "A single standalone 2D game knight shield sprite on a pure solid magenta #FF00FF background, following the attached layout_guide_1x1.png safe zone (centered inside 65% of the canvas, zero border clipping). The shield is the off-hand parrying shield of W051 'Khiên Phản Đòn' (Parry Defender's Counter-Shock Buckler Kite Shield, Tier R Rare shield), standing upright in 3/4 front-right view. Design details: an ornate dark-fantasy duelist defender shield forged from tempered silver-grey steel and gilded bronze parrying ridges designed to catch and deflect enemy blades, with a glowing amber-gold impact sigil at the center boss. Crisp dark outlines, stylized 2D hand-painted game art matching Arcana Five aesthetic, NO character, NO hands, NO detached floating particles, 100% flat solid #FF00FF magenta background.",
+  "prompt_card": "Extreme close-up macro sword-and-shield portrait (horizontal rectangular 4:3, 884x632, 100% opaque RGB painting, NO transparent background, NO UI frame). ONE GIANT PARRYING KITE SHIELD AND RIPOSTE BROADSWORD (Bộ Kiếm & Khiên Phản Kích) identical to the two attached reference images MUST FILL 85% OF THE FRAME together in the foreground (the tempered steel shield with gilded bronze parrying ridges and amber impact boss alongside the wide riposte broadsword). Keep the dark-fantasy stone dueling courtyard background softly blurred in dramatic slate-gold shadow so the shield and sword are the sole hero subjects in the foreground."
+}

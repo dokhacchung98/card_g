@@ -1,0 +1,20 @@
+{
+  "id": "w064",
+  "slug": "w064_tu_si_hoi_phuc_cham",
+  "name": "C064 Tu Sĩ Hồi Phục Chậm (Trượng Bình Thảo Dược Sinh Mệnh)",
+  "tier": "N",
+  "archetype": "magic_staff",
+  "grip1_norm": [
+    0.46,
+    0.56
+  ],
+  "grip2_norm": [
+    0.34,
+    0.68
+  ],
+  "scale_mult": 1.12,
+  "prompt_ref": "Create a single-cell 1x1 reference sheet of a dark-fantasy Herbalist Monk's life-dew censer staff (Trượng Bình Thảo Dược Sinh Mệnh - C064 Tu Sĩ Hồi Phục Chậm) following the exact square cell of the attached reference layout_guide_1x1.png.\n\nCOMPOSITION & ORIENTATION (100% MANDATORY):\n- Draw ONE complete herbalist druid staff oriented DIAGONALLY from bottom-left (gnarled living root-wood shaft) to top-right (braided wooden branches cradling an emerald-green glass alchemy flask and bronze herbal censer dripping glowing green life-dew).\n- Must show 100% of the entire staff from bottom root-tip to top herbal flask with generous padding inside the frame (occupying 65%-75% of the canvas).\n- Zero clipping at canvas edges.\n\nCOLOR & BACKGROUND (100% MANDATORY):\n- Background MUST be flat solid pure magenta (#FF00FF) edge-to-edge.\n- DO NOT use any magenta/pink tones on the staff itself (use rich brown oak, weathered bronze, forest green moss, and luminous emerald healing elixir).\n- No character hands, no text, no borders.",
+  "prompt_card": "Create a wide horizontal 16:11 dark-fantasy card illustration featuring the exact same Herbalist Life-Dew Staff (Trượng Bình Thảo Dược Sinh Mệnh - C064 Tu Sĩ Hồi Phục Chậm) from the attached reference image.\n\nCOMPOSITION & BACKGROUND (100% MANDATORY):\n- Place the gnarly wood and emerald flask staff diagonally across the center of the horizontal frame.\n- Full atmospheric dark-fantasy background (100% opaque RGB illustration, NO magenta, NO transparency): a twilight monastery herb garden where glowing emerald-green droplets and soothing herbal mist rise from the staff's alchemy vessel.\n- Do NOT draw any card frame, borders, or text.",
+  "tscn_name": "c064_tu_si_hoi_phuc_cham.tscn",
+  "node_name": "C064_TuSiHoiPhucCham"
+}

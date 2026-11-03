@@ -1,0 +1,25 @@
+{
+  "id": "w041",
+  "slug": "w041_ve_binh_nghia_trang",
+  "tier": "N",
+  "name": "W041 — Đại Khiên Mộ Đá Nghĩa Trang (Cấp N — Vũ Khí Tĩnh)",
+  "tscn_name": "c041_ve_binh_nghia_trang.tscn",
+  "node_name": "C041_VeBinhNghiaTrang",
+  "archetype": "great_shield",
+  "target_size": [
+    168,
+    206
+  ],
+  "grip1_norm": [
+    0.45,
+    0.48
+  ],
+  "grip2_norm": [
+    0.45,
+    0.72
+  ],
+  "rest_rot": 35.0,
+  "flip_horizontal": false,
+  "prompt_ref": "A single standalone 2D game tower-shield sprite on a pure solid magenta #FF00FF background, following the attached layout_guide_1x1.png safe zone (centered inside 65% of the canvas, zero border clipping). The weapon is W041 'Đại Khiên Mộ Đá Nghĩa Trang' (Graveyard Warden's Tombstone Greatshield, Tier N Normal shield), standing upright in 3/4 side-front perspective facing right. Design details: a massive dark-fantasy tanker tower shield carved from a thick weathered grey granite tombstone slab reinforced around the borders with heavy rusted cemetery iron brackets, iron skull rivets, and a raised iron graveyard cross emblem in the center, with a spiked iron base for planting into the ground. Crisp dark outlines, stylized 2D hand-painted game art matching Arcana Five aesthetic, NO character, NO hands, NO detached floating particles, 100% flat solid #FF00FF magenta background.",
+  "prompt_card": "Extreme close-up macro shield portrait (horizontal rectangular 4:3, 884x632, 100% opaque RGB painting, NO transparent background, NO UI frame). ONE GIANT GRAVEYARD TOMBSTONE GREATSHIELD (Đại Khiên Mộ Đá Nghĩa Trang) identical to the attached reference image MUST FILL 85% OF THE FRAME angled heroically in the foreground (cracked grey granite tombstone tower shield reinforced with rusted cemetery iron brackets and central iron cross emblem). Keep the dark-fantasy misty graveyard background softly blurred in cold slate-grey night shadow so the giant tombstone shield is the sole hero subject in the foreground."
+}

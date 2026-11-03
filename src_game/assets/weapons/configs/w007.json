@@ -1,0 +1,26 @@
+{
+  "id": "w007",
+  "slug": "w007_song_dao_huyet_cuong",
+  "tier": "R",
+  "name": "W007 — Song Đao Huyết Cuồng (Cấp R — Vũ Khí Tĩnh)",
+  "tscn_name": "c007_song_dao_huyet_cuong.tscn",
+  "node_name": "C007_SongDaoHuyetCuong",
+  "archetype": "dual_blades",
+  "dual_wield_default": true,
+  "target_size": [
+    196,
+    164
+  ],
+  "grip1_norm": [
+    0.26,
+    0.76
+  ],
+  "grip2_norm": [
+    0.12,
+    0.88
+  ],
+  "rest_rot": 24.0,
+  "flip_horizontal": false,
+  "prompt_ref": "A single standalone 2D game weapon sprite on a pure solid magenta #FF00FF background, following the attached layout_guide_1x1.png safe zone (centered inside 65% of the canvas, zero border clipping). The weapon is W007 'Đao Huyết Cuồng' (Blood-Crazed Berserker Curved Saber / Crimson Scimitar, Tier R Rare weapon), placed diagonally from bottom-left (pommel skull-ring at the base of the handle) to top-right (curved serrated blade tip). Design details: a wicked dark-fantasy curved war saber with a swept blackened Damascus steel blade featuring a deep crimson blood-groove (fuller) along the spine, three brutal saw-tooth serrations near the back spine, and a razor-sharp cold silver cutting edge; a jagged dark bronze guard shaped like beast fangs; and a long handle wrapped in dark crimson leather straps for Grip 1 and Grip 2 ending in a heavy iron ring pommel. Draw ONE complete curved saber cleanly (used for both hands in dual-wield). Crisp dark outlines, stylized 2D hand-painted game art matching Arcana Five aesthetic, NO character, NO hands, NO floating aura particles, 100% flat solid #FF00FF magenta background.",
+  "prompt_card": "Close-up hero weapon showcase illustration (horizontal rectangular 4:3, 884x632, 100% opaque RGB full scenic painting, NO transparent background, NO card frame or text UI). A MATCHED PAIR OF GIANT BLOOD-CRAZED CURVED SABERS (Song Đao Huyết Cuồng) from the attached reference image MUST FILL 75% OF THE FOREGROUND, crossed and angled prominently diagonally across the center-foreground (showing their blackened steel curved blades with crimson blood-grooves, serrated spine teeth, fang-shaped bronze guards, and crimson leather-wrapped handles). Behind the giant foreground twin sabers is a dramatic dark-fantasy blood-moon battlefield with shattered shields and swirling red battle mist. Focus 100% on the giant twin curved sabers in the center-foreground matching the reference weapon geometry."
+}

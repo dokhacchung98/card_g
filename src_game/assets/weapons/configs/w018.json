@@ -1,0 +1,30 @@
+{
+  "id": "w018",
+  "slug": "w018_huyet_kiem_hanh_quyet",
+  "tier": "SSR",
+  "name": "W018 — Huyết Kiếm Hành Quyết (Cấp SSR — Animated 2x2 Spritesheet)",
+  "tscn_name": "c018_hanh_quyet_gia.tscn",
+  "node_name": "C018_HanhQuyetGia",
+  "archetype": "melee_sword",
+  "target_size": [
+    224,
+    159
+  ],
+  "grip1": [
+    54.0,
+    118.0
+  ],
+  "grip2": [
+    28.0,
+    136.0
+  ],
+  "offhand_grip1": [
+    34.0,
+    74.0
+  ],
+  "offhand_grip2": [
+    18.0,
+    86.0
+  ],
+  "rest_rot": 48.0
+}

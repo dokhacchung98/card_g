@@ -1,0 +1,41 @@
+{
+  "id": "w048",
+  "slug": "w048_ky_si_xich_sat",
+  "tier": "R",
+  "name": "W048 — Bộ Móc Xích & Khiên Sắt Tử Thần (Cấp R — Vũ Khí Tĩnh)",
+  "tscn_name": "c048_ky_si_xich_sat.tscn",
+  "node_name": "C048_KySiXichSat",
+  "archetype": "sword_and_shield",
+  "dual_wield_default": true,
+  "target_size": [
+    220,
+    176
+  ],
+  "offhand_target_size": [
+    146,
+    178
+  ],
+  "grip1_norm": [
+    0.34,
+    0.66
+  ],
+  "grip2_norm": [
+    0.14,
+    0.86
+  ],
+  "offhand_grip1_norm": [
+    0.48,
+    0.48
+  ],
+  "offhand_grip2_norm": [
+    0.48,
+    0.70
+  ],
+  "rest_rot": 20.0,
+  "offhand_rest_rot": 58.0,
+  "offhand_z_index": 11,
+  "flip_horizontal": false,
+  "prompt_ref": "A single standalone 2D game weapon sprite on a pure solid magenta #FF00FF background, following the attached layout_guide_1x1.png safe zone (centered inside 65% of the canvas, zero border clipping). The weapon is the main-hand harpoon hook of W048 'Kỵ Sĩ Xích Sắt' (Iron-Chain Knight's Death-Hook Harpoon Polearm, Tier R Rare weapon), placed diagonally from bottom-left (heavy chain-shackle ring at the base of the shaft) to top-right (barbed twin-clawed blackened-steel harpoon hook blade wrapped in heavy iron chain links). Crisp dark outlines, stylized 2D hand-painted game art matching Arcana Five aesthetic, NO character, NO hands, 100% flat solid #FF00FF magenta background.",
+  "prompt_offhand": "A single standalone 2D game knight shield sprite on a pure solid magenta #FF00FF background, following the attached layout_guide_1x1.png safe zone (centered inside 65% of the canvas, zero border clipping). The shield is the off-hand shield of W048 'Khiên Xích Sắt Tử Thần' (Iron-Chain Knight's Chain-Bound Dungeon Bulwark Shield, Tier R Rare shield), standing upright in 3/4 front-right view. Design details: a brutal dark-fantasy blackened-iron war shield crisscrossed and bound with heavy spiked iron dungeon chains, iron padlock shackles, and a central skull-iron boss with a smoldering crimson-amber ember core. Crisp dark outlines, stylized 2D hand-painted game art matching Arcana Five aesthetic, NO character, NO hands, NO detached floating particles, 100% flat solid #FF00FF magenta background.",
+  "prompt_card": "Extreme close-up macro shield-and-harpoon portrait (horizontal rectangular 4:3, 884x632, 100% opaque RGB painting, NO transparent background, NO UI frame). ONE GIANT CHAIN-BOUND DUNGEON SHIELD AND DEATH-HOOK HARPOON POLEARM (Bộ Móc Xích & Khiên Sắt Tử Thần) identical to the two attached reference images MUST FILL 85% OF THE FRAME together in the foreground (the blackened-iron shield bound in spiked dungeon chains alongside the barbed harpoon hook polearm). Keep the dark-fantasy dungeon keep background softly blurred in smoldering charcoal-red shadow so the shield and harpoon are the sole hero subjects in the foreground."
+}

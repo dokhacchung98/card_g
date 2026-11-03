@@ -1,0 +1,26 @@
+{
+  "id": "w034",
+  "slug": "w034_chua_te_bong_ma",
+  "tier": "S",
+  "name": "W034 — Trượng Đầu Lâu Bóng Ma (Cấp S — Vũ Khí Động 2x2)",
+  "tscn_name": "c034_chua_te_bong_ma.tscn",
+  "node_name": "C034_ChuaTeBongMa",
+  "archetype": "magic_staff",
+  "target_size": [
+    224,
+    180
+  ],
+  "grip1_norm": [
+    0.34,
+    0.66
+  ],
+  "grip2_norm": [
+    0.14,
+    0.86
+  ],
+  "rest_rot": 22.0,
+  "flip_horizontal": false,
+  "prompt_ref": "A single standalone 2D game weapon sprite on a pure solid magenta #FF00FF background, following the attached layout_guide_1x1.png safe zone (centered inside 65% of the canvas, zero border clipping). The weapon is W034 'Trượng Đầu Lâu Bóng Ma' (Wraith Lord's Spectral Sovereign Staff, Tier S Epic weapon), placed diagonally from bottom-left (spiked bone-and-iron tail at the base of the shaft) to top-right (crowned twin-horned wraith skull head). Design details: an intimidating dark-fantasy necromancer lord staff topped with a crowned phantom-king skull forged from blackened bone and dark silver, with glowing ghostly teal-cyan soulfire burning inside its eye sockets and jaw; the spine-like dark iron shaft is wrapped in spectral dark leather at Grip 1 and Grip 2, ending in a sharp soul-anchor spike at the bottom-left. Crisp dark outlines, stylized 2D hand-painted game art matching Arcana Five aesthetic, NO character, NO hands, NO detached floating particles, 100% flat solid #FF00FF magenta background.",
+  "prompt_anim_2x2": "A 2x2 sprite sheet (4 frames in a 2-row by 2-column grid) on a pure solid magenta #FF00FF background, strictly following the second attached reference image layout_guide_2x2.png and keeping the exact weapon design, size, diagonal angle, and grip positions of the first attached reference image (W034 Trượng Đầu Lâu Bóng Ma). Each of the 4 cells shows the exact same diagonal Wraith Lord Skull Staff in the exact same position, with a 4-frame looping animation of spectral teal-cyan wraith fire and ghostly soul wisps coiling tightly around the crowned skull head and spine shaft. Zero cell border clipping, NO character, 100% solid #FF00FF background.",
+  "prompt_card": "Extreme close-up macro weapon portrait (horizontal rectangular 4:3, 884x632, 100% opaque RGB painting, NO transparent background, NO UI frame). ONE GIANT WRAITH LORD SKULL STAFF (Trượng Đầu Lâu Bóng Ma) identical to the attached reference images MUST FILL 85% OF THE FRAME diagonally from bottom-left (spine-forged dark iron shaft) to top-right (crowned phantom skull blazing with spectral teal-cyan soulfire). Keep the dark-fantasy haunted necropolis throne room background softly blurred in ghostly slate-teal shadow so the giant diagonal staff is the sole hero subject in the foreground."
+}

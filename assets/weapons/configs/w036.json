@@ -1,0 +1,26 @@
+{
+  "id": "w036",
+  "slug": "w036_dai_thuat_si_nguyen_lan",
+  "tier": "S",
+  "name": "W036 — Trượng Cổ Ngữ Nguyền Lan (Cấp S — Vũ Khí Động 2x2)",
+  "tscn_name": "c036_dai_thuat_si_nguyen_lan.tscn",
+  "node_name": "C036_DaiThuatSiNguyenLan",
+  "archetype": "magic_staff",
+  "target_size": [
+    224,
+    180
+  ],
+  "grip1_norm": [
+    0.34,
+    0.66
+  ],
+  "grip2_norm": [
+    0.14,
+    0.86
+  ],
+  "rest_rot": 22.0,
+  "flip_horizontal": false,
+  "prompt_ref": "A single standalone 2D game weapon sprite on a pure solid magenta #FF00FF background, following the attached layout_guide_1x1.png safe zone (centered inside 65% of the canvas, zero border clipping). The weapon is W036 'Trượng Cổ Ngữ Nguyền Lan' (Grand Hex-Weaver's Chain-Curse Staff, Tier S Epic weapon), placed diagonally from bottom-left (hooked rune-iron spike at the base of the shaft) to top-right (triple-serpent hex totem head). Design details: a wicked dark-fantasy hex-warlock staff topped with three intertwined blackened-bronze horned serpents biting a glowing crimson-orange hex sigil stone; the dark charred-iron shaft is carved with glowing orange-red chain-curse runes and wrapped in dark crimson leather at Grip 1 and Grip 2, ending in a barbed iron tail spike at the bottom-left. Crisp dark outlines, stylized 2D hand-painted game art matching Arcana Five aesthetic, NO character, NO hands, NO detached floating particles, 100% flat solid #FF00FF magenta background.",
+  "prompt_anim_2x2": "A 2x2 sprite sheet (4 frames in a 2-row by 2-column grid) on a pure solid magenta #FF00FF background, strictly following the second attached reference image layout_guide_2x2.png and keeping the exact weapon design, size, diagonal angle, and grip positions of the first attached reference image (W036 Trượng Cổ Ngữ Nguyền Lan). Each of the 4 cells shows the exact same diagonal Chain-Curse Staff in the exact same position, with a 4-frame looping animation of blazing crimson-amber hex lightning and cursed rune chains crackling tightly around the serpent head and rune shaft. Zero cell border clipping, NO character, 100% solid #FF00FF background.",
+  "prompt_card": "Extreme close-up macro weapon portrait (horizontal rectangular 4:3, 884x632, 100% opaque RGB painting, NO transparent background, NO UI frame). ONE GIANT CHAIN-CURSE HEX STAFF (Trượng Cổ Ngữ Nguyền Lan) identical to the attached reference images MUST FILL 85% OF THE FRAME diagonally from bottom-left (rune-carved dark iron shaft) to top-right (intertwined bronze serpents holding the blazing crimson-amber hex sigil stone). Keep the dark-fantasy ritual altar background softly blurred in smoldering dark-red shadow so the giant diagonal staff is the sole hero subject in the foreground."
+}

@@ -1,0 +1,25 @@
+{
+  "id": "w028",
+  "slug": "w028_thuat_si_xich_hon",
+  "tier": "R",
+  "name": "W028 — Trượng Xích Hồn (Cấp R — Vũ Khí Tĩnh)",
+  "tscn_name": "c028_thuat_si_xich_hon.tscn",
+  "node_name": "C028_ThuatSiXichHon",
+  "archetype": "magic_staff",
+  "target_size": [
+    222,
+    176
+  ],
+  "grip1_norm": [
+    0.34,
+    0.66
+  ],
+  "grip2_norm": [
+    0.14,
+    0.86
+  ],
+  "rest_rot": 22.0,
+  "flip_horizontal": false,
+  "prompt_ref": "A single standalone 2D game weapon sprite on a pure solid magenta #FF00FF background, following the attached layout_guide_1x1.png safe zone (centered inside 65% of the canvas, zero border clipping). The weapon is W028 'Trượng Xích Hồn' (Soul-Link Warlock's Twin-Shackle Chain Staff, Tier R Rare weapon), placed diagonally from bottom-left (iron shackle-ring pommel at the base of the shaft) to top-right (twin interlocked soul-core staff head). Design details: a dark-fantasy soul-binder staff featuring a forged blackened-iron double-ring head where heavy iron chains bind two glowing cyan-blue soul-stones together inside a horned iron cage (all chains physically attached to the staff head and upper collar, zero detached parts); the dark iron-reinforced shaft is wrapped in grey-blue leather grips at Grip 1 and Grip 2, ending in a heavy iron shackle ring at the bottom-left. Crisp dark outlines, stylized 2D hand-painted game art matching Arcana Five aesthetic, NO character, NO hands, NO floating aura particles, 100% flat solid #FF00FF magenta background.",
+  "prompt_card": "Extreme close-up macro weapon portrait (horizontal rectangular 4:3, 884x632, 100% opaque RGB painting, NO transparent background, NO UI frame). ONE GIANT SOUL-LINK CHAIN STAFF (Trượng Xích Hồn) identical to the attached reference image MUST FILL 85% OF THE FRAME diagonally from bottom-left (iron-reinforced shaft with shackle pommel) to top-right (horned iron cage where heavy chains bind the twin cyan-blue soul-stones). Keep the dark-fantasy soul-prison background softly blurred in deep abyssal-blue shadow so the giant diagonal chain staff is the sole hero subject in the foreground."
+}

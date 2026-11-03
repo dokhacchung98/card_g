@@ -1,0 +1,26 @@
+{
+  "id": "w060",
+  "slug": "w060_ke_ganh_toi",
+  "tier": "SSR",
+  "name": "W060 — Thánh Thuẫn Thập Tự Gánh Tội (Cấp SSR — Vũ Khí Động 2x2)",
+  "tscn_name": "c060_ke_ganh_toi.tscn",
+  "node_name": "C060_KeGanhToi",
+  "archetype": "great_shield",
+  "target_size": [
+    182,
+    218
+  ],
+  "grip1_norm": [
+    0.32,
+    0.48
+  ],
+  "grip2_norm": [
+    0.45,
+    0.72
+  ],
+  "rest_rot": 35.0,
+  "flip_horizontal": false,
+  "prompt_ref": "A single standalone 2D game mythic tower-shield sprite on a pure solid magenta #FF00FF background, following the attached layout_guide_1x1.png safe zone (centered inside 65% of the canvas, zero border clipping). The weapon is W060 'Thánh Thuẫn Thập Tự Gánh Tội' (Undying Martyr's Sin-Bearer Reliquary Greatshield, Tier SSR Mythic shield), standing upright in 3/4 side-front perspective facing right. Design details: a colossal SSR dark-fantasy cathedral-cross tower shield forged from ancient blackened iron, tarnished cathedral gold, and heavy penitent chains, featuring a glowing golden-emerald undying soul-furnace reliquary at the center of the cross that absorbs all allies' damage without dying. Crisp dark outlines, stylized 2D hand-painted game art matching Arcana Five aesthetic, NO character, NO hands, NO detached floating particles, 100% flat solid #FF00FF magenta background.",
+  "prompt_anim_2x2": "A 2x2 sprite sheet (4 frames in a 2-row by 2-column grid) on a pure solid magenta #FF00FF background, strictly following the second attached reference image layout_guide_2x2.png and keeping the exact shield design, size, and upright 3/4 angle of the first attached reference image (W060 Thánh Thuẫn Thập Tự Gánh Tội). Each of the 4 cells shows the exact same Undying Martyr Greatshield in the exact same position, with a 4-frame looping mythic animation of golden-emerald undying martyr flames and sacred runes blazing across the cross reliquary and chains. DO NOT draw the blue layout guide lines, zero cell border clipping, NO character, 100% solid #FF00FF background.",
+  "prompt_card": "Extreme close-up macro mythic shield portrait (horizontal rectangular 4:3, 884x632, 100% opaque RGB painting, NO transparent background, NO UI frame). ONE GIANT MYTHIC UNDYING MARTYR RELIQUARY GREATSHIELD (Thánh Thuẫn Thập Tự Gánh Tội) identical to the attached reference images MUST FILL 85% OF THE FRAME planted heroically in the foreground (cathedral-cross blackened iron and gold tower shield bound in penitent chains with its blazing golden-emerald soul-furnace core). Keep the dark-fantasy ruined basilica battlefield background softly blurred in dramatic emerald-gold shadow so the giant SSR shield is the sole hero subject in the foreground."
+}

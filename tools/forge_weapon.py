@@ -30,6 +30,8 @@ MUSE_BASE = "http://127.0.0.1:3456"
 LAYOUT_1X1 = ROOT / "layout_guide/layout_guide_1x1.png"
 LAYOUT_2X2 = ROOT / "layout_guide/layout_guide_2x2.png"
 STICKER_DIR = ROOT / "assets/sticker_hero/godot/parts"
+SHARED_VFX_DIR = ROOT / "assets/vfx_shared"
+MOBILE_SHARED_VFX_DIR = ROOT / "assets/mobile/vfx_shared"
 WEAPONS_DATA_JS = ROOT / "assets/weapons_data.js"
 MAIN_EDITOR_HTML = ROOT / "assets/sticker_weapon_editor.html"
 
@@ -105,8 +107,71 @@ ARCHETYPE_ACTIONS = {
     }
 }
 # Alias other archetypes to melee_cleaver or customized variants
-for arch in ["melee_sword", "melee_spear", "ranged_crossbow", "magic_staff", "dual_blades"]:
+for arch in ["melee_sword", "melee_spear", "ranged_crossbow", "magic_staff", "dual_blades", "great_shield", "sword_and_shield"]:
     ARCHETYPE_ACTIONS[arch] = json.loads(json.dumps(ARCHETYPE_ACTIONS["melee_cleaver"]))
+
+ARCHETYPE_ACTIONS["great_shield"]["attack"] = {
+    "grid": [2, 2], "length": 0.65, "loop": False,
+    "frames": [
+        {"t": 0.0, "Hip": [-8, 4, -4], "Chest": [-6, 0, 0], "Neck": [0, 0, 0], "Head": [4, 0, 0], "UpperArm_R": [-18, 0, 0], "Forearm_R": [-14, 0, 0], "Hand_R": [0, 0, 0], "Weapon_Back": [0, 0, 0], "UpperArm_L": [-28, 0, 0], "Forearm_L": [-18, 0, 0], "Hand_L": [-6, 0, 0], "Weapon_Front": [-8, 0, 0], "Thigh_R": [12, 0, 0], "Shin_R": [12, 0, 0], "Foot_R": [0, 0, 0], "Thigh_L": [-10, 0, 0], "Shin_L": [12, 0, 0], "Foot_L": [0, 0, 0]},
+        {"t": 0.18, "Hip": [16, 4, 8], "Chest": [12, 0, 0], "Neck": [0, 0, 0], "Head": [-8, 0, 0], "UpperArm_R": [12, 0, 0], "Forearm_R": [10, 0, 0], "Hand_R": [0, 0, 0], "Weapon_Back": [0, 0, 0], "UpperArm_L": [18, 0, 0], "Forearm_L": [14, 0, 0], "Hand_L": [8, 0, 0], "Weapon_Front": [10, 0, 0], "Thigh_R": [-22, 0, 0], "Shin_R": [16, 0, 0], "Foot_R": [6, 0, 0], "Thigh_L": [20, 0, 0], "Shin_L": [14, 0, 0], "Foot_L": [6, 0, 0], "vfx": {"fx_slash_heavy": {"pos": [298, 248], "rot": 0, "scale": 0.68, "alpha": 0.92}}},
+        {"t": 0.36, "Hip": [20, 6, 10], "Chest": [14, 0, 0], "Neck": [0, 0, 0], "Head": [-10, 0, 0], "UpperArm_R": [16, 0, 0], "Forearm_R": [12, 0, 0], "Hand_R": [0, 0, 0], "Weapon_Back": [0, 0, 0], "UpperArm_L": [24, 0, 0], "Forearm_L": [18, 0, 0], "Hand_L": [10, 0, 0], "Weapon_Front": [12, 0, 0], "Thigh_R": [-24, 0, 0], "Shin_R": [18, 0, 0], "Foot_R": [8, 0, 0], "Thigh_L": [22, 0, 0], "Shin_L": [16, 0, 0], "Foot_L": [8, 0, 0], "vfx": {"fx_spark": {"pos": [328, 256], "rot": 0, "scale": 0.85, "alpha": 0.95}, "fx_dust": {"pos": [242, 384], "rot": 0, "scale": 0.78, "alpha": 0.86}}},
+        {"t": 0.52, "Hip": [0, 0, 0], "Chest": [0, 0, 0], "Neck": [0, 0, 0], "Head": [0, 0, 0], "UpperArm_R": [0, 0, 0], "Forearm_R": [0, 0, 0], "Hand_R": [0, 0, 0], "Weapon_Back": [0, 0, 0], "UpperArm_L": [0, 0, 0], "Forearm_L": [0, 0, 0], "Hand_L": [0, 0, 0], "Weapon_Front": [0, 0, 0], "Thigh_R": [0, 0, 0], "Shin_R": [0, 0, 0], "Foot_R": [0, 0, 0], "Thigh_L": [0, 0, 0], "Shin_L": [0, 0, 0], "Foot_L": [0, 0, 0]},
+    ],
+}
+ARCHETYPE_ACTIONS["great_shield"]["cast"] = {
+    "grid": [2, 3], "length": 0.95, "loop": False,
+    "frames": [
+        {"t": 0.0, "Hip": [-4, 6, -2], "Chest": [-4, 0, 0], "Neck": [0, 0, 0], "Head": [2, 0, 0], "UpperArm_R": [-16, 0, 0], "Forearm_R": [-12, 0, 0], "Hand_R": [0, 0, 0], "Weapon_Back": [0, 0, 0], "UpperArm_L": [-32, 0, 0], "Forearm_L": [-18, 0, 0], "Hand_L": [-8, 0, 0], "Weapon_Front": [-10, 0, 0], "Thigh_R": [10, 0, 0], "Shin_R": [12, 0, 0], "Foot_R": [0, 0, 0], "Thigh_L": [-10, 0, 0], "Shin_L": [12, 0, 0], "Foot_L": [0, 0, 0]},
+        {"t": 0.16, "Hip": [6, 12, 4], "Chest": [8, 0, 0], "Neck": [0, 0, 0], "Head": [-4, 0, 0], "UpperArm_R": [8, 0, 0], "Forearm_R": [10, 0, 0], "Hand_R": [0, 0, 0], "Weapon_Back": [0, 0, 0], "UpperArm_L": [14, 0, 0], "Forearm_L": [18, 0, 0], "Hand_L": [6, 0, 0], "Weapon_Front": [8, 0, 0], "Thigh_R": [-18, 0, 0], "Shin_R": [20, 0, 0], "Foot_R": [4, 0, 0], "Thigh_L": [14, 0, 0], "Shin_L": [18, 0, 0], "Foot_L": [4, 0, 0], "vfx": {"fx_dust": {"pos": [268, 386], "rot": 0, "scale": 0.88, "alpha": 0.92}}},
+        {"t": 0.34, "Hip": [8, 14, 5], "Chest": [10, 0, 0], "Neck": [0, 0, 0], "Head": [-6, 0, 0], "UpperArm_R": [10, 0, 0], "Forearm_R": [12, 0, 0], "Hand_R": [0, 0, 0], "Weapon_Back": [0, 0, 0], "UpperArm_L": [16, 0, 0], "Forearm_L": [20, 0, 0], "Hand_L": [8, 0, 0], "Weapon_Front": [10, 0, 0], "Thigh_R": [-20, 0, 0], "Shin_R": [22, 0, 0], "Foot_R": [6, 0, 0], "Thigh_L": [16, 0, 0], "Shin_L": [20, 0, 0], "Foot_L": [6, 0, 0], "vfx": {"fx_spark": {"pos": [292, 262], "rot": 0, "scale": 0.92, "alpha": 0.96}, "fx_dust": {"pos": [274, 386], "rot": 0, "scale": 0.94, "alpha": 0.9}}},
+        {"t": 0.52, "Hip": [10, 12, 6], "Chest": [8, 0, 0], "Neck": [0, 0, 0], "Head": [-4, 0, 0], "UpperArm_R": [12, 0, 0], "Forearm_R": [10, 0, 0], "Hand_R": [0, 0, 0], "Weapon_Back": [0, 0, 0], "UpperArm_L": [18, 0, 0], "Forearm_L": [16, 0, 0], "Hand_L": [6, 0, 0], "Weapon_Front": [8, 0, 0], "Thigh_R": [-18, 0, 0], "Shin_R": [20, 0, 0], "Foot_R": [4, 0, 0], "Thigh_L": [14, 0, 0], "Shin_L": [18, 0, 0], "Foot_L": [4, 0, 0], "vfx": {"fx_spark": {"pos": [298, 254], "rot": 20, "scale": 0.84, "alpha": 0.88}}},
+        {"t": 0.7, "Hip": [4, 6, 2], "Chest": [4, 0, 0], "Neck": [0, 0, 0], "Head": [-2, 0, 0], "UpperArm_R": [4, 0, 0], "Forearm_R": [4, 0, 0], "Hand_R": [0, 0, 0], "Weapon_Back": [0, 0, 0], "UpperArm_L": [8, 0, 0], "Forearm_L": [8, 0, 0], "Hand_L": [2, 0, 0], "Weapon_Front": [4, 0, 0], "Thigh_R": [-8, 0, 0], "Shin_R": [10, 0, 0], "Foot_R": [2, 0, 0], "Thigh_L": [6, 0, 0], "Shin_L": [10, 0, 0], "Foot_L": [2, 0, 0]},
+        {"t": 0.86, "Hip": [0, 0, 0], "Chest": [0, 0, 0], "Neck": [0, 0, 0], "Head": [0, 0, 0], "UpperArm_R": [0, 0, 0], "Forearm_R": [0, 0, 0], "Hand_R": [0, 0, 0], "Weapon_Back": [0, 0, 0], "UpperArm_L": [0, 0, 0], "Forearm_L": [0, 0, 0], "Hand_L": [0, 0, 0], "Weapon_Front": [0, 0, 0], "Thigh_R": [0, 0, 0], "Shin_R": [0, 0, 0], "Foot_R": [0, 0, 0], "Thigh_L": [0, 0, 0], "Shin_L": [0, 0, 0], "Foot_L": [0, 0, 0]},
+    ],
+}
+ARCHETYPE_ACTIONS["sword_and_shield"] = json.loads(json.dumps(ARCHETYPE_ACTIONS["dual_blades"]))
+
+ARCHETYPE_ACTIONS["ranged_crossbow"]["attack"] = {
+    "grid": [2, 2], "length": 0.65, "loop": False,
+    "frames": [
+        {"t": 0.0, "Hip": [-2, 2, -2], "Chest": [-3, 0, 0], "Neck": [0, 0, 0], "Head": [2, 0, 0], "UpperArm_R": [-18, 0, 0], "Forearm_R": [-14, 0, 0], "Hand_R": [0, 0, 0], "Weapon_Back": [0, 0, 0], "UpperArm_L": [-32, 0, 0], "Forearm_L": [10, 0, 0], "Hand_L": [8, 0, 0], "Weapon_Front": [12, 0, 0], "Thigh_R": [6, 0, 0], "Shin_R": [8, 0, 0], "Foot_R": [0, 0, 0], "Thigh_L": [-6, 0, 0], "Shin_L": [8, 0, 0], "Foot_L": [0, 0, 0]},
+        {"t": 0.18, "Hip": [-8, 3, -4], "Chest": [-6, 0, 0], "Neck": [0, 0, 0], "Head": [4, 0, 0], "UpperArm_R": [-14, 0, 0], "Forearm_R": [-18, 0, 0], "Hand_R": [-4, 0, 0], "Weapon_Back": [0, 0, 0], "UpperArm_L": [-38, 0, 0], "Forearm_L": [4, 0, 0], "Hand_L": [-6, 0, 0], "Weapon_Front": [-8, 0, 0], "Thigh_R": [10, 0, 0], "Shin_R": [10, 0, 0], "Foot_R": [0, 0, 0], "Thigh_L": [-10, 0, 0], "Shin_L": [10, 0, 0], "Foot_L": [0, 0, 0], "vfx": {"fx_spark": {"pos": [318, 212], "rot": 0, "scale": 0.78, "alpha": 0.95}}},
+        {"t": 0.36, "Hip": [-4, 2, -2], "Chest": [-3, 0, 0], "Neck": [0, 0, 0], "Head": [2, 0, 0], "UpperArm_R": [-16, 0, 0], "Forearm_R": [-12, 0, 0], "Hand_R": [0, 0, 0], "Weapon_Back": [0, 0, 0], "UpperArm_L": [-28, 0, 0], "Forearm_L": [8, 0, 0], "Hand_L": [4, 0, 0], "Weapon_Front": [6, 0, 0], "Thigh_R": [6, 0, 0], "Shin_R": [6, 0, 0], "Foot_R": [0, 0, 0], "Thigh_L": [-6, 0, 0], "Shin_L": [6, 0, 0], "Foot_L": [0, 0, 0], "vfx": {"fx_spark": {"pos": [342, 210], "rot": 15, "scale": 0.56, "alpha": 0.72}}},
+        {"t": 0.52, "Hip": [0, 0, 0], "Chest": [0, 0, 0], "Neck": [0, 0, 0], "Head": [0, 0, 0], "UpperArm_R": [0, 0, 0], "Forearm_R": [0, 0, 0], "Hand_R": [0, 0, 0], "Weapon_Back": [0, 0, 0], "UpperArm_L": [0, 0, 0], "Forearm_L": [0, 0, 0], "Hand_L": [0, 0, 0], "Weapon_Front": [0, 0, 0], "Thigh_R": [0, 0, 0], "Shin_R": [0, 0, 0], "Foot_R": [0, 0, 0], "Thigh_L": [0, 0, 0], "Shin_L": [0, 0, 0], "Foot_L": [0, 0, 0]},
+    ],
+}
+ARCHETYPE_ACTIONS["ranged_crossbow"]["cast"] = {
+    "grid": [2, 3], "length": 0.95, "loop": False,
+    "frames": [
+        {"t": 0.0, "Hip": [-4, 4, -3], "Chest": [-5, 0, 0], "Neck": [0, 0, 0], "Head": [4, 0, 0], "UpperArm_R": [-20, 0, 0], "Forearm_R": [-16, 0, 0], "Hand_R": [0, 0, 0], "Weapon_Back": [0, 0, 0], "UpperArm_L": [-34, 0, 0], "Forearm_L": [8, 0, 0], "Hand_L": [6, 0, 0], "Weapon_Front": [10, 0, 0], "Thigh_R": [8, 0, 0], "Shin_R": [10, 0, 0], "Foot_R": [0, 0, 0], "Thigh_L": [-8, 0, 0], "Shin_L": [10, 0, 0], "Foot_L": [0, 0, 0], "vfx": {"fx_dust": {"pos": [210, 384], "rot": 0, "scale": 0.62, "alpha": 0.76}}},
+        {"t": 0.16, "Hip": [-10, 5, -6], "Chest": [-8, 0, 0], "Neck": [0, 0, 0], "Head": [6, 0, 0], "UpperArm_R": [-16, 0, 0], "Forearm_R": [-22, 0, 0], "Hand_R": [-6, 0, 0], "Weapon_Back": [0, 0, 0], "UpperArm_L": [-42, 0, 0], "Forearm_L": [2, 0, 0], "Hand_L": [-8, 0, 0], "Weapon_Front": [-10, 0, 0], "Thigh_R": [12, 0, 0], "Shin_R": [12, 0, 0], "Foot_R": [0, 0, 0], "Thigh_L": [-12, 0, 0], "Shin_L": [12, 0, 0], "Foot_L": [0, 0, 0], "vfx": {"fx_spark": {"pos": [318, 208], "rot": 0, "scale": 0.84, "alpha": 0.95}, "fx_dust": {"pos": [202, 384], "rot": 0, "scale": 0.72, "alpha": 0.85}}},
+        {"t": 0.34, "Hip": [-4, 3, -2], "Chest": [-4, 0, 0], "Neck": [0, 0, 0], "Head": [3, 0, 0], "UpperArm_R": [-22, 0, 0], "Forearm_R": [-14, 0, 0], "Hand_R": [0, 0, 0], "Weapon_Back": [0, 0, 0], "UpperArm_L": [-32, 0, 0], "Forearm_L": [10, 0, 0], "Hand_L": [8, 0, 0], "Weapon_Front": [12, 0, 0], "Thigh_R": [8, 0, 0], "Shin_R": [10, 0, 0], "Foot_R": [0, 0, 0], "Thigh_L": [-8, 0, 0], "Shin_L": [10, 0, 0], "Foot_L": [0, 0, 0]},
+        {"t": 0.52, "Hip": [-12, 6, -7], "Chest": [-10, 0, 0], "Neck": [0, 0, 0], "Head": [8, 0, 0], "UpperArm_R": [-14, 0, 0], "Forearm_R": [-24, 0, 0], "Hand_R": [-8, 0, 0], "Weapon_Back": [0, 0, 0], "UpperArm_L": [-44, 0, 0], "Forearm_L": [0, 0, 0], "Hand_L": [-10, 0, 0], "Weapon_Front": [-12, 0, 0], "Thigh_R": [14, 0, 0], "Shin_R": [14, 0, 0], "Foot_R": [0, 0, 0], "Thigh_L": [-14, 0, 0], "Shin_L": [14, 0, 0], "Foot_L": [0, 0, 0], "vfx": {"fx_spark": {"pos": [322, 204], "rot": 18, "scale": 0.9, "alpha": 0.96}, "fx_dust": {"pos": [196, 384], "rot": 0, "scale": 0.78, "alpha": 0.88}}},
+        {"t": 0.7, "Hip": [-4, 2, -2], "Chest": [-3, 0, 0], "Neck": [0, 0, 0], "Head": [2, 0, 0], "UpperArm_R": [-10, 0, 0], "Forearm_R": [-8, 0, 0], "Hand_R": [0, 0, 0], "Weapon_Back": [0, 0, 0], "UpperArm_L": [-18, 0, 0], "Forearm_L": [4, 0, 0], "Hand_L": [2, 0, 0], "Weapon_Front": [4, 0, 0], "Thigh_R": [4, 0, 0], "Shin_R": [6, 0, 0], "Foot_R": [0, 0, 0], "Thigh_L": [-4, 0, 0], "Shin_L": [6, 0, 0], "Foot_L": [0, 0, 0], "vfx": {"fx_spark": {"pos": [346, 204], "rot": 30, "scale": 0.58, "alpha": 0.6}}},
+        {"t": 0.86, "Hip": [0, 0, 0], "Chest": [0, 0, 0], "Neck": [0, 0, 0], "Head": [0, 0, 0], "UpperArm_R": [0, 0, 0], "Forearm_R": [0, 0, 0], "Hand_R": [0, 0, 0], "Weapon_Back": [0, 0, 0], "UpperArm_L": [0, 0, 0], "Forearm_L": [0, 0, 0], "Hand_L": [0, 0, 0], "Weapon_Front": [0, 0, 0], "Thigh_R": [0, 0, 0], "Shin_R": [0, 0, 0], "Foot_R": [0, 0, 0], "Thigh_L": [0, 0, 0], "Shin_L": [0, 0, 0], "Foot_L": [0, 0, 0]},
+    ],
+}
+ARCHETYPE_ACTIONS["dual_blades"]["attack"] = {
+    "grid": [2, 2], "length": 0.65, "loop": False,
+    "frames": [
+        {"t": 0.0, "Hip": [-6, 3, -3], "Chest": [-6, 0, 0], "Neck": [0, 0, 0], "Head": [4, 0, 0], "UpperArm_R": [-36, 0, 0], "Forearm_R": [-18, 0, 0], "Hand_R": [-10, 0, 0], "Weapon_Back": [-14, 0, 0], "UpperArm_L": [-42, 0, 0], "Forearm_L": [-18, 0, 0], "Hand_L": [-12, 0, 0], "Weapon_Front": [-16, 0, 0], "Thigh_R": [10, 0, 0], "Shin_R": [10, 0, 0], "Foot_R": [0, 0, 0], "Thigh_L": [-10, 0, 0], "Shin_L": [10, 0, 0], "Foot_L": [0, 0, 0]},
+        {"t": 0.18, "Hip": [10, 4, 6], "Chest": [10, 0, 0], "Neck": [0, 0, 0], "Head": [-6, 0, 0], "UpperArm_R": [14, 0, 0], "Forearm_R": [20, 0, 0], "Hand_R": [16, 0, 0], "Weapon_Back": [28, 0, 0], "UpperArm_L": [-6, 0, 0], "Forearm_L": [14, 0, 0], "Hand_L": [18, 0, 0], "Weapon_Front": [30, 0, 0], "Thigh_R": [-16, 0, 0], "Shin_R": [12, 0, 0], "Foot_R": [4, 0, 0], "Thigh_L": [14, 0, 0], "Shin_L": [12, 0, 0], "Foot_L": [4, 0, 0], "vfx": {"fx_slash": {"pos": [298, 244], "rot": 16, "scale": 0.74, "alpha": 0.94}}},
+        {"t": 0.36, "Hip": [14, 6, 8], "Chest": [12, 0, 0], "Neck": [0, 0, 0], "Head": [-8, 0, 0], "UpperArm_R": [-12, 0, 0], "Forearm_R": [18, 0, 0], "Hand_R": [22, 0, 0], "Weapon_Back": [38, 0, 0], "UpperArm_L": [14, 0, 0], "Forearm_L": [22, 0, 0], "Hand_L": [24, 0, 0], "Weapon_Front": [42, 0, 0], "Thigh_R": [-20, 0, 0], "Shin_R": [14, 0, 0], "Foot_R": [6, 0, 0], "Thigh_L": [18, 0, 0], "Shin_L": [14, 0, 0], "Foot_L": [6, 0, 0], "vfx": {"fx_slash": {"pos": [306, 262], "rot": -24, "scale": 0.72, "alpha": 0.92}, "fx_spark": {"pos": [336, 298], "rot": 0, "scale": 0.68, "alpha": 0.92}}},
+        {"t": 0.52, "Hip": [2, 2, 1], "Chest": [2, 0, 0], "Neck": [0, 0, 0], "Head": [-1, 0, 0], "UpperArm_R": [-2, 0, 0], "Forearm_R": [0, 0, 0], "Hand_R": [0, 0, 0], "Weapon_Back": [0, 0, 0], "UpperArm_L": [-2, 0, 0], "Forearm_L": [0, 0, 0], "Hand_L": [0, 0, 0], "Weapon_Front": [0, 0, 0], "Thigh_R": [-4, 0, 0], "Shin_R": [4, 0, 0], "Foot_R": [0, 0, 0], "Thigh_L": [4, 0, 0], "Shin_L": [4, 0, 0], "Foot_L": [0, 0, 0]},
+    ],
+}
+ARCHETYPE_ACTIONS["dual_blades"]["cast"] = {
+    "grid": [2, 3], "length": 0.95, "loop": False,
+    "frames": [
+        {"t": 0.0, "Hip": [-10, 5, -4], "Chest": [-8, 0, 0], "Neck": [0, 0, 0], "Head": [6, 0, 0], "UpperArm_R": [-38, 0, 0], "Forearm_R": [-16, 0, 0], "Hand_R": [-12, 0, 0], "Weapon_Back": [-16, 0, 0], "UpperArm_L": [-42, 0, 0], "Forearm_L": [-18, 0, 0], "Hand_L": [-14, 0, 0], "Weapon_Front": [-18, 0, 0], "Thigh_R": [8, 0, 0], "Shin_R": [10, 0, 0], "Foot_R": [0, 0, 0], "Thigh_L": [-10, 0, 0], "Shin_L": [10, 0, 0], "Foot_L": [0, 0, 0], "vfx": {"fx_dust": {"pos": [214, 384], "rot": 0, "scale": 0.62, "alpha": 0.76}}},
+        {"t": 0.16, "Hip": [10, 4, 6], "Chest": [10, 0, 0], "Neck": [0, 0, 0], "Head": [-6, 0, 0], "UpperArm_R": [16, 0, 0], "Forearm_R": [18, 0, 0], "Hand_R": [16, 0, 0], "Weapon_Back": [28, 0, 0], "UpperArm_L": [-8, 0, 0], "Forearm_L": [14, 0, 0], "Hand_L": [18, 0, 0], "Weapon_Front": [30, 0, 0], "Thigh_R": [-16, 0, 0], "Shin_R": [12, 0, 0], "Foot_R": [4, 0, 0], "Thigh_L": [14, 0, 0], "Shin_L": [12, 0, 0], "Foot_L": [4, 0, 0], "vfx": {"fx_slash_heavy": {"pos": [294, 246], "rot": 18, "scale": 0.68, "alpha": 0.94}}},
+        {"t": 0.34, "Hip": [14, 5, 7], "Chest": [12, 0, 0], "Neck": [0, 0, 0], "Head": [-8, 0, 0], "UpperArm_R": [-14, 0, 0], "Forearm_R": [20, 0, 0], "Hand_R": [22, 0, 0], "Weapon_Back": [38, 0, 0], "UpperArm_L": [14, 0, 0], "Forearm_L": [20, 0, 0], "Hand_L": [22, 0, 0], "Weapon_Front": [38, 0, 0], "Thigh_R": [-18, 0, 0], "Shin_R": [12, 0, 0], "Foot_R": [4, 0, 0], "Thigh_L": [16, 0, 0], "Shin_L": [14, 0, 0], "Foot_L": [6, 0, 0], "vfx": {"fx_slash_heavy": {"pos": [302, 258], "rot": -22, "scale": 0.68, "alpha": 0.95}, "fx_dust": {"pos": [196, 384], "rot": 0, "scale": 0.74, "alpha": 0.85}}},
+        {"t": 0.52, "Hip": [18, 7, 9], "Chest": [14, 0, 0], "Neck": [0, 0, 0], "Head": [-10, 0, 0], "UpperArm_R": [18, 0, 0], "Forearm_R": [24, 0, 0], "Hand_R": [24, 0, 0], "Weapon_Back": [44, 0, 0], "UpperArm_L": [16, 0, 0], "Forearm_L": [24, 0, 0], "Hand_L": [26, 0, 0], "Weapon_Front": [46, 0, 0], "Thigh_R": [-22, 0, 0], "Shin_R": [14, 0, 0], "Foot_R": [6, 0, 0], "Thigh_L": [20, 0, 0], "Shin_L": [16, 0, 0], "Foot_L": [8, 0, 0], "vfx": {"fx_slash_heavy": {"pos": [310, 268], "rot": 12, "scale": 0.72, "alpha": 0.92}, "fx_spark": {"pos": [344, 312], "rot": 12, "scale": 0.74, "alpha": 0.95}}},
+        {"t": 0.7, "Hip": [8, 3, 4], "Chest": [6, 0, 0], "Neck": [0, 0, 0], "Head": [-4, 0, 0], "UpperArm_R": [-6, 0, 0], "Forearm_R": [6, 0, 0], "Hand_R": [6, 0, 0], "Weapon_Back": [10, 0, 0], "UpperArm_L": [4, 0, 0], "Forearm_L": [8, 0, 0], "Hand_L": [8, 0, 0], "Weapon_Front": [14, 0, 0], "Thigh_R": [-10, 0, 0], "Shin_R": [8, 0, 0], "Foot_R": [2, 0, 0], "Thigh_L": [8, 0, 0], "Shin_L": [8, 0, 0], "Foot_L": [4, 0, 0], "vfx": {"fx_spark": {"pos": [346, 320], "rot": 25, "scale": 0.54, "alpha": 0.56}}},
+        {"t": 0.86, "Hip": [0, 0, 0], "Chest": [0, 0, 0], "Neck": [0, 0, 0], "Head": [0, 0, 0], "UpperArm_R": [0, 0, 0], "Forearm_R": [0, 0, 0], "Hand_R": [0, 0, 0], "Weapon_Back": [0, 0, 0], "UpperArm_L": [0, 0, 0], "Forearm_L": [0, 0, 0], "Hand_L": [0, 0, 0], "Weapon_Front": [0, 0, 0], "Thigh_R": [0, 0, 0], "Shin_R": [0, 0, 0], "Foot_R": [0, 0, 0], "Thigh_L": [0, 0, 0], "Shin_L": [0, 0, 0], "Foot_L": [0, 0, 0]},
+    ],
+}
 
 
 # ==============================================================================
@@ -153,6 +218,33 @@ def unmix_magenta_rgba(raw_img: Image.Image) -> Image.Image:
                 r = int(max(0, min(255, r - mag_excess * 0.35)))
                 b = int(max(0, min(255, b - mag_excess * 0.35)))
             opx[x, y] = (r, g, b, alpha)
+
+    # Strip thin layout_guide_1x1 / layout_guide_2x2 safe-zone border lines if Muse echoed them
+    for _pass in range(2):
+        to_clear = []
+        for y in range(margin_y, h - margin_y):
+            ny = y / float(h)
+            in_h_band = (0.115 <= ny <= 0.16) or (0.485 <= ny <= 0.515) or (0.84 <= ny <= 0.885)
+            for x in range(margin_x, w - margin_x):
+                if opx[x, y][3] == 0:
+                    continue
+                nx = x / float(w)
+                in_v_band = (0.115 <= nx <= 0.16) or (0.485 <= nx <= 0.515) or (0.84 <= nx <= 0.885)
+                if not (in_h_band or in_v_band):
+                    continue
+                if in_v_band:
+                    left_clear = any(x - dx >= 0 and opx[x - dx, y][3] < 20 for dx in range(1, 9))
+                    right_clear = any(x + dx < w and opx[x + dx, y][3] < 20 for dx in range(1, 9))
+                    if left_clear and right_clear:
+                        to_clear.append((x, y))
+                        continue
+                if in_h_band:
+                    up_clear = any(y - dy >= 0 and opx[x, y - dy][3] < 20 for dy in range(1, 9))
+                    down_clear = any(y + dy < h and opx[x, y + dy][3] < 20 for dy in range(1, 9))
+                    if up_clear and down_clear:
+                        to_clear.append((x, y))
+        for cx, cy in to_clear:
+            opx[cx, cy] = (0, 0, 0, 0)
     return out
 
 
@@ -225,11 +317,26 @@ def build_anatomical_bones(w_main: Image.Image, w_offhand: Image.Image, cfg: dic
         if g2: d["grip2_x"], d["grip2_y"] = round(float(g2[0]), 2), round(float(g2[1]), 2)
         return d
 
-    g1 = cfg.get("grip1", [round(w_main.width * 0.35, 1), round(w_main.height * 0.72, 1)])
-    g2 = cfg.get("grip2", [round(w_main.width * 0.14, 1), round(w_main.height * 0.86, 1)])
-    og1 = cfg.get("offhand_grip1", [round(w_offhand.width * 0.22, 1), round(w_offhand.height * 0.55, 1)])
-    og2 = cfg.get("offhand_grip2", [round(w_offhand.width * 0.12, 1), round(w_offhand.height * 0.65, 1)])
-    w_rot = cfg.get("rest_rot", 14.0)
+    arch = cfg.get("archetype", "melee_cleaver")
+    g1_norm = cfg.get("grip1_norm", [0.35, 0.72])
+    g2_norm = cfg.get("grip2_norm", [0.14, 0.86])
+    if arch == "great_shield":
+        g1_norm = [0.32, 0.48]
+    og1_norm = [0.30, 0.48] if arch == "sword_and_shield" else cfg.get("offhand_grip1_norm", g1_norm)
+    og2_norm = [0.30, 0.68] if arch == "sword_and_shield" else cfg.get("offhand_grip2_norm", g2_norm)
+    g1 = cfg.get("grip1", [round(w_main.width * g1_norm[0], 1), round(w_main.height * g1_norm[1], 1)])
+    g2 = cfg.get("grip2", [round(w_main.width * g2_norm[0], 1), round(w_main.height * g2_norm[1], 1)])
+    og1 = cfg.get("offhand_grip1", [round(w_offhand.width * og1_norm[0], 1), round(w_offhand.height * og1_norm[1], 1)])
+    og2 = cfg.get("offhand_grip2", [round(w_offhand.width * og2_norm[0], 1), round(w_offhand.height * og2_norm[1], 1)])
+    w_rot = -22.0 if arch == "sword_and_shield" else cfg.get("rest_rot", 14.0)
+    ow_rot = 77.0 if arch == "sword_and_shield" else cfg.get("offhand_rest_rot", w_rot + 8.0)
+    ow_z = 16 if arch in ("sword_and_shield", "great_shield") else cfg.get("offhand_z_index", 9)
+    wf_z = 16 if arch == "great_shield" else 14
+    uarm_r_rot = -48 if arch == "sword_and_shield" else -26
+    farm_r_rot = -32 if arch == "sword_and_shield" else -38
+    uarm_l_rot = 36 if arch == "sword_and_shield" else 14
+    farm_l_rot = -28 if arch == "sword_and_shield" else -52
+    is_dual = bool(cfg.get("dual_wield_default", arch in ("dual_blades", "sword_and_shield")))
 
     return [
         mb("Hip", None, "hip_kilt", 198, 258, 0, part_dims["hip_kilt"][0]/2, part_dims["hip_kilt"][1]*0.35, 7, tip_child="Chest"),
@@ -242,14 +349,14 @@ def build_anatomical_bones(w_main: Image.Image, w_offhand: Image.Image, cfg: dic
         mb("Chest", "Hip", "chest", 0, -4, 3, part_dims["chest"][0]/2, part_dims["chest"][1]-10, 8, tip_child="Neck"),
         mb("Neck", "Chest", "neck", 0, -(part_dims["chest"][1]-22), 0, part_dims["neck"][0]/2, part_dims["neck"][1]-7, 7, tip_child="Head"),
         mb("Head", "Neck", "head", 0, -(part_dims["neck"][1]-14), -3, part_dims["head"][0]/2, part_dims["head"][1]-10, 11, tip_offset=[0, -76]),
-        mb("UpperArm_R", "Chest", "arm_upper_back", 10, -(part_dims["chest"][1]-26), -26, part_dims["arm_upper_back"][0]/2, 10.5, 6, tip_child="Forearm_R"),
-        mb("Forearm_R", "UpperArm_R", "arm_lower_back", 0, part_dims["arm_upper_back"][1]-21, -38, part_dims["arm_lower_back"][0]/2, 10, 9, tip_child="Hand_R"),
+        mb("UpperArm_R", "Chest", "arm_upper_back", 10, -(part_dims["chest"][1]-26), uarm_r_rot, part_dims["arm_upper_back"][0]/2, 10.5, 6, tip_child="Forearm_R"),
+        mb("Forearm_R", "UpperArm_R", "arm_lower_back", 0, part_dims["arm_upper_back"][1]-21, farm_r_rot, part_dims["arm_lower_back"][0]/2, 10, 9, tip_child="Hand_R"),
         mb("Hand_R", "Forearm_R", "hand_back", 0, part_dims["arm_lower_back"][1]-20, 0, part_dims["hand_back"][0]*0.48, 5, 10, tip_child="Weapon_Back"),
-        mb("Weapon_Back", "Hand_R", "weapon_offhand", 0, part_dims["hand_back"][1]*0.58, 22, og1[0], og1[1], 9, tip_offset=[115, 0], is_weapon=True, vis=False, g1=og1, g2=og2),
-        mb("UpperArm_L", "Chest", "arm_upper_front", -8, -(part_dims["chest"][1]-26), 14, part_dims["arm_upper_front"][0]/2, 11, 12, tip_child="Forearm_L"),
-        mb("Forearm_L", "UpperArm_L", "arm_lower_front", 0, part_dims["arm_upper_front"][1]-22, -52, part_dims["arm_lower_front"][0]/2, 10, 13, tip_child="Hand_L"),
+        mb("Weapon_Back", "Hand_R", "weapon_offhand", 0, part_dims["hand_back"][1]*0.58, ow_rot, og1[0], og1[1], ow_z, tip_offset=[115, 0], is_weapon=True, vis=is_dual, g1=og1, g2=og2),
+        mb("UpperArm_L", "Chest", "arm_upper_front", -8, -(part_dims["chest"][1]-26), uarm_l_rot, part_dims["arm_upper_front"][0]/2, 11, 12, tip_child="Forearm_L"),
+        mb("Forearm_L", "UpperArm_L", "arm_lower_front", 0, part_dims["arm_upper_front"][1]-22, farm_l_rot, part_dims["arm_lower_front"][0]/2, 10, 13, tip_child="Hand_L"),
         mb("Hand_L", "Forearm_L", "hand_front", 0, part_dims["arm_lower_front"][1]-20, 0, part_dims["hand_front"][0]*0.48, 5, 15, tip_child="Weapon_Front"),
-        mb("Weapon_Front", "Hand_L", "weapon_main", 0, part_dims["hand_front"][1]*0.58, w_rot, g1[0], g1[1], 14, tip_offset=[135, -95], is_weapon=True, vis=True, g1=g1, g2=g2),
+        mb("Weapon_Front", "Hand_L", "weapon_main", 0, part_dims["hand_front"][1]*0.58, w_rot, g1[0], g1[1], wf_z, tip_offset=[135, -95], is_weapon=True, vis=True, g1=g1, g2=g2),
     ]
 
 
@@ -305,7 +412,7 @@ def render_pose_cell(bones: list, frame_pose: dict, team_key: str, weapon_parts:
     sorted_bones = sorted(bones, key=lambda b: b["z_index"])
     for b in sorted_bones:
         bname = b["name"]
-        if bname == "Weapon_Back" and not dual_wield:
+        if bname == "Weapon_Back" and not (dual_wield or b.get("visible_default", False)):
             continue
         tr = world[bname]
         if b["is_weapon"]:
@@ -455,7 +562,7 @@ def build_godot_files(cfg: dict, bones: list, actions: dict, weapon_dir: pathlib
             idx += 1
     for fx in VFX_NAMES:
         part_ext_id[fx] = f"{idx}_{fx}"
-        ext_list.append((part_ext_id[fx], "Texture2D", f"res://assets/weapons/{slug}/parts/{fx}.png"))
+        ext_list.append((part_ext_id[fx], "Texture2D", f"res://assets/vfx_shared/{fx}.png"))
         idx += 1
 
     bone_paths = {}
@@ -681,9 +788,15 @@ def load_weapons_registry() -> tuple[dict, list]:
 
 def save_weapons_data_js(registry: dict, order: list):
     team_b64 = build_team_part_b64()
+    shared_vfx_b64 = {
+        fx: b64_uri(SHARED_VFX_DIR / f"{fx}.png")
+        for fx in VFX_NAMES
+        if (SHARED_VFX_DIR / f"{fx}.png").exists()
+    }
     js_lines = [
         "// Auto-generated by tools/forge_weapon.py — DO NOT READ OR EDIT MANUALLY IN AI CONTEXT",
         f"window.TEAM_PART_B64 = {json.dumps(team_b64, ensure_ascii=True)};",
+        f"window.SHARED_VFX_B64 = {json.dumps(shared_vfx_b64, ensure_ascii=True)};",
         f"window.WEAPON_REGISTRY = {json.dumps(registry, ensure_ascii=True)};",
         f"window.WEAPON_ORDER = {json.dumps(order, ensure_ascii=True)};",
         "",
@@ -1016,6 +1129,7 @@ const BONES = [];
 const BONE_MAP = {{}};
 const ACTIONS = {{}};
 const TEAM_IMAGES = {{}};
+const SHARED_VFX_IMAGES = {{}};
 const WEAPON_PACK_IMAGES = {{}};
 const WEAPON_IMAGES = {{}};
 
@@ -1026,6 +1140,12 @@ Object.keys(window.TEAM_PART_B64 || {{}}).forEach(tkey => {{
     img.src = b64;
     TEAM_IMAGES[tkey][pname] = img;
   }});
+}});
+
+Object.entries(window.SHARED_VFX_B64 || {{}}).forEach(([fxName, b64]) => {{
+  const im = new Image();
+  im.src = b64;
+  SHARED_VFX_IMAGES[fxName] = im;
 }});
 
 Object.entries(window.WEAPON_REGISTRY || {{}}).forEach(([wid, pack]) => {{
@@ -1074,6 +1194,7 @@ function applyWeaponPack(wid) {{
   Object.keys(ACTIONS).forEach(k => delete ACTIONS[k]);
   Object.entries(JSON.parse(JSON.stringify(pack.actions))).forEach(([k, v]) => ACTIONS[k] = v);
   Object.keys(WEAPON_IMAGES).forEach(k => delete WEAPON_IMAGES[k]);
+  Object.entries(SHARED_VFX_IMAGES).forEach(([k, im]) => WEAPON_IMAGES[k] = im);
   Object.entries(WEAPON_PACK_IMAGES[wid] || {{}}).forEach(([k, im]) => WEAPON_IMAGES[k] = im);
   showWeaponAura = Boolean(pack.aura_default && WEAPON_IMAGES["weapon_anim_1"]);
   const chkAura = document.getElementById("chkWeaponAura");
@@ -1592,7 +1713,7 @@ function buildGodotTscnString() {{
   }});
   VFX_LIST.forEach(fx => {{
     partExtId[fx] = `${{idx}}_${{fx}}`;
-    extList.push([partExtId[fx], "Texture2D", `res://assets/weapons/${{slug}}/parts/${{fx}}.png`]);
+    extList.push([partExtId[fx], "Texture2D", `res://assets/vfx_shared/${{fx}}.png`]);
     idx++;
   }});
 
@@ -1784,9 +1905,6 @@ def build_pack_entry_from_config(cfg: dict) -> dict:
         for i in range(1, 4):
             if (pdir / f"weapon_anim_{i}.png").exists():
                 images[f"weapon_anim_{i}"] = b64_uri(pdir / f"weapon_anim_{i}.png")
-    for fx in VFX_NAMES:
-        if (pdir / f"{fx}.png").exists():
-            images[fx] = b64_uri(pdir / f"{fx}.png")
 
     card_path = cdir / f"{wid}_card_preview.png"
     return {
@@ -1804,8 +1922,28 @@ def build_pack_entry_from_config(cfg: dict) -> dict:
     }
 
 
+def normalize_config(cfg: dict) -> dict:
+    wid = cfg["id"]
+    raw_slug = cfg["slug"]
+    if not raw_slug.startswith(f"{wid}_"):
+        slug = f"{wid}_{raw_slug}"
+        cfg["slug"] = slug
+    else:
+        slug = raw_slug
+    base_slug = slug[len(wid) + 1:] if slug.startswith(f"{wid}_") else slug
+    cid_lower = "c" + wid[1:]
+    cid_upper = "C" + wid[1:]
+    if "tscn_name" not in cfg:
+        cfg["tscn_name"] = f"{cid_lower}_{base_slug}.tscn"
+    if "node_name" not in cfg:
+        camel = "".join(part.capitalize() for part in base_slug.split("_"))
+        cfg["node_name"] = f"{cid_upper}_{camel}"
+    return cfg
+
+
 def forge_single_weapon(config_path: pathlib.Path, force_gen: bool = False):
-    cfg = json.loads(config_path.read_text(encoding="utf-8"))
+    cfg = normalize_config(json.loads(config_path.read_text(encoding="utf-8")))
+    config_path.write_text(json.dumps(cfg, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     wid = cfg["id"]
     slug = cfg["slug"]
     tier = cfg.get("tier", "N").upper()
@@ -1820,13 +1958,19 @@ def forge_single_weapon(config_path: pathlib.Path, force_gen: bool = False):
 
     ref_raw = rdir / f"{wid}_ref_raw.png"
     if force_gen or (not (pdir / "weapon_main.png").exists() and not ref_raw.exists()):
-        print(f"[{wid}] Resetting Muse thread & generating Step 1 Ref Weapon...")
-        muse_post("/v1/thread", {"new_thread": True})
-        muse_post("/generate-image", {
-            "prompt": cfg["prompt_ref"],
-            "reference_images": [str(LAYOUT_1X1)],
-            "save_path": str(ref_raw),
-        })
+        for attempt in range(3):
+            print(f"[{wid}] Resetting Muse thread & generating Step 1 Ref Weapon (attempt {attempt + 1}/3)...")
+            try:
+                muse_post("/v1/thread", {"new_thread": True})
+                muse_post("/generate-image", {
+                    "prompt": cfg["prompt_ref"],
+                    "reference_images": [str(LAYOUT_1X1)],
+                    "save_path": str(ref_raw),
+                })
+            except Exception as exc:
+                print(f"[{wid}] Muse ref warning: {exc}")
+            if ref_raw.exists():
+                break
 
     if force_gen or not (pdir / "weapon_main.png").exists():
         raw_im = Image.open(ref_raw).convert("RGBA")
@@ -1840,21 +1984,55 @@ def forge_single_weapon(config_path: pathlib.Path, force_gen: bool = False):
         w_main = keep_largest_component_and_crop(w_main, pad=0)
         w_main.save(pdir / "weapon_main.png")
         w_main.save(pdir / "weapon_anim_0.png")
-        if not (pdir / "weapon_offhand.png").exists():
-            w_off = w_main.resize((max(1, int(w_main.width * 0.75)), max(1, int(w_main.height * 0.75))), Image.Resampling.LANCZOS)
+
+    offhand_raw = rdir / f"{wid}_offhand_raw.png"
+    if "prompt_offhand" in cfg:
+        if force_gen or (not (pdir / "weapon_offhand.png").exists() and not offhand_raw.exists()):
+            for attempt in range(3):
+                print(f"[{wid}] Generating Offhand Shield/Weapon via Muse (attempt {attempt + 1}/3)...")
+                try:
+                    muse_post("/v1/thread", {"new_thread": True})
+                    muse_post("/generate-image", {
+                        "prompt": cfg["prompt_offhand"],
+                        "reference_images": [str(LAYOUT_1X1)],
+                        "save_path": str(offhand_raw),
+                    })
+                except Exception as exc:
+                    print(f"[{wid}] Muse offhand warning: {exc}")
+                if offhand_raw.exists():
+                    break
+        if (force_gen or not (pdir / "weapon_offhand.png").exists()) and offhand_raw.exists():
+            oraw_im = Image.open(offhand_raw).convert("RGBA")
+            ounmixed = unmix_magenta_rgba(oraw_im)
+            oclean_im = keep_largest_component_and_crop(ounmixed, pad=0)
+            otsz = cfg.get("offhand_target_size", [132, 160])
+            oscale = min(otsz[0] / max(1, oclean_im.width), otsz[1] / max(1, oclean_im.height))
+            w_off = oclean_im.resize((max(1, int(round(oclean_im.width * oscale))), max(1, int(round(oclean_im.height * oscale)))), Image.Resampling.LANCZOS)
+            w_off = keep_largest_component_and_crop(w_off, pad=0)
             w_off.save(pdir / "weapon_offhand.png")
+
+    if not (pdir / "weapon_offhand.png").exists():
+        w_main = Image.open(pdir / "weapon_main.png").convert("RGBA")
+        w_off = w_main.resize((max(1, int(w_main.width * 0.75)), max(1, int(w_main.height * 0.75))), Image.Resampling.LANCZOS)
+        w_off.save(pdir / "weapon_offhand.png")
 
     # Step 2 (Only for S and SSR tiers; skipped for N and R tiers): 2x2 Animated Weapon Spritesheet
     anim_raw = rdir / f"{wid}_weapon_anim_2x2_raw.png"
     if tier in ("S", "SSR"):
         if force_gen or not (pdir / "weapon_anim_1.png").exists():
             if (force_gen or not anim_raw.exists()) and "prompt_anim_2x2" in cfg:
-                print(f"[{wid}] Generating Step 2 (S/SSR) 2x2 Weapon Animation Sheet via Muse...")
-                muse_post("/generate-image", {
-                    "prompt": cfg["prompt_anim_2x2"],
-                    "reference_images": [str(ref_raw), str(LAYOUT_2X2)],
-                    "save_path": str(anim_raw),
-                })
+                for attempt in range(3):
+                    print(f"[{wid}] Generating Step 2 (S/SSR) 2x2 Weapon Animation Sheet via Muse (attempt {attempt + 1}/3)...")
+                    try:
+                        muse_post("/generate-image", {
+                            "prompt": cfg["prompt_anim_2x2"],
+                            "reference_images": [str(ref_raw), str(LAYOUT_2X2)],
+                            "save_path": str(anim_raw),
+                        })
+                    except Exception as exc:
+                        print(f"[{wid}] Muse 2x2 warning: {exc}")
+                    if anim_raw.exists():
+                        break
             if anim_raw.exists():
                 w_main_ref = Image.open(pdir / "weapon_main.png").convert("RGBA")
                 sheet_im = Image.open(anim_raw).convert("RGBA")
@@ -1868,29 +2046,37 @@ def forge_single_weapon(config_path: pathlib.Path, force_gen: bool = False):
                     if cfg.get("flip_horizontal", False):
                         cell_clean = cell_clean.transpose(Image.Transpose.FLIP_LEFT_RIGHT)
                     cell_fitted = cell_clean.resize(w_main_ref.size, Image.Resampling.LANCZOS)
-                    cell_fitted.save(pdir / f"weapon_anim_{idx}.png")
+                    aura_over = cell_fitted.copy()
+                    r_ch, g_ch, b_ch, a_ch = aura_over.split()
+                    a_ch = a_ch.point(lambda p: int(p * 0.42))
+                    aura_over.putalpha(a_ch)
+                    composed_frame = Image.alpha_composite(cell_fitted, w_main_ref)
+                    composed_frame = Image.alpha_composite(composed_frame, aura_over)
+                    composed_frame.save(pdir / f"weapon_anim_{idx}.png")
                     if idx == 1 and not (pdir / "weapon_aura.png").exists():
                         cell_fitted.save(pdir / "weapon_aura.png")
-
-    # Copy shared soft VFX if missing
-    vfx_src_dir = ROOT / "assets/weapons/w001_hac_kiem_tan_binh/parts"
-    for fx in VFX_NAMES:
-        if not (pdir / f"{fx}.png").exists() and (vfx_src_dir / f"{fx}.png").exists():
-            shutil.copyfile(vfx_src_dir / f"{fx}.png", pdir / f"{fx}.png")
 
     card_png = cdir / f"{wid}_card_preview.png"
     if force_gen or not card_png.exists():
         card_raw = rdir / f"{wid}_card_preview_raw.png"
         if not card_raw.exists() and "prompt_card" in cfg:
-            print(f"[{wid}] Generating Card Preview via Muse...")
             card_refs = [str(ref_raw)]
+            if offhand_raw.exists():
+                card_refs.append(str(offhand_raw))
             if tier in ("S", "SSR") and anim_raw.exists():
                 card_refs.append(str(anim_raw))
-            muse_post("/generate-image", {
-                "prompt": cfg["prompt_card"],
-                "reference_images": card_refs,
-                "save_path": str(card_raw),
-            })
+            for attempt in range(3):
+                print(f"[{wid}] Generating Card Preview via Muse (attempt {attempt + 1}/3)...")
+                try:
+                    muse_post("/generate-image", {
+                        "prompt": cfg["prompt_card"],
+                        "reference_images": card_refs,
+                        "save_path": str(card_raw),
+                    })
+                except Exception as exc:
+                    print(f"[{wid}] Muse card warning: {exc}")
+                if card_raw.exists():
+                    break
         if card_raw.exists():
             cim = Image.open(card_raw).convert("RGB").resize((884, 632), Image.Resampling.LANCZOS)
             cim.save(card_png, format="PNG")
@@ -1900,10 +2086,16 @@ def forge_single_weapon(config_path: pathlib.Path, force_gen: bool = False):
         cim = Image.open(card_png).convert("RGB")
         cim.resize((354, 253), Image.Resampling.LANCZOS).save(mdir_cards / f"{wid}_card_preview.webp", format="WEBP", quality=90)
     for png_p in pdir.glob("*.png"):
+        if png_p.stem in VFX_NAMES:
+            continue
         Image.open(png_p).convert("RGBA").save(mdir_parts / f"{png_p.stem}.webp", format="WEBP", quality=90)
 
-    # Load parts & build rig + QC + Godot
-    weapon_parts = {p.stem: Image.open(p).convert("RGBA") for p in pdir.glob("*.png")}
+    # Load parts & shared VFX + build rig + QC + Godot
+    weapon_parts = {p.stem: Image.open(p).convert("RGBA") for p in pdir.glob("*.png") if p.stem not in VFX_NAMES}
+    for fx in VFX_NAMES:
+        fx_path = SHARED_VFX_DIR / f"{fx}.png"
+        if fx_path.exists():
+            weapon_parts[fx] = Image.open(fx_path).convert("RGBA")
     card_img = Image.open(card_png).convert("RGB")
     pack = build_pack_entry_from_config(cfg)
     build_qc_boards(cfg, pack["bones"], pack["actions"], wdir, weapon_parts, card_img)

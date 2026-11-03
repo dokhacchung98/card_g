@@ -1,0 +1,25 @@
+{
+  "id": "w011",
+  "slug": "w011_kiem_si_san_bong",
+  "tier": "R",
+  "name": "W011 — Kiếm Răng Cưa Săn Bóng (Cấp R — Vũ Khí Tĩnh)",
+  "tscn_name": "c011_kiem_si_san_bong.tscn",
+  "node_name": "C011_KiemSiSanBong",
+  "archetype": "melee_sword",
+  "target_size": [
+    214,
+    174
+  ],
+  "grip1_norm": [
+    0.26,
+    0.75
+  ],
+  "grip2_norm": [
+    0.12,
+    0.88
+  ],
+  "rest_rot": 24.0,
+  "flip_horizontal": false,
+  "prompt_ref": "A single standalone 2D game weapon sprite on a pure solid magenta #FF00FF background, following the attached layout_guide_1x1.png safe zone (centered inside 65% of the canvas, zero border clipping). The weapon is W011 'Kiếm Răng Cưa Săn Bóng' (Shadow-Hunter's Serrated Bloodletter Sword / Bleed-Ripper Flamberge, Tier R Rare weapon), placed diagonally from bottom-left (wolf-claw iron pommel at the base of the hilt) to top-right (barbed armor-tearing sword point). Design details: a brutal dark-fantasy shadow-hunter longsword featuring a blackened Damascus steel blade with cruel hooked saw-tooth serrations along the upper spine designed to tear flesh, a deep crimson blood-channel fuller down the center, and a razor-sharp cold silver lower edge; a dark iron crossguard shaped like snarling shadow-hound jaws; and a two-handed grip wrapped in charcoal-black and dark crimson leather bands for Grip 1 and Grip 2. Crisp dark outlines, stylized 2D hand-painted game art matching Arcana Five aesthetic, NO character, NO hands, NO floating aura particles, 100% flat solid #FF00FF magenta background.",
+  "prompt_card": "Extreme close-up macro weapon portrait (horizontal rectangular 4:3, 884x632, 100% opaque RGB painting, NO transparent background, NO UI frame). ONE GIANT SERRATED SHADOW-HUNTER SWORD (Kiếm Răng Cưa Săn Bóng) identical to the attached reference image MUST FILL 85% OF THE FRAME diagonally from bottom-left (leather-wrapped hilt and wolf-claw pommel) to top-right (blackened steel blade with hooked saw-tooth spine serrations, crimson blood-fuller, and shadow-hound jaw crossguard). Keep the background dark, moody, and softly blurred with cold moonlight and shadow mist so the giant diagonal sword is the sole hero subject in the foreground."
+}

@@ -1,0 +1,20 @@
+{
+  "id": "w068",
+  "slug": "w068_ke_ban_phuoc",
+  "name": "C068 Kẻ Ban Phước (Quyền Trượng Tinh Tú Ban Phước)",
+  "tier": "R",
+  "archetype": "magic_staff",
+  "grip1_norm": [
+    0.46,
+    0.56
+  ],
+  "grip2_norm": [
+    0.34,
+    0.68
+  ],
+  "scale_mult": 1.15,
+  "prompt_ref": "Create a single-cell 1x1 reference sheet of a dark-fantasy Astral Blesser's starlight armillary scepter (Quyền Trượng Tinh Tú Ban Phước - C068 Kẻ Ban Phước) following the exact square cell of the attached reference layout_guide_1x1.png.\n\nCOMPOSITION & ORIENTATION (100% MANDATORY):\n- Draw ONE complete celestial scepter staff oriented DIAGONALLY from bottom-left (ivory-and-gold fluted shaft) to top-right (interlocking golden armillary sphere rings surrounding a radiant eight-pointed cyan-and-gold star crystal).\n- Must show 100% of the entire staff from bottom tip to top armillary star crest with generous padding inside the frame (occupying 65%-75% of the canvas).\n- Zero clipping at canvas edges.\n\nCOLOR & BACKGROUND (100% MANDATORY):\n- Background MUST be flat solid pure magenta (#FF00FF) edge-to-edge.\n- DO NOT use any magenta/pink tones on the staff itself (use burnished celestial gold, midnight-blue enamel, silver, and bright cyan-gold starlight).\n- No character hands, no text, no borders.",
+  "prompt_card": "Create a wide horizontal 16:11 dark-fantasy card illustration featuring the exact same Astral Armillary Starlight Staff (Quyền Trượng Tinh Tú Ban Phước - C068 Kẻ Ban Phước) from the attached reference image.\n\nCOMPOSITION & BACKGROUND (100% MANDATORY):\n- Place the golden armillary star scepter diagonally across the center of the horizontal frame.\n- Full atmospheric dark-fantasy background (100% opaque RGB illustration, NO magenta, NO transparency): a high observatory sanctuary under a starry cosmos where golden-cyan constellations and blessing halos orbit the staff.\n- Do NOT draw any card frame, borders, or text.",
+  "tscn_name": "c068_ke_ban_phuoc.tscn",
+  "node_name": "C068_KeBanPhuoc"
+}

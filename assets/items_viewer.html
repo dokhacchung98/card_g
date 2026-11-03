@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<title>Card_G — Bộ 25 Item & Kỹ Năng Cuối (C076–C100) + Icon Trạng Thái 16x16 Dùng Chung</title>
+<style>
+  body { margin: 0; background: #0d1117; color: #e6edf3; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
+  header { padding: 14px 24px; background: #161b22; border-bottom: 1px solid #30363d; display: flex; justify-content: space-between; align-items: center; }
+  h1 { margin: 0; font-size: 18px; color: #f59e0b; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 16px; padding: 20px; }
+  .card { background: #161b22; border: 1px solid #30363d; border-radius: 10px; padding: 14px; display: flex; flex-direction: column; gap: 10px; }
+  .card-head { display: flex; justify-content: space-between; align-items: center; font-weight: 700; font-size: 14px; color: #58a6ff; }
+  .tier { background: #238636; color: #fff; padding: 2px 8px; border-radius: 99px; font-size: 11px; }
+  .media-row { display: flex; gap: 12px; align-items: center; }
+  .card-art { width: 190px; height: 136px; object-fit: cover; border-radius: 6px; border: 1px solid #f59e0b; }
+  .anim-box { width: 136px; height: 136px; background: #0d1117; border: 1px solid #30363d; border-radius: 6px; display: flex; align-items: center; justify-content: center; }
+  .anim-box img { max-width: 124px; max-height: 124px; }
+  .status-bar { display: flex; align-items: center; gap: 10px; background: #0d1117; padding: 8px 10px; border-radius: 6px; border: 1px solid #2ea043; font-size: 12px; }
+  .ic16 { width: 16px; height: 16px; image-rendering: pixelated; border: 1px solid #f59e0b; }
+  .ic48 { width: 48px; height: 48px; image-rendering: pixelated; border: 1px solid #2ea043; }
+  .desc { font-size: 12px; color: #8b949e; line-height: 1.4; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Card_G — 25 Thẻ Cuối (C076–C100): Ảnh Bìa Thẻ + Spritesheet Sử Dụng 2x2 + Icon Trạng Thái 16x16 Dùng Chung</h1>
+  <span style="font-size:12px;color:#8b949e">Animation 4-Frame chạy trực tiếp | Icon 16x16 Pixel-Crisp</span>
+</header>
+<div class="grid" id="grid"></div>
+<script src="items_data.js"></script>
+<script>
+  const grid = document.getElementById("grid");
+  const animImgs = [];
+  Object.values(window.ITEMS_76_100).forEach(item => {
+    const el = document.createElement("div");
+    el.className = "card";
+    el.innerHTML = `
+      <div class="card-head">
+        <span>${item.name}</span>
+        <span class="tier">${item.tier}</span>
+      </div>
+      <div class="media-row">
+        <img class="card-art" src="${item.card_b64}" alt="${item.id}" />
+        <div class="anim-box"><img id="anim_${item.id}" src="${item.frames_b64[0]}" /></div>
+      </div>
+      <div class="status-bar">
+        <img class="ic16" src="${item.icon16_b64}" title="16x16 gốc" />
+        <img class="ic48" src="${item.icon16_b64}" title="16x16 Zoom 3x" />
+        <div>
+          <div style="color:#3fb950;font-weight:700">${item.status_name}</div>
+          <div style="color:#8b949e">Dùng chung: ${item.status_shared_by.join(", ")}</div>
+        </div>
+      </div>
+      <div class="desc">${item.effect_summary}</div>
+    `;
+    grid.appendChild(el);
+    animImgs.push({ el: el.querySelector(`#anim_${item.id}`), frames: item.frames_b64 });
+  });
+  let f = 0;
+  setInterval(() => {
+    f = (f + 1) % 4;
+    animImgs.forEach(a => { if (a.frames[f]) a.el.src = a.frames[f]; });
+  }, 220);
+</script>
+</body>
+</html>

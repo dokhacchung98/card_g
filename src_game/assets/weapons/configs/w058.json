@@ -1,0 +1,26 @@
+{
+  "id": "w058",
+  "slug": "w058_guong_gai_chua_te",
+  "tier": "SSR",
+  "name": "W058 — Thần Thuẫn Ma Gương Phản Phệ (Cấp SSR — Vũ Khí Động 2x2)",
+  "tscn_name": "c058_guong_gai_chua_te.tscn",
+  "node_name": "C058_GuongGaiChuaTe",
+  "archetype": "great_shield",
+  "target_size": [
+    182,
+    218
+  ],
+  "grip1_norm": [
+    0.32,
+    0.48
+  ],
+  "grip2_norm": [
+    0.45,
+    0.72
+  ],
+  "rest_rot": 35.0,
+  "flip_horizontal": false,
+  "prompt_ref": "A single standalone 2D game mythic tower-shield sprite on a pure solid magenta #FF00FF background, following the attached layout_guide_1x1.png safe zone (centered inside 65% of the canvas, zero border clipping). The weapon is W058 'Thần Thuẫn Ma Gương Phản Phệ' (Lord of Thorn-Mirrors' Mythic Reflect Greatshield, Tier SSR Mythic shield), standing upright in 3/4 side-front perspective facing right. Design details: a legendary SSR dark-fantasy sovereign greatshield featuring an octagonal enchanted mirror-glass core framed by sinister royal-gold and blackened-adamant dragon-thorn spikes, crowned with a horned demon-lord crest at the top and razor ground-fangs at the bottom, glowing with violet-crimson and prismatic reflection energy. Crisp dark outlines, stylized 2D hand-painted game art matching Arcana Five aesthetic, NO character, NO hands, NO detached floating particles, 100% flat solid #FF00FF magenta background.",
+  "prompt_anim_2x2": "A 2x2 sprite sheet (4 frames in a 2-row by 2-column grid) on a pure solid magenta #FF00FF background, strictly following the second attached reference image layout_guide_2x2.png and keeping the exact shield design, size, and upright 3/4 angle of the first attached reference image (W058 Thần Thuẫn Ma Gương Phản Phệ). Each of the 4 cells shows the exact same Mythic Thorn-Mirror Greatshield in the exact same position, with a 4-frame looping mythic animation of blazing violet-crimson and golden mirror-reflection shockwaves and lightning surging across the mirror surface and gilded spikes. DO NOT draw the blue layout guide lines, zero cell border clipping, NO character, 100% solid #FF00FF background.",
+  "prompt_card": "Extreme close-up macro mythic shield portrait (horizontal rectangular 4:3, 884x632, 100% opaque RGB painting, NO transparent background, NO UI frame). ONE GIANT MYTHIC THORN-MIRROR REFLECT GREATSHIELD (Thần Thuẫn Ma Gương Phản Phệ) identical to the attached reference images MUST FILL 85% OF THE FRAME planted heroically in the foreground (crowned royal-gold and blackened-adamant spiked tower shield with its blazing violet-crimson enchanted mirror core). Keep the dark-fantasy throne of mirrors background softly blurred in deep abyssal purple-crimson shadow so the giant SSR shield is the sole hero subject in the foreground."
+}

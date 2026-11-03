@@ -1,0 +1,25 @@
+{
+  "id": "w047",
+  "slug": "w047_thu_ve_gai_goc",
+  "tier": "R",
+  "name": "W047 — Đại Khiên Gai Hàn Thiết (Cấp R — Vũ Khí Tĩnh)",
+  "tscn_name": "c047_thu_ve_gai_goc.tscn",
+  "node_name": "C047_ThuVeGaiGoc",
+  "archetype": "great_shield",
+  "target_size": [
+    172,
+    210
+  ],
+  "grip1_norm": [
+    0.45,
+    0.48
+  ],
+  "grip2_norm": [
+    0.45,
+    0.72
+  ],
+  "rest_rot": 35.0,
+  "flip_horizontal": false,
+  "prompt_ref": "A single standalone 2D game tower-shield sprite on a pure solid magenta #FF00FF background, following the attached layout_guide_1x1.png safe zone (centered inside 65% of the canvas, zero border clipping). The weapon is W047 'Đại Khiên Gai Hàn Thiết' (Thorn Bulwark's Cold-Iron Spiked Greatshield, Tier R Rare shield), standing upright in 3/4 side-front perspective facing right. Design details: a fearsome dark-fantasy fortress greatshield forged from blue-black cold iron, its entire front face and scalloped rims bristling with rows of razor-sharp reflective steel thorns and spikes around a glowing frost-blue rune core in the center, built to impale and reflect melee attackers. Crisp dark outlines, stylized 2D hand-painted game art matching Arcana Five aesthetic, NO character, NO hands, NO detached floating particles, 100% flat solid #FF00FF magenta background.",
+  "prompt_card": "Extreme close-up macro shield portrait (horizontal rectangular 4:3, 884x632, 100% opaque RGB painting, NO transparent background, NO UI frame). ONE GIANT COLD-IRON SPIKED THORN GREATSHIELD (Đại Khiên Gai Hàn Thiết) identical to the attached reference image MUST FILL 85% OF THE FRAME angled heroically in the foreground (armored blue-black cold-iron tower shield bristling with razor-sharp steel thorns and a glowing frost-blue rune core). Keep the dark-fantasy frozen iron citadel background softly blurred in deep steel-blue shadow so the giant spiked shield is the sole hero subject in the foreground."
+}

@@ -1,0 +1,25 @@
+{
+  "id": "w044",
+  "slug": "w044_tu_si_la_chan",
+  "tier": "N",
+  "name": "W044 — Đại Thuẫn Pháo Đài Tử Sĩ (Cấp N — Vũ Khí Tĩnh)",
+  "tscn_name": "c044_tu_si_la_chan.tscn",
+  "node_name": "C044_TuSiLaChan",
+  "archetype": "great_shield",
+  "target_size": [
+    170,
+    210
+  ],
+  "grip1_norm": [
+    0.45,
+    0.48
+  ],
+  "grip2_norm": [
+    0.45,
+    0.72
+  ],
+  "rest_rot": 35.0,
+  "flip_horizontal": false,
+  "prompt_ref": "A single standalone 2D game tower-shield sprite on a pure solid magenta #FF00FF background, following the attached layout_guide_1x1.png safe zone (centered inside 65% of the canvas, zero border clipping). The weapon is W044 'Đại Thuẫn Pháo Đài Tử Sĩ' (Shield Martyr's Fortress Pavise Greatshield, Tier N Normal shield), standing upright in 3/4 side-front perspective facing right. Design details: a colossal dark-fantasy rectangular pavise tower shield forged from thick blackened fortress steel and dark ironwood planks, reinforced with heavy brass rivets, an armored viewing slit at the top, chevron iron plating across the front, and three heavy ground-anchor spikes at the bottom edge to resist knockback. Crisp dark outlines, stylized 2D hand-painted game art matching Arcana Five aesthetic, NO character, NO hands, NO detached floating particles, 100% flat solid #FF00FF magenta background.",
+  "prompt_card": "Extreme close-up macro shield portrait (horizontal rectangular 4:3, 884x632, 100% opaque RGB painting, NO transparent background, NO UI frame). ONE GIANT FORTRESS PAVISE GREATSHIELD (Đại Thuẫn Pháo Đài Tử Sĩ) identical to the attached reference image MUST FILL 85% OF THE FRAME planted heroically in the foreground (heavy blackened steel and brass-riveted tower shield with chevron armor plating and ground spikes). Keep the dark-fantasy besieged castle breach background softly blurred in smoky steel-grey shadow so the giant pavise shield is the sole hero subject in the foreground."
+}

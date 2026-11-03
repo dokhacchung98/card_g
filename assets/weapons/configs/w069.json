@@ -1,0 +1,21 @@
+{
+  "id": "w069",
+  "slug": "w069_vu_cong_nghi_le",
+  "name": "C069 Vũ Công Nghi Lễ (Song Phiến Luân Nghi Lễ Chiến Trận)",
+  "tier": "R",
+  "archetype": "dual_blades",
+  "grip1_norm": [
+    0.35,
+    0.65
+  ],
+  "grip2_norm": [
+    0.26,
+    0.74
+  ],
+  "scale_mult": 1.05,
+  "dual_wield_default": true,
+  "prompt_ref": "Create a single-cell 1x1 reference sheet of a dark-fantasy Ritual War-Dancer's bladed sun-fan chakram dagger (Song Phiến Luân Nghi Lễ Chiến Trận - C069 Vũ Công Nghi Lễ) following the exact square cell of the attached reference layout_guide_1x1.png.\n\nCOMPOSITION & ORIENTATION (100% MANDATORY):\n- Draw ONE complete ornate ritual war-fan blade oriented DIAGONALLY from bottom-left (wrapped crimson-and-gold grip handle with a brass ring pommel) to top-right (a crescent fan of razor-sharp gilded bronze feathers and turquoise wind-runes).\n- Must show 100% of the entire weapon from bottom handle ring to top fan-blade tips with generous padding inside the frame (occupying 65%-75% of the canvas).\n- Zero clipping at canvas edges.\n\nCOLOR & BACKGROUND (100% MANDATORY):\n- Background MUST be flat solid pure magenta (#FF00FF) edge-to-edge.\n- DO NOT use any magenta/pink tones on the weapon itself (use burnished gold, dark bronze, crimson silk wrap, and glowing turquoise-jade wind runes).\n- No character hands, no text, no borders.",
+  "prompt_card": "Create a wide horizontal 16:11 dark-fantasy card illustration featuring a matching pair of the exact same Gilded Ritual War-Fan Blades (Song Phiến Luân Nghi Lễ Chiến Trận - C069 Vũ Công Nghi Lễ) from the attached reference image.\n\nCOMPOSITION & BACKGROUND (100% MANDATORY):\n- Showcase two matching gilded bronze ritual war-fan blades crossed dynamically in the center of the horizontal frame.\n- Full atmospheric dark-fantasy background (100% opaque RGB illustration, NO magenta, NO transparency): a torch-lit temple ceremonial stage with swirling turquoise wind-haste ribbons and golden sparks.\n- Do NOT draw any card frame, borders, or text.",
+  "tscn_name": "c069_vu_cong_nghi_le.tscn",
+  "node_name": "C069_VuCongNghiLe"
+}

@@ -9,6 +9,8 @@ description: Quy tắc bắt buộc chạy lệnh terminal qua script.sh và t�
    - Mọi lệnh terminal cần chạy **BẮT BUỘC** phải được ghi/sửa vào file `/Users/dochung/Desktop/card_g/script.sh`, sau đó chỉ thực thi bằng lệnh `bash /Users/dochung/Desktop/card_g/script.sh` (hoặc `bash script.sh`). Không chạy lệnh lẻ trực tiếp.
 
 2. **Tạo Ảnh & Game Assets bằng Muse Local API + `agent-sprite-forge`:**
+   - **TUYỆT ĐỐI KHÔNG dùng Icon Text / Emoji / Ký tự Unicode** (như `⚔️`, `🛡️`, `✨`, `📦`, `📚`, `🔒`, `♥`, `⚡`, `🤖`, `🔄`, `◀`, `✕`...) để làm icon trong UI/HUD/Card/Game. Thiếu icon nào **BẮT BUỘC** dùng Muse Local API vẽ thành ảnh `.png` tách nền trong suốt (`#FF00FF` chroma-key).
+   - **Chuẩn Assets Game Tối Đa 8 Màu (`Max 8-Color Fantasy Standard`) & GUI Vẽ Tay Ít Chi Tiết (`Hand-Crafted Low-Detail 2D Game GUI`):** Các hình vẽ assets game hiện tại (đặc biệt là icon Nguyên Tố, icon Hệ/Vai Trò, icon Chỉ Số, icon UI kích thước nhỏ `14x14` – `48x48` px, cũng như toàn bộ hình ảnh GUI: button background, dialog background, panel frame, header banner) **BẮT BUỘC giữ phong cách 2D dark-fantasy như người vẽ thật, đồng bộ nhưng ít chi tiết, mảng khối lớn rõ nét, viền dày và chỉ dùng TỐI ĐA 8 MÀU (`strict maximum 8-color palette`, flat cel-shaded, zero micro-clutter)** — vừa yêu cầu trong prompt Muse vừa hậu xử lý chuẩn hóa bảng màu `<= 8` màu. Không dùng hộp phẳng `StyleBoxFlat` kiểu AI design hay hoa văn AI rườm rà cho button/dialog.
    - Khởi động Muse Local Server (qua `script.sh`): `bash /Users/dochung/Desktop/muse-local-api/start.sh --daemon`
    - Base URL: `http://127.0.0.1:3456/v1` | Health: `GET http://127.0.0.1:3456/health` | Model: `"muse-spark"` | Key: `"muse-local"`
    - Tạo ảnh / raw spritesheet / map: `POST http://127.0.0.1:3456/generate-image`

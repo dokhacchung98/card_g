@@ -1,0 +1,25 @@
+{
+  "id": "w012",
+  "slug": "w012_vo_si_xich_dao",
+  "tier": "R",
+  "name": "W012 — Xích Đao Hộ Thân (Cấp R — Vũ Khí Tĩnh)",
+  "tscn_name": "c012_vo_si_xich_dao.tscn",
+  "node_name": "C012_VoSiXichDao",
+  "archetype": "melee_cleaver",
+  "target_size": [
+    220,
+    176
+  ],
+  "grip1_norm": [
+    0.34,
+    0.66
+  ],
+  "grip2_norm": [
+    0.14,
+    0.86
+  ],
+  "rest_rot": 20.0,
+  "flip_horizontal": false,
+  "prompt_ref": "A single standalone 2D game weapon sprite on a pure solid magenta #FF00FF background, following the attached layout_guide_1x1.png safe zone (centered inside 65% of the canvas, zero border clipping). The weapon is W012 'Xích Đao Hộ Thân' (Chain-Wrapped Vortex War Glaive / Heavy Iron Chained Guandao-Cleaver, Tier R Rare weapon), placed diagonally from bottom-left (heavy iron chain-ring counterweight at the base of the shaft) to top-right (heavy curved glaive blade). Design details: a formidable East-meets-West dark-fantasy warrior's chain-glaive with a wide, heavy curved blackened steel cleaver blade featuring a notched back-hook and gleaming silver cutting edge; heavy dark iron chains are coiled tightly around the bronze dragon-collar and upper shaft (all physically connected to the weapon shaft with zero detached floating pieces); the sturdy dark ironwood pole has worn leather wraps for Grip 1 and Grip 2 and ends in a spiked iron ring with two short connected chain links at the bottom-left. Crisp dark outlines, stylized 2D hand-painted game art matching Arcana Five aesthetic, NO character, NO hands, NO floating aura particles, 100% flat solid #FF00FF magenta background.",
+  "prompt_card": "Extreme close-up macro weapon portrait (horizontal rectangular 4:3, 884x632, 100% opaque RGB painting, NO transparent background, NO UI frame). ONE GIANT CHAIN-WRAPPED WAR GLAIVE (Xích Đao Hộ Thân) identical to the attached reference image MUST FILL 85% OF THE FRAME diagonally from bottom-left (spiked iron ring pommel and leather-wrapped shaft) to top-right (heavy curved blackened steel glaive blade with heavy iron chains coiled around the collar). Keep the background dark, moody, and softly blurred with warm torchlight embers and stone shadows so the giant diagonal chain-glaive is the sole hero subject in the foreground."
+}

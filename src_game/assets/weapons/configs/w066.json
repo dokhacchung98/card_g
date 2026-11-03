@@ -1,0 +1,20 @@
+{
+  "id": "w066",
+  "slug": "w066_linh_muc_khien_don",
+  "name": "C066 Linh Mục Khiên Đơn (Trượng Ấn Thuẫn Báo Trước)",
+  "tier": "N",
+  "archetype": "magic_staff",
+  "grip1_norm": [
+    0.46,
+    0.56
+  ],
+  "grip2_norm": [
+    0.34,
+    0.68
+  ],
+  "scale_mult": 1.12,
+  "prompt_ref": "Create a single-cell 1x1 reference sheet of a dark-fantasy Aegis Priest's shield-crest crosier staff (Trượng Ấn Thuẫn Báo Trước - C066 Linh Mục Khiên Đơn) following the exact square cell of the attached reference layout_guide_1x1.png.\n\nCOMPOSITION & ORIENTATION (100% MANDATORY):\n- Draw ONE complete cleric crosier staff oriented DIAGONALLY from bottom-left (reinforced iron and white-gold shaft) to top-right (a crest shaped like an ornate kite-shield emblem with a glowing golden-amber barrier rune at its center).\n- Must show 100% of the entire staff from bottom tip to top shield-emblem crest with generous padding inside the frame (occupying 65%-75% of the canvas).\n- Zero clipping at canvas edges.\n\nCOLOR & BACKGROUND (100% MANDATORY):\n- Background MUST be flat solid pure magenta (#FF00FF) edge-to-edge.\n- DO NOT use any magenta/pink tones on the staff itself (use brushed steel, antique gold, ivory enamel, and warm amber-gold barrier runes).\n- No character hands, no text, no borders.",
+  "prompt_card": "Create a wide horizontal 16:11 dark-fantasy card illustration featuring the exact same Shield-Crest Cleric Staff (Trượng Ấn Thuẫn Báo Trước - C066 Linh Mục Khiên Đơn) from the attached reference image.\n\nCOMPOSITION & BACKGROUND (100% MANDATORY):\n- Place the shield-emblem crosier staff diagonally across the center of the horizontal frame.\n- Full atmospheric dark-fantasy background (100% opaque RGB illustration, NO magenta, NO transparency): a stone bastion sanctuary where hexagonal golden-amber protective barrier shields project outward from the staff's crest.\n- Do NOT draw any card frame, borders, or text.",
+  "tscn_name": "c066_linh_muc_khien_don.tscn",
+  "node_name": "C066_LinhMucKhienDon"
+}

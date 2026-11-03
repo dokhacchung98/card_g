@@ -1,0 +1,26 @@
+{
+  "id": "w020",
+  "slug": "w020_ke_thu_no_tu_vong",
+  "tier": "SSR",
+  "name": "W020 — Tử Thần Đoạt Hồn Liêm (Cấp SSR — Animated 2x2 Spritesheet)",
+  "tscn_name": "c020_ke_thu_no_tu_vong.tscn",
+  "node_name": "C020_KeThuNoTuVong",
+  "archetype": "melee_cleaver",
+  "target_size": [
+    228,
+    180
+  ],
+  "grip1_norm": [
+    0.34,
+    0.66
+  ],
+  "grip2_norm": [
+    0.14,
+    0.86
+  ],
+  "rest_rot": 18.0,
+  "flip_horizontal": false,
+  "prompt_ref": "A single standalone 2D game weapon sprite on a pure solid magenta #FF00FF background, following the attached layout_guide_1x1.png safe zone (centered inside 65% of the canvas, zero border clipping). The weapon is W020 'Tử Thần Đoạt Hồn Liêm' (Death's Debt-Collector Soul-Reaper Great Scythe-Halberd, Tier SSR Legendary weapon), placed diagonally from bottom-left (spiked soul-lantern pommel at the base of the shaft) to top-right (colossal curved reaper scythe-cleaver head). Design details: a supreme SSR legendary dark-fantasy reaper war-scythe with a sweeping blackened abyssal-steel crescent scythe blade engraved with glowing ghostly emerald-cyan soul runes, a crowned skull-and-ribcage collar clutching a blazing turquoise soul-gem core, and a wicked rear execution spike; the heavy dark bone-and-obsidian shaft is wrapped in ancient runes and dark leather grips for Grip 1 and Grip 2. Crisp dark outlines, stylized 2D hand-painted game art matching Arcana Five aesthetic, NO character, NO hands, 100% flat solid #FF00FF magenta background.",
+  "prompt_anim_2x2": "A 2x2 animated weapon spritesheet (4 frames arranged in 2 rows by 2 columns, following the attached layout_guide_2x2.png grid) on a pure solid magenta #FF00FF background. Each of the 4 cells MUST show the EXACT SAME W020 'Tử Thần Đoạt Hồn Liêm' (Death's Debt-Collector Soul-Reaper Great Scythe-Halberd) from the attached reference weapon image at the EXACT same diagonal angle, scale, and position inside each cell's safe zone (zero border clipping), while animating a 4-frame looping SSR legendary soul-harvest phantom fire aura tightly wrapping the scythe blade: Frame 1 (top-left) glowing emerald-cyan soul runes and pulsing turquoise soul-gem in the skull collar; Frame 2 (top-right) swirling ghostly emerald-turquoise wraith flames and spectral soul wisps rising along the curved scythe edge; Frame 3 (bottom-left) peak SSR soul-reaper vortex and blazing ghostly cyan-green necrotic lightning around the scythe head; Frame 4 (bottom-right) dissipating spectral soul embers cycling smoothly back to Frame 1. Keep the background 100% flat solid #FF00FF magenta with NO grid lines drawn in the final image.",
+  "prompt_card": "Extreme close-up macro weapon portrait (horizontal rectangular 4:3, 884x632, 100% opaque RGB painting, NO transparent background, NO UI frame). ONE GIANT LEGENDARY SOUL-REAPER GREAT SCYTHE-HALBERD (Tử Thần Đoạt Hồn Liêm) identical to the attached reference images MUST FILL 85% OF THE FRAME diagonally from bottom-left (bone-and-obsidian shaft) to top-right (crowned skull collar with blazing turquoise soul-gem and sweeping abyssal-steel scythe blade wreathed in ghostly emerald-cyan wraith flames). Keep the dark-fantasy underworld background softly blurred so the giant diagonal soul-reaper scythe is the sole hero subject in the foreground."
+}

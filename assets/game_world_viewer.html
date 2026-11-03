@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<title>Arcana Five (Card_G) — Trình Xem Bàn Cờ Poker, Đạn 5 Hệ, Đệ Triệu Hồi & UI HUD</title>
+<style>
+  body { margin: 0; background: #0d1117; color: #e6edf3; font-family: -apple-system, BlinkMacSystemFont, sans-serif; padding-bottom: 40px; }
+  header { padding: 14px 24px; background: #161b22; border-bottom: 1px solid #30363d; display: flex; justify-content: space-between; align-items: center; }
+  h1 { margin: 0; font-size: 18px; color: #f59e0b; }
+  h2 { margin: 24px 24px 12px; font-size: 16px; color: #58a6ff; border-left: 4px solid #f59e0b; padding-left: 10px; }
+  .row { display: flex; gap: 16px; flex-wrap: wrap; padding: 0 24px; }
+  .box { background: #161b22; border: 1px solid #30363d; border-radius: 10px; padding: 12px; display: flex; flex-direction: column; align-items: center; gap: 8px; min-width: 180px; }
+  .box img { max-width: 160px; max-height: 160px; object-fit: contain; }
+  .board-preview { width: 640px; height: 640px; object-fit: cover; margin: 0 24px; border: 2px solid #f59e0b; border-radius: 12px; }
+  .lbl { font-size: 12px; color: #8b949e; text-align: center; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Arcana Five — Tổng Hợp 4 Hạng Mục Đồ Họa Sân Đấu, Đạn Ngũ Hành, Đệ Triệu Hồi & UI/Gacha Pack</h1>
+  <span style="font-size:12px;color:#3fb950">100% Assets Ready</span>
+</header>
+<h2>1. Mặt Bàn Poker Hình Vuông 4 Cạnh Đối Xứng (1024x1024 RGB) + 4 Trạng Thái Ô Bài + Props</h2>
+<img id="board_bg" class="board-preview" />
+<div class="row" id="board_items" style="margin-top:14px"></div>
+<h2>2. Đạn Vật Lý Tầm Xa + Đạn Phép, Nổ Impact & Hào Quang Tương Sinh 5 Hệ Ngũ Hành</h2>
+<div class="row" id="vfx_items"></div>
+<h2>3. Đơn Vị Triệu Hồi Phụ Trên Sân (Animation 4-Frame)</h2>
+<div class="row" id="summon_items"></div>
+<h2>4. Giao Diện HUD Chiến Đấu, Khung Avatar 100 HP & Mở Gói Bài Gacha (Animation 4-Frame)</h2>
+<div class="row" id="hud_items"></div>
+<script src="game_world_data.js"></script>
+<script>
+  const D = window.GAME_WORLD_ASSETS;
+  document.getElementById("board_bg").src = D.board_bg;
+  const bRow = document.getElementById("board_items");
+  ["Ô Trống", "Đang Úp Bài", "Duy Trì Tướng", "Kích Hoạt / Vỡ"].forEach((t, i) => {
+    bRow.innerHTML += `<div class="box"><img src="${D.slots[i]}"/><div class="lbl">${t}</div></div>`;
+  });
+  ["Bộ Bài Chung", "Ấn Đóng Băng 15s", "Đài Tử Chiến 60s", "Ấn Ngũ Hành"].forEach((t, i) => {
+    bRow.innerHTML += `<div class="box"><img src="${D.props[i]}"/><div class="lbl">${t}</div></div>`;
+  });
+  const vRow = document.getElementById("vfx_items");
+  ["Mũi Tên", "Đạn Nỏ", "Lao Móc", "Phiến Luân"].forEach((t, i) => {
+    vRow.innerHTML += `<div class="box"><img src="${D.phys_proj[i]}"/><div class="lbl">${t}</div></div>`;
+  });
+  const anims = [];
+  Object.entries(D.elements).forEach(([k, v]) => {
+    vRow.innerHTML += `
+      <div class="box"><img id="ep_${k}" src="${v.proj[0]}"/><div class="lbl">${v.name} — Đạn (4F)</div></div>
+      <div class="box"><img id="ei_${k}" src="${v.impact[0]}"/><div class="lbl">${v.name} — Nổ Impact</div></div>
+      <div class="box"><img src="${v.aura}"/><div class="lbl">${v.name} — Hào Quang</div></div>
+    `;
+  });
+  const sRow = document.getElementById("summon_items");
+  Object.entries(D.summons).forEach(([k, v]) => {
+    sRow.innerHTML += `<div class="box"><img id="sum_${k}" src="${v.frames[0]}"/><div class="lbl"><b>${v.name}</b><br/>(${v.card_ref})</div></div>`;
+  });
+  const hRow = document.getElementById("hud_items");
+  ["Avatar 100 HP", "Avatar Bị Đánh", "Avatar Bị Loại", "Nút Bài Đã Mở"].forEach((t, i) => {
+    hRow.innerHTML += `<div class="box"><img src="${D.avatars[i]}"/><div class="lbl">${t}</div></div>`;
+  });
+  ["Thanh HP/Mana", "Khung Bọc Khiên", "Đồng Hồ 15s Prep", "Đồng Hồ 15s Combat"].forEach((t, i) => {
+    hRow.innerHTML += `<div class="box"><img src="${D.hud_bars[i]}"/><div class="lbl">${t}</div></div>`;
+  });
+  hRow.innerHTML += `<div class="box"><img id="gacha_anim" src="${D.gacha_pack[0]}"/><div class="lbl"><b>Mở Gói Bài Gacha (4F)</b></div></div>`;
+
+  let tick = 0;
+  setInterval(() => {
+    tick++;
+    Object.entries(D.elements).forEach(([k, v]) => {
+      document.getElementById("ep_" + k).src = v.proj[tick % 4];
+      document.getElementById("ei_" + k).src = v.impact[tick % 3];
+    });
+    Object.entries(D.summons).forEach(([k, v]) => {
+      document.getElementById("sum_" + k).src = v.frames[tick % 4];
+    });
+    document.getElementById("gacha_anim").src = D.gacha_pack[tick % 4];
+  }, 220);
+</script>
+</body>
+</html>

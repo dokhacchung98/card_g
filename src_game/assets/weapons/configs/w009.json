@@ -1,0 +1,25 @@
+{
+  "id": "w009",
+  "slug": "w009_kiem_si_doan_anh",
+  "tier": "R",
+  "name": "W009 — Đoạn Ảnh Kiếm (Cấp R — Vũ Khí Tĩnh)",
+  "tscn_name": "c009_kiem_si_doan_anh.tscn",
+  "node_name": "C009_KiemSiDoanAnh",
+  "archetype": "melee_sword",
+  "target_size": [
+    216,
+    174
+  ],
+  "grip1_norm": [
+    0.26,
+    0.75
+  ],
+  "grip2_norm": [
+    0.12,
+    0.88
+  ],
+  "rest_rot": 26.0,
+  "flip_horizontal": false,
+  "prompt_ref": "A single standalone 2D game weapon sprite on a pure solid magenta #FF00FF background, following the attached layout_guide_1x1.png safe zone (centered inside 65% of the canvas, zero border clipping). The weapon is W009 'Đoạn Ảnh Kiếm' (Shadow-Severing Obsidian Katana / Assassin's Dark Longblade, Tier R Rare weapon), placed diagonally from bottom-left (pointed dark silver kashira pommel at the base of the hilt) to top-right (razor-sharp curved katana tip). Design details: a sleek, lethal East-meets-West dark-fantasy assassin longblade with a slightly curved obsidian-black steel blade featuring a cold silver-violet tempered edge (hamon wave pattern) and a narrow blood-fuller groove near the spine; an ornate crescent-moon and shadow-fang handguard (tsuba) forged from blackened bronze and gunmetal; and a long two-handed hilt wrapped in diamond-braided dark indigo silk cord over black rayskin for Grip 1 and Grip 2, ending in a spiked dark silver pommel cap at the bottom-left. Crisp dark outlines, stylized 2D hand-painted game art matching Arcana Five aesthetic, NO character, NO hands, NO scabbard, NO floating aura particles, 100% flat solid #FF00FF magenta background.",
+  "prompt_card": "Close-up hero weapon showcase illustration (horizontal rectangular 4:3, 884x632, 100% opaque RGB full scenic painting, NO transparent background, NO card frame or text UI). THE GIANT SHADOW-SEVERING OBSIDIAN KATANA LONGBLADE (Đoạn Ảnh Kiếm) from the attached reference image MUST FILL 75% OF THE FOREGROUND, placed prominently diagonally from bottom-left (diamond-braided indigo hilt and pointed pommel) to top-right (sleek curved obsidian-black blade with cold silver-violet hamon edge and crescent handguard). Behind the giant foreground katana is an atmospheric dark-fantasy assassin setting: rain-slicked ancient temple rooftops, drifting indigo shadow mist, and a pale crescent moon breaking through night clouds. Focus 100% on the giant diagonal katana in the center-foreground matching the reference weapon geometry."
+}

@@ -1,0 +1,25 @@
+{
+  "id": "w026",
+  "slug": "w026_ke_goi_bong",
+  "tier": "N",
+  "name": "W026 — Trượng Lồng Đèn Gọi Bóng (Cấp N — Vũ Khí Tĩnh)",
+  "tscn_name": "c026_ke_goi_bong.tscn",
+  "node_name": "C026_KeGoiBong",
+  "archetype": "magic_staff",
+  "target_size": [
+    220,
+    174
+  ],
+  "grip1_norm": [
+    0.34,
+    0.66
+  ],
+  "grip2_norm": [
+    0.14,
+    0.86
+  ],
+  "rest_rot": 22.0,
+  "flip_horizontal": false,
+  "prompt_ref": "A single standalone 2D game weapon sprite on a pure solid magenta #FF00FF background, following the attached layout_guide_1x1.png safe zone (centered inside 65% of the canvas, zero border clipping). The weapon is W026 'Trượng Lồng Đèn Gọi Bóng' (Shadow-Caller's Wrought-Iron Night-Lantern Staff, Tier N Normal weapon), placed diagonally from bottom-left (iron spike at the base of the shaft) to top-right (hooked wrought-iron lantern head). Design details: a haunting dark-fantasy shadow-caller staff with a curved black wrought-iron shepherd's crook at the top rigidly holding a gothic hexagonal iron cage-lantern with a dark purple-blue shadow-glass core inside (rigidly mounted to the hook, NO detached parts); the dark weathered ashwood shaft is wrapped in charcoal leather straps at Grip 1 and Grip 2, ending in a pointed iron butt-spike at the bottom-left. Crisp dark outlines, stylized 2D hand-painted game art matching Arcana Five aesthetic, NO character, NO hands, NO floating aura particles, 100% flat solid #FF00FF magenta background.",
+  "prompt_card": "Extreme close-up macro weapon portrait (horizontal rectangular 4:3, 884x632, 100% opaque RGB painting, NO transparent background, NO UI frame). ONE GIANT WROUGHT-IRON SHADOW-LANTERN STAFF (Trượng Lồng Đèn Gọi Bóng) identical to the attached reference image MUST FILL 85% OF THE FRAME diagonally from bottom-left (charcoal-leather wrapped wood shaft) to top-right (curved black iron crook holding the gothic hexagonal iron cage-lantern). Keep the dark-fantasy foggy street background softly blurred in deep midnight-indigo shadow so the giant diagonal lantern staff is the sole hero subject in the foreground."
+}

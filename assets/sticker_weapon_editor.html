@@ -314,7 +314,7 @@
   </aside>
 </main>
 
-<script>window.DEFAULT_WEAPON_ID = "w018";</script>
+<script>window.DEFAULT_WEAPON_ID = "w001";</script>
 <script src="weapons_data.js"></script>
 <script>
 const VFX_LIST = ["fx_slash", "fx_slash_heavy", "fx_spark", "fx_dust"];
@@ -322,6 +322,7 @@ const BONES = [];
 const BONE_MAP = {};
 const ACTIONS = {};
 const TEAM_IMAGES = {};
+const SHARED_VFX_IMAGES = {};
 const WEAPON_PACK_IMAGES = {};
 const WEAPON_IMAGES = {};
 
@@ -332,6 +333,12 @@ Object.keys(window.TEAM_PART_B64 || {}).forEach(tkey => {
     img.src = b64;
     TEAM_IMAGES[tkey][pname] = img;
   });
+});
+
+Object.entries(window.SHARED_VFX_B64 || {}).forEach(([fxName, b64]) => {
+  const im = new Image();
+  im.src = b64;
+  SHARED_VFX_IMAGES[fxName] = im;
 });
 
 Object.entries(window.WEAPON_REGISTRY || {}).forEach(([wid, pack]) => {
@@ -380,6 +387,7 @@ function applyWeaponPack(wid) {
   Object.keys(ACTIONS).forEach(k => delete ACTIONS[k]);
   Object.entries(JSON.parse(JSON.stringify(pack.actions))).forEach(([k, v]) => ACTIONS[k] = v);
   Object.keys(WEAPON_IMAGES).forEach(k => delete WEAPON_IMAGES[k]);
+  Object.entries(SHARED_VFX_IMAGES).forEach(([k, im]) => WEAPON_IMAGES[k] = im);
   Object.entries(WEAPON_PACK_IMAGES[wid] || {}).forEach(([k, im]) => WEAPON_IMAGES[k] = im);
   showWeaponAura = Boolean(pack.aura_default && WEAPON_IMAGES["weapon_anim_1"]);
   const chkAura = document.getElementById("chkWeaponAura");
@@ -898,7 +906,7 @@ function buildGodotTscnString() {
   });
   VFX_LIST.forEach(fx => {
     partExtId[fx] = `${idx}_${fx}`;
-    extList.push([partExtId[fx], "Texture2D", `res://assets/weapons/${slug}/parts/${fx}.png`]);
+    extList.push([partExtId[fx], "Texture2D", `res://assets/vfx_shared/${fx}.png`]);
     idx++;
   });
 

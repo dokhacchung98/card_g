@@ -1,0 +1,20 @@
+{
+  "id": "w065",
+  "slug": "w065_ke_truyen_mana",
+  "name": "C065 Kẻ Truyền Mana (Trượng Tụ Linh Truyền Mana)",
+  "tier": "N",
+  "archetype": "magic_staff",
+  "grip1_norm": [
+    0.46,
+    0.56
+  ],
+  "grip2_norm": [
+    0.34,
+    0.68
+  ],
+  "scale_mult": 1.12,
+  "prompt_ref": "Create a single-cell 1x1 reference sheet of a dark-fantasy Mana Channeler's aether-conduit staff (Trượng Tụ Linh Truyền Mana - C065 Kẻ Truyền Mana) following the exact square cell of the attached reference layout_guide_1x1.png.\n\nCOMPOSITION & ORIENTATION (100% MANDATORY):\n- Draw ONE complete arcane mana-conduit staff oriented DIAGONALLY from bottom-left (silver-inlaid dark steel shaft) to top-right (two curved brass conductor prongs holding a levitating radiant sapphire-blue mana crystal prism).\n- Must show 100% of the entire staff from bottom tip to top sapphire crystal prongs with generous padding inside the frame (occupying 65%-75% of the canvas).\n- Zero clipping at canvas edges.\n\nCOLOR & BACKGROUND (100% MANDATORY):\n- Background MUST be flat solid pure magenta (#FF00FF) edge-to-edge.\n- DO NOT use any magenta/pink tones on the staff itself (use gunmetal steel, antique brass, silver filigree, and pure sapphire-cyan mana crystal).\n- No character hands, no text, no borders.",
+  "prompt_card": "Create a wide horizontal 16:11 dark-fantasy card illustration featuring the exact same Sapphire Mana-Conduit Staff (Trượng Tụ Linh Truyền Mana - C065 Kẻ Truyền Mana) from the attached reference image.\n\nCOMPOSITION & BACKGROUND (100% MANDATORY):\n- Place the brass-and-steel mana crystal staff diagonally across the center of the horizontal frame.\n- Full atmospheric dark-fantasy background (100% opaque RGB illustration, NO magenta, NO transparency): an arcane ley-line chamber where streams of luminous sapphire-cyan mana energy flow through the crystal prism.\n- Do NOT draw any card frame, borders, or text.",
+  "tscn_name": "c065_ke_truyen_mana.tscn",
+  "node_name": "C065_KeTruyenMana"
+}

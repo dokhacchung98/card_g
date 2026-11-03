@@ -1,0 +1,25 @@
+{
+  "id": "w023",
+  "slug": "w023_ao_thuat_gia_cam",
+  "tier": "N",
+  "name": "W023 — Quyền Trượng Tam Cổ Ngữ (Cấp N — Vũ Khí Tĩnh)",
+  "tscn_name": "c023_ao_thuat_gia_cam.tscn",
+  "node_name": "C023_AoThuatGiaCam",
+  "archetype": "magic_staff",
+  "target_size": [
+    220,
+    174
+  ],
+  "grip1_norm": [
+    0.34,
+    0.66
+  ],
+  "grip2_norm": [
+    0.14,
+    0.86
+  ],
+  "rest_rot": 22.0,
+  "flip_horizontal": false,
+  "prompt_ref": "A single standalone 2D game weapon sprite on a pure solid magenta #FF00FF background, following the attached layout_guide_1x1.png safe zone (centered inside 65% of the canvas, zero border clipping). The weapon is W023 'Quyền Trượng Tam Cổ Ngữ' (Mute Illusionist's Tri-Rune Arcane Scepter-Staff, Tier N Normal weapon), placed diagonally from bottom-left (brass counterweight tip at the base of the shaft) to top-right (three-pronged arcane fork head). Design details: a mysterious dark-fantasy illusionist staff featuring an ornate dark-bronze and gunmetal trident-like crescent head holding three physical crystal prisms (violet, blue, and silver-indigo) joined securely by engraved metal rune-rings; the sleek dark ebony shaft has braided dark-purple leather grips at Grip 1 and Grip 2, ending in a pointed antique brass pommel at the bottom-left. Crisp dark outlines, stylized 2D hand-painted game art matching Arcana Five aesthetic, NO character, NO hands, NO detached floating pieces, 100% flat solid #FF00FF magenta background.",
+  "prompt_card": "Extreme close-up macro weapon portrait (horizontal rectangular 4:3, 884x632, 100% opaque RGB painting, NO transparent background, NO UI frame). ONE GIANT TRI-RUNE ILLUSIONIST SCEPTER-STAFF (Quyền Trượng Tam Cổ Ngữ) identical to the attached reference image MUST FILL 85% OF THE FRAME diagonally from bottom-left (ebony shaft with braided grips) to top-right (dark-bronze crescent head holding the three joined crystal prisms). Keep the dark-fantasy arcane library background softly blurred in deep indigo shadow so the giant diagonal staff is the sole hero subject in the foreground."
+}

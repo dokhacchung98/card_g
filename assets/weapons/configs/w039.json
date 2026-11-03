@@ -1,0 +1,26 @@
+{
+  "id": "w039",
+  "slug": "w039_nghich_hoi_gia",
+  "tier": "SSR",
+  "name": "W039 — Huyết Trượng Nghịch Hồi Ấn (Cấp SSR — Vũ Khí Động 2x2)",
+  "tscn_name": "c039_nghich_hoi_gia.tscn",
+  "node_name": "C039_NghichHoiGia",
+  "archetype": "magic_staff",
+  "target_size": [
+    228,
+    182
+  ],
+  "grip1_norm": [
+    0.34,
+    0.66
+  ],
+  "grip2_norm": [
+    0.14,
+    0.86
+  ],
+  "rest_rot": 22.0,
+  "flip_horizontal": false,
+  "prompt_ref": "A single standalone 2D game weapon sprite on a pure solid magenta #FF00FF background, following the attached layout_guide_1x1.png safe zone (centered inside 65% of the canvas, zero border clipping). The weapon is W039 'Huyết Trượng Nghịch Hồi Ấn' (Inverse-Heal Heretic's Blood-Caduceus Staff, Tier SSR Mythic weapon), placed diagonally from bottom-left (pointed crimson-gold spear-pommel at the base of the shaft) to top-right (inverted twin-wing blood hourglass crest). Design details: a legendary SSR dark-fantasy heretic staff topped with dark-gold fallen-angel wings and twin bone-and-silver serpents coiling around a cracked crimson blood-hourglass core that corrupts healing into lethal damage; the blackened-gold shaft is inlaid with glowing scarlet runes and wrapped in charcoal-crimson leather at Grip 1 and Grip 2, ending in a sharp ritual spike at the bottom-left. Crisp dark outlines, stylized 2D hand-painted game art matching Arcana Five aesthetic, NO character, NO hands, NO detached floating particles, 100% flat solid #FF00FF magenta background.",
+  "prompt_anim_2x2": "A 2x2 sprite sheet (4 frames in a 2-row by 2-column grid) on a pure solid magenta #FF00FF background, strictly following the second attached reference image layout_guide_2x2.png and keeping the exact weapon design, size, diagonal angle, and grip positions of the first attached reference image (W039 Huyết Trượng Nghịch Hồi Ấn). Each of the 4 cells shows the exact same diagonal Blood-Caduceus Staff in the exact same position, with a 4-frame looping mythic animation of crimson-and-gold inverse-healing sigils and blood-fire arcs spiraling tightly around the winged hourglass head and shaft. Zero cell border clipping, NO character, 100% solid #FF00FF background.",
+  "prompt_card": "Extreme close-up macro weapon portrait (horizontal rectangular 4:3, 884x632, 100% opaque RGB painting, NO transparent background, NO UI frame). ONE GIANT MYTHIC BLOOD-CADUCEUS STAFF (Huyết Trượng Nghịch Hồi Ấn) identical to the attached reference images MUST FILL 85% OF THE FRAME diagonally from bottom-left (blackened-gold rune shaft) to top-right (fallen-angel wings and twin serpents framing the blazing crimson blood-hourglass core). Keep the dark-fantasy eclipsed cathedral background softly blurred in deep crimson-black shadow so the giant diagonal SSR staff is the sole hero subject in the foreground."
+}

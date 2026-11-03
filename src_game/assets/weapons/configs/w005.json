@@ -1,0 +1,25 @@
+{
+  "id": "w005",
+  "slug": "w005_tram_thu_vo_danh",
+  "tier": "N",
+  "name": "W005 — Rìu Đoạn Cốt Vô Danh (Cấp N — Vũ Khí Tĩnh)",
+  "tscn_name": "c005_tram_thu_vo_danh.tscn",
+  "node_name": "C005_TramThuVoDanh",
+  "archetype": "melee_cleaver",
+  "target_size": [
+    220,
+    174
+  ],
+  "grip1_norm": [
+    0.36,
+    0.66
+  ],
+  "grip2_norm": [
+    0.14,
+    0.86
+  ],
+  "rest_rot": 18.0,
+  "flip_horizontal": false,
+  "prompt_ref": "A single standalone 2D game weapon sprite on a pure solid magenta #FF00FF background, following the attached layout_guide_1x1.png safe zone (centered inside 65% of the canvas, zero border clipping). The weapon is W005 'Rìu Đoạn Cốt Vô Danh' (Nameless Executioner's Bone-Breaker Heavy Battleaxe / Armor-Crushing Pollaxe, Tier N Normal weapon), placed diagonally from bottom-left (iron pommel cap at the base of the handle) to top-right (heavy axe head). Design details: a brutal dark-fantasy executioner battleaxe with a thick, heavy crescent-bearded blackened steel blade on the front edge with realistic battle nicks and cold silver sharpened bevels, a heavy armor-piercing hammer fluke on the back of the axe head, and a reinforced iron collar with rivets; the long sturdy dark ironwood shaft is wrapped with weathered brown leather bands at Grip 1 and Grip 2 and capped with a heavy iron ring pommel at the bottom-left end. Crisp dark outlines, stylized 2D hand-painted game art matching Arcana Five aesthetic, NO character, NO hands, NO aura, NO glowing magic particles, 100% flat solid #FF00FF magenta background.",
+  "prompt_card": "Close-up hero weapon showcase illustration (horizontal rectangular 4:3, 884x632, 100% opaque RGB full scenic painting, NO transparent background, NO card frame or text UI). THE GIANT HEAVY EXECUTIONER BATTLEAXE from the attached reference image MUST FILL 75% OF THE FOREGROUND, placed prominently diagonally from bottom-left (iron ring pommel and leather-wrapped dark wood shaft) to top-right (the massive crescent-bearded blackened steel axe blade with silver sharpened edge and back spike). In the blurred dark-fantasy background behind the giant foreground axe, dim blue torchlight illuminates a misty stone execution courtyard. Focus 100% on the giant diagonal battleaxe in the center-foreground matching the reference weapon."
+}

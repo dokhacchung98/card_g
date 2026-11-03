@@ -19,10 +19,10 @@
 [ext_resource type="Texture2D" path="res://assets/sticker_hero/godot/parts/team_blue/arm_lower_front.png" id="17_arm_lower_front"]
 [ext_resource type="Texture2D" path="res://assets/sticker_hero/godot/parts/team_blue/hand_front.png" id="18_hand_front"]
 [ext_resource type="Texture2D" path="res://assets/weapons/w018_huyet_kiem_hanh_quyet/parts/weapon_main.png" id="19_weapon_main"]
-[ext_resource type="Texture2D" path="res://assets/weapons/w018_huyet_kiem_hanh_quyet/parts/fx_slash.png" id="20_fx_slash"]
-[ext_resource type="Texture2D" path="res://assets/weapons/w018_huyet_kiem_hanh_quyet/parts/fx_slash_heavy.png" id="21_fx_slash_heavy"]
-[ext_resource type="Texture2D" path="res://assets/weapons/w018_huyet_kiem_hanh_quyet/parts/fx_spark.png" id="22_fx_spark"]
-[ext_resource type="Texture2D" path="res://assets/weapons/w018_huyet_kiem_hanh_quyet/parts/fx_dust.png" id="23_fx_dust"]
+[ext_resource type="Texture2D" path="res://assets/vfx_shared/fx_slash.png" id="20_fx_slash"]
+[ext_resource type="Texture2D" path="res://assets/vfx_shared/fx_slash_heavy.png" id="21_fx_slash_heavy"]
+[ext_resource type="Texture2D" path="res://assets/vfx_shared/fx_spark.png" id="22_fx_spark"]
+[ext_resource type="Texture2D" path="res://assets/vfx_shared/fx_dust.png" id="23_fx_dust"]
 
 [sub_resource type="Animation" id="Animation_idle"]
 resource_name = "idle"
@@ -223,7 +223,7 @@ tracks/27/enabled = true
 tracks/27/path = NodePath("Skeleton2D/Hip/Chest/UpperArm_R/Forearm_R/Hand_R/Weapon_Back:rotation")
 tracks/27/interp = 1
 tracks/27/loop_wrap = true
-tracks/27/keys = {"times": PackedFloat32Array(0.00, 0.30, 0.60, 0.90), "transitions": PackedFloat32Array(1, 1, 1, 1), "update": 0, "values": [0.3840, 0.3840, 0.3840, 0.3840]}
+tracks/27/keys = {"times": PackedFloat32Array(0.00, 0.30, 0.60, 0.90), "transitions": PackedFloat32Array(1, 1, 1, 1), "update": 0, "values": [0.9774, 0.9774, 0.9774, 0.9774]}
 tracks/28/type = "value"
 tracks/28/imported = false
 tracks/28/enabled = true
@@ -480,7 +480,7 @@ tracks/27/enabled = true
 tracks/27/path = NodePath("Skeleton2D/Hip/Chest/UpperArm_R/Forearm_R/Hand_R/Weapon_Back:rotation")
 tracks/27/interp = 1
 tracks/27/loop_wrap = true
-tracks/27/keys = {"times": PackedFloat32Array(0.00, 0.15, 0.30, 0.45, 0.60, 0.75), "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1), "update": 0, "values": [0.3840, 0.3840, 0.3840, 0.3840, 0.3840, 0.3840]}
+tracks/27/keys = {"times": PackedFloat32Array(0.00, 0.15, 0.30, 0.45, 0.60, 0.75), "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1), "update": 0, "values": [0.9774, 0.9774, 0.9774, 0.9774, 0.9774, 0.9774]}
 tracks/28/type = "value"
 tracks/28/imported = false
 tracks/28/enabled = true
@@ -737,7 +737,7 @@ tracks/27/enabled = true
 tracks/27/path = NodePath("Skeleton2D/Hip/Chest/UpperArm_R/Forearm_R/Hand_R/Weapon_Back:rotation")
 tracks/27/interp = 1
 tracks/27/loop_wrap = true
-tracks/27/keys = {"times": PackedFloat32Array(0.00, 0.18, 0.36, 0.52), "transitions": PackedFloat32Array(1, 1, 1, 1), "update": 0, "values": [0.3840, 0.3840, 0.3840, 0.3840]}
+tracks/27/keys = {"times": PackedFloat32Array(0.00, 0.18, 0.36, 0.52), "transitions": PackedFloat32Array(1, 1, 1, 1), "update": 0, "values": [0.9774, 0.9774, 0.9774, 0.9774]}
 tracks/28/type = "value"
 tracks/28/imported = false
 tracks/28/enabled = true
@@ -994,7 +994,7 @@ tracks/27/enabled = true
 tracks/27/path = NodePath("Skeleton2D/Hip/Chest/UpperArm_R/Forearm_R/Hand_R/Weapon_Back:rotation")
 tracks/27/interp = 1
 tracks/27/loop_wrap = true
-tracks/27/keys = {"times": PackedFloat32Array(0.00, 0.16, 0.34, 0.52, 0.70, 0.86), "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1), "update": 0, "values": [0.3840, 0.3840, 0.3840, 0.3840, 0.3840, 0.3840]}
+tracks/27/keys = {"times": PackedFloat32Array(0.00, 0.16, 0.34, 0.52, 0.70, 0.86), "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1), "update": 0, "values": [0.9774, 0.9774, 0.9774, 0.9774, 0.9774, 0.9774]}
 tracks/28/type = "value"
 tracks/28/imported = false
 tracks/28/enabled = true
@@ -1251,7 +1251,7 @@ tracks/27/enabled = true
 tracks/27/path = NodePath("Skeleton2D/Hip/Chest/UpperArm_R/Forearm_R/Hand_R/Weapon_Back:rotation")
 tracks/27/interp = 1
 tracks/27/loop_wrap = true
-tracks/27/keys = {"times": PackedFloat32Array(0.00, 0.15, 0.32, 0.48), "transitions": PackedFloat32Array(1, 1, 1, 1), "update": 0, "values": [0.3840, 0.3840, 0.3840, 0.3840]}
+tracks/27/keys = {"times": PackedFloat32Array(0.00, 0.15, 0.32, 0.48), "transitions": PackedFloat32Array(1, 1, 1, 1), "update": 0, "values": [0.9774, 0.9774, 0.9774, 0.9774]}
 tracks/28/type = "value"
 tracks/28/imported = false
 tracks/28/enabled = true
@@ -1508,7 +1508,7 @@ tracks/27/enabled = true
 tracks/27/path = NodePath("Skeleton2D/Hip/Chest/UpperArm_R/Forearm_R/Hand_R/Weapon_Back:rotation")
 tracks/27/interp = 1
 tracks/27/loop_wrap = true
-tracks/27/keys = {"times": PackedFloat32Array(0.00, 0.22, 0.45, 0.68, 0.88, 1.05), "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1), "update": 0, "values": [0.3840, 0.3840, 0.3840, 0.3840, 0.3840, 0.3840]}
+tracks/27/keys = {"times": PackedFloat32Array(0.00, 0.22, 0.45, 0.68, 0.88, 1.05), "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1), "update": 0, "values": [0.9774, 0.9774, 0.9774, 0.9774, 0.9774, 0.9774]}
 tracks/28/type = "value"
 tracks/28/imported = false
 tracks/28/enabled = true
@@ -1765,8 +1765,8 @@ offset = Vector2(0.64, 18.00)
 
 [node name="Weapon_Back" type="Bone2D" parent="Skeleton2D/Hip/Chest/UpperArm_R/Forearm_R/Hand_R"]
 position = Vector2(0.0, 26.7)
-rotation = 0.3840
-rest = Transform2D(0.9272, 0.3746, -0.3746, 0.9272, 0.0, 26.7)
+rotation = 0.9774
+rest = Transform2D(0.5592, 0.8290, -0.8290, 0.5592, 0.0, 26.7)
 auto_calculate_length_and_angle = false
 length = 115.0
 bone_angle = 0.0000

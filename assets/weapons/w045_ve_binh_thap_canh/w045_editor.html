@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Card_G — Stickman 4 Đội + Hệ Thống Vũ Khí Thẻ Bài (Token-Optimized Editor)</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --panel: #161b22;
+    --border: #30363d;
+    --text: #e6edf3;
+    --muted: #8b949e;
+    --accent: #f59e0b;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+  }
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 16px;
+    background: var(--panel);
+    border-bottom: 1px solid var(--border);
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .brand { display: flex; align-items: center; gap: 10px; }
+  .badge {
+    background: rgba(245, 158, 11, 0.16);
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 999px;
+  }
+  .team-bar, .action-bar, .tool-bar { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+  button, select {
+    background: #21262d;
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 6px 11px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.15s;
+  }
+  button:hover, select:hover { border-color: #58a6ff; }
+  button.active { background: #1f6feb; border-color: #58a6ff; color: #fff; }
+  button.primary { background: #238636; border-color: #2ea043; color: #fff; }
+  .team-btn { display: inline-flex; align-items: center; gap: 6px; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+  main {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 330px 1fr 340px;
+    overflow: hidden;
+  }
+  .sidebar {
+    background: var(--panel);
+    border-right: 1px solid var(--border);
+    padding: 12px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .sidebar.right { border-right: none; border-left: 1px solid var(--border); }
+  h3 {
+    margin: 0;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: var(--accent);
+  }
+  .card-box {
+    background: #0d1117;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .card-preview-img {
+    width: 100%;
+    aspect-ratio: 884 / 632;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid var(--accent);
+    background: #000;
+  }
+  .bone-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    max-height: 280px;
+    overflow-y: auto;
+  }
+  .bone-item {
+    padding: 6px 8px;
+    border-radius: 6px;
+    background: #0d1117;
+    border: 1px solid transparent;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+  }
+  .bone-item.selected { border-color: var(--accent); background: rgba(245, 158, 11, 0.12); }
+  .viewport {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    background: radial-gradient(circle at center, #1b2230 0%, #0d1117 75%);
+    padding: 12px;
+  }
+  canvas {
+    background: rgba(13, 17, 23, 0.72);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+    max-width: 100%;
+    max-height: calc(100vh - 180px);
+  }
+  .timeline-bar {
+    width: 100%;
+    max-width: 680px;
+    margin-top: 10px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .timeline-controls { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .frame-pills { display: flex; gap: 6px; flex-wrap: wrap; }
+  .control-group {
+    background: #0d1117;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .slider-row {
+    display: grid;
+    grid-template-columns: 78px 1fr 60px;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+  }
+  input[type="number"] {
+    background: #161b22;
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 4px;
+    font-size: 11px;
+    text-align: right;
+  }
+  .hint { font-size: 11px; color: var(--muted); line-height: 1.45; }
+  .status-toast { font-size: 12px; color: #4ade80; min-height: 18px; }
+  .check-row { display: flex; align-items: center; gap: 8px; font-size: 12px; cursor: pointer; }
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <span class="badge">STICKMAN 4 TEAMS + WEAPON SYSTEM</span>
+    <strong>Tướng Sticker Basic + Vũ Khí Thẻ Bài</strong>
+  </div>
+  <div class="team-bar" id="teamBar">
+    <button class="team-btn active" onclick="setTeam('team_blue', this)"><span class="dot" style="background:#3b82f6"></span>Đội 1: Xanh</button>
+    <button class="team-btn" onclick="setTeam('team_red', this)"><span class="dot" style="background:#ef4444"></span>Đội 2: Đỏ</button>
+    <button class="team-btn" onclick="setTeam('team_green', this)"><span class="dot" style="background:#22c55e"></span>Đội 3: Lá</button>
+    <button class="team-btn" onclick="setTeam('team_amber', this)"><span class="dot" style="background:#f59e0b"></span>Đội 4: Vàng</button>
+  </div>
+  <div class="action-bar" id="actionBar"></div>
+  <div class="tool-bar">
+    <button id="btnPlay" class="active" onclick="togglePlay()">⏸ Pause</button>
+    <button id="btnBones" class="active" onclick="toggleBones()">🦴 Bones: ON</button>
+    <button class="primary" onclick="saveToGodotTscn()">💾 Save to .tscn</button>
+  </div>
+</header>
+
+<main>
+  <aside class="sidebar">
+    <div class="card-box">
+      <h3>Thẻ Bài &amp; Vũ Khí Đang Trang Bị</h3>
+      <select id="weaponSelect" onchange="onSelectWeapon()"></select>
+      <img id="cardPreviewImg" class="card-preview-img" alt="Diagonal Weapon Card Preview" />
+      <div class="hint">
+        Ảnh Preview Thẻ Bài (<strong>884×632</strong> ngang RGB Opaque, đặt chéo vũ khí tối ưu khung hình).
+      </div>
+    </div>
+
+    <div class="card-box">
+      <h3>Thiết Lập 2 Vị Trí Cầm (Grip 1 &amp; Grip 2) + Đa Vũ Khí</h3>
+      <div style="display:flex; gap:6px; flex-wrap:wrap;">
+        <button id="btnGrip1" class="active" onclick="selectGripSlot(1)">🔴 Cầm ở Grip 1 (Chính)</button>
+        <button id="btnGrip2" onclick="selectGripSlot(2)">🔵 Cầm ở Grip 2 (Phụ)</button>
+      </div>
+      <button onclick="applyTwoHandedGripPose()">🤝 Pose Cầm 2 Tay (Tay Phải bám Grip 2)</button>
+      <label class="check-row">
+        <input type="checkbox" id="chkDualWield" onchange="toggleDualWield(this.checked)" />
+        <span>Bật Vũ Khí Phụ (<strong>Weapon_Back</strong> ở Tay Sau)</span>
+      </label>
+      <label class="check-row">
+        <input type="checkbox" id="chkWeaponAura" onchange="toggleWeaponAura(this.checked)" />
+        <span>Hiệu ứng <strong>Weapon Animation / Aura</strong> (Chỉ có ở cấp S &amp; SSR)</span>
+      </label>
+      <div class="slider-row">
+        <span>Grip 1 X/Y</span>
+        <input type="range" id="grip1X" min="0" max="240" step="1" value="54" oninput="updateGripPoints()" />
+        <input type="number" id="grip1Y" min="0" max="180" step="1" value="118" oninput="updateGripPoints()" />
+      </div>
+      <div class="slider-row">
+        <span>Grip 2 X/Y</span>
+        <input type="range" id="grip2X" min="0" max="240" step="1" value="28" oninput="updateGripPoints()" />
+        <input type="number" id="grip2Y" min="0" max="180" step="1" value="136" oninput="updateGripPoints()" />
+      </div>
+      <div class="hint">
+        • Chấm <strong>Đỏ</strong> trên vũ khí = <code>Grip 1</code> | Chấm <strong>Xanh Cyan</strong> = <code>Grip 2</code>.
+      </div>
+    </div>
+
+    <h3>Hệ Xương 17 Bone2D (Stickman + 2 Vũ Khí)</h3>
+    <div class="bone-list" id="boneList"></div>
+  </aside>
+
+  <section class="viewport">
+    <canvas id="rigCanvas" width="512" height="512"></canvas>
+    <div class="timeline-bar">
+      <div class="timeline-controls">
+        <strong id="lblActionInfo">Action: IDLE</strong>
+        <span id="lblTimeInfo" style="font-size:12px;color:var(--muted)">t = 0.00s</span>
+      </div>
+      <input type="range" id="timeScrubber" min="0" max="1.2" step="0.01" value="0" oninput="onScrubTime(this.value)" />
+      <div class="frame-pills" id="framePills"></div>
+    </div>
+  </section>
+
+  <aside class="sidebar right">
+    <h3>Thông Số Khớp Xương Đang Chọn</h3>
+    <div class="control-group">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <strong id="selectedBoneName" style="color:var(--accent)">Weapon_Front</strong>
+        <button onclick="resetSelectedBone()">Reset Bone</button>
+      </div>
+      <div class="slider-row">
+        <span>Rotate (°)</span>
+        <input type="range" id="sldRot" min="-180" max="180" step="0.5" value="0" oninput="onBoneInput('rot', this.value)" />
+        <input type="number" id="numRot" value="0" step="0.5" oninput="onBoneInput('rot', this.value)" />
+      </div>
+      <div class="slider-row">
+        <span>Offset X</span>
+        <input type="range" id="sldDx" min="-120" max="120" step="0.5" value="0" oninput="onBoneInput('dx', this.value)" />
+        <input type="number" id="numDx" value="0" step="0.5" oninput="onBoneInput('dx', this.value)" />
+      </div>
+      <div class="slider-row">
+        <span>Offset Y</span>
+        <input type="range" id="sldDy" min="-120" max="120" step="0.5" value="0" oninput="onBoneInput('dy', this.value)" />
+        <input type="number" id="numDy" value="0" step="0.5" oninput="onBoneInput('dy', this.value)" />
+      </div>
+    </div>
+
+    <h3>Vị Trí Cốt (Rest Pose &amp; Pivot)</h3>
+    <div class="control-group">
+      <div class="slider-row">
+        <span>Rest X</span>
+        <input type="range" id="sldRestX" min="-160" max="360" step="0.5" value="0" oninput="onRestInput('rest_x', this.value)" />
+        <input type="number" id="numRestX" value="0" step="0.5" oninput="onRestInput('rest_x', this.value)" />
+      </div>
+      <div class="slider-row">
+        <span>Rest Y</span>
+        <input type="range" id="sldRestY" min="-160" max="420" step="0.5" value="0" oninput="onRestInput('rest_y', this.value)" />
+        <input type="number" id="numRestY" value="0" step="0.5" oninput="onRestInput('rest_y', this.value)" />
+      </div>
+      <div class="slider-row">
+        <span>Pivot X</span>
+        <input type="range" id="sldPivX" min="0" max="240" step="0.5" value="0" oninput="onRestInput('pivot_x', this.value)" />
+        <input type="number" id="numPivX" value="0" step="0.5" oninput="onRestInput('pivot_x', this.value)" />
+      </div>
+      <div class="slider-row">
+        <span>Pivot Y</span>
+        <input type="range" id="sldPivY" min="0" max="240" step="0.5" value="0" oninput="onRestInput('pivot_y', this.value)" />
+        <input type="number" id="numPivY" value="0" step="0.5" oninput="onRestInput('pivot_y', this.value)" />
+      </div>
+    </div>
+
+    <div class="status-toast" id="statusToast">Sẵn sàng — Chọn màu đội, vũ khí, Grip 1/2 hoặc chỉnh pose!</div>
+
+    <div class="hint">
+      • <strong>Save to .tscn:</strong> Lưu trực tiếp toàn bộ cây xương <code>Skeleton2D</code> (17 <code>Bone2D</code>), tọa độ <code>Grip 1 / Grip 2</code> và <code>AnimationLibrary</code> 6 action thẳng vào file <code>.tscn</code> của tướng.<br/>
+      • <strong>Kiến trúc Tối Ưu 90% Token:</strong> Toàn bộ dữ liệu ảnh Base64 được tách sang <code>weapons_data.js</code> và tự động đồng bộ qua <code>tools/forge_weapon.py</code>.
+    </div>
+  </aside>
+</main>
+
+<script>window.DEFAULT_WEAPON_ID = "w045";</script>
+<script src="../../weapons_data.js"></script>
+<script>
+const VFX_LIST = ["fx_slash", "fx_slash_heavy", "fx_spark", "fx_dust"];
+const BONES = [];
+const BONE_MAP = {};
+const ACTIONS = {};
+const TEAM_IMAGES = {};
+const SHARED_VFX_IMAGES = {};
+const WEAPON_PACK_IMAGES = {};
+const WEAPON_IMAGES = {};
+
+Object.keys(window.TEAM_PART_B64 || {}).forEach(tkey => {
+  TEAM_IMAGES[tkey] = {};
+  Object.entries(window.TEAM_PART_B64[tkey]).forEach(([pname, b64]) => {
+    const img = new Image();
+    img.src = b64;
+    TEAM_IMAGES[tkey][pname] = img;
+  });
+});
+
+Object.entries(window.SHARED_VFX_B64 || {}).forEach(([fxName, b64]) => {
+  const im = new Image();
+  im.src = b64;
+  SHARED_VFX_IMAGES[fxName] = im;
+});
+
+Object.entries(window.WEAPON_REGISTRY || {}).forEach(([wid, pack]) => {
+  WEAPON_PACK_IMAGES[wid] = {};
+  Object.entries(pack.images || {}).forEach(([k, src]) => {
+    const im = new Image();
+    im.src = src;
+    WEAPON_PACK_IMAGES[wid][k] = im;
+  });
+});
+
+let currentWeaponId = window.DEFAULT_WEAPON_ID || (window.WEAPON_ORDER && window.WEAPON_ORDER[0]) || "w003";
+let currentTeam = "team_blue";
+let currentAction = "idle";
+let currentFrameIdx = 0;
+let currentTime = 0.0;
+let isPlaying = true;
+let showBones = true;
+let showDualWield = false;
+let showWeaponAura = false;
+let activeGripSlot = 1;
+let selectedBone = "Weapon_Front";
+let lastTs = performance.now();
+
+function rebuildBoneList() {
+  const boneList = document.getElementById("boneList");
+  if (!boneList) return;
+  boneList.innerHTML = "";
+  BONES.forEach(b => {
+    const div = document.createElement("div");
+    div.className = "bone-item" + (b.name === selectedBone ? " selected" : "");
+    div.innerHTML = `<span>${b.name}</span><span style="color:var(--muted);font-size:11px">z:${b.z_index}</span>`;
+    div.onclick = () => selectBone(b.name);
+    boneList.appendChild(div);
+  });
+}
+
+function applyWeaponPack(wid) {
+  const pack = window.WEAPON_REGISTRY[wid];
+  if (!pack) return;
+  currentWeaponId = wid;
+  BONES.length = 0;
+  JSON.parse(JSON.stringify(pack.bones)).forEach(b => BONES.push(b));
+  Object.keys(BONE_MAP).forEach(k => delete BONE_MAP[k]);
+  BONES.forEach(b => BONE_MAP[b.name] = b);
+  Object.keys(ACTIONS).forEach(k => delete ACTIONS[k]);
+  Object.entries(JSON.parse(JSON.stringify(pack.actions))).forEach(([k, v]) => ACTIONS[k] = v);
+  Object.keys(WEAPON_IMAGES).forEach(k => delete WEAPON_IMAGES[k]);
+  Object.entries(SHARED_VFX_IMAGES).forEach(([k, im]) => WEAPON_IMAGES[k] = im);
+  Object.entries(WEAPON_PACK_IMAGES[wid] || {}).forEach(([k, im]) => WEAPON_IMAGES[k] = im);
+  showWeaponAura = Boolean(pack.aura_default && WEAPON_IMAGES["weapon_anim_1"]);
+  const chkAura = document.getElementById("chkWeaponAura");
+  if (chkAura) {
+    chkAura.checked = showWeaponAura;
+    chkAura.disabled = !WEAPON_IMAGES["weapon_anim_1"];
+  }
+  const cardImg = document.getElementById("cardPreviewImg");
+  if (cardImg) cardImg.src = pack.card_b64;
+  const wf = BONE_MAP["Weapon_Front"];
+  if (wf) {
+    document.getElementById("grip1X").value = Math.round(wf.grip1_x);
+    document.getElementById("grip1Y").value = Math.round(wf.grip1_y);
+    document.getElementById("grip2X").value = Math.round(wf.grip2_x);
+    document.getElementById("grip2Y").value = Math.round(wf.grip2_y);
+  }
+  currentFrameIdx = 0;
+  currentTime = 0.0;
+  const sc = document.getElementById("timeScrubber");
+  if (sc && ACTIONS[currentAction]) {
+    sc.max = ACTIONS[currentAction].length;
+    sc.value = 0;
+  }
+  rebuildBoneList();
+  rebuildFramePills();
+  syncInspector();
+}
+
+function setTeam(teamKey, btnEl) {
+  currentTeam = teamKey;
+  document.querySelectorAll("#teamBar .team-btn").forEach(b => b.classList.remove("active"));
+  if (btnEl) btnEl.classList.add("active");
+  document.getElementById("statusToast").textContent = "Đã chuyển màu đội sang: " + teamKey;
+}
+
+function selectGripSlot(slot) {
+  activeGripSlot = slot;
+  document.getElementById("btnGrip1").classList.toggle("active", slot === 1);
+  document.getElementById("btnGrip2").classList.toggle("active", slot === 2);
+  const wf = BONE_MAP["Weapon_Front"];
+  if (slot === 1) {
+    wf.pivot_x = wf.grip1_x;
+    wf.pivot_y = wf.grip1_y;
+  } else {
+    wf.pivot_x = wf.grip2_x;
+    wf.pivot_y = wf.grip2_y;
+  }
+  wf.offset_x = Number((wf.width / 2.0 - wf.pivot_x).toFixed(2));
+  wf.offset_y = Number((wf.height / 2.0 - wf.pivot_y).toFixed(2));
+  syncInspector();
+  document.getElementById("statusToast").textContent = `Đang cầm vũ khí tại Grip ${slot} (${wf.pivot_x}, ${wf.pivot_y})`;
+}
+
+function updateGripPoints() {
+  const wf = BONE_MAP["Weapon_Front"];
+  wf.grip1_x = parseFloat(document.getElementById("grip1X").value) || 0;
+  wf.grip1_y = parseFloat(document.getElementById("grip1Y").value) || 0;
+  wf.grip2_x = parseFloat(document.getElementById("grip2X").value) || 0;
+  wf.grip2_y = parseFloat(document.getElementById("grip2Y").value) || 0;
+  selectGripSlot(activeGripSlot);
+}
+
+function applyTwoHandedGripPose() {
+  const f = ACTIONS[currentAction].frames[currentFrameIdx];
+  f["UpperArm_R"] = [-26, 0, 0];
+  f["Forearm_R"] = [-22, 0, 0];
+  f["Hand_R"] = [-8, 0, 0];
+  syncInspector();
+  document.getElementById("statusToast").textContent = "Đã áp dụng Pose Cầm 2 Tay (Tay Phải bám vào Grip 2)!";
+}
+
+function toggleDualWield(checked) {
+  showDualWield = checked;
+  document.getElementById("statusToast").textContent = checked
+    ? "Đã bật Vũ Khí Phụ (Weapon_Back trên Hand_R)!"
+    : "Đã tắt Vũ Khí Phụ (chỉ cầm Weapon_Front).";
+}
+
+function toggleWeaponAura(checked) {
+  if (!WEAPON_IMAGES["weapon_anim_1"]) {
+    showWeaponAura = false;
+    const chk = document.getElementById("chkWeaponAura");
+    if (chk) chk.checked = false;
+    document.getElementById("statusToast").textContent =
+      "Vũ khí cấp N & R chỉ hiển thị 1 ảnh tĩnh (weapon_anim_0), không có hiệu ứng animation!";
+    return;
+  }
+  showWeaponAura = checked;
+  document.getElementById("statusToast").textContent = checked
+    ? "Đã bật hiệu ứng Weapon Animation 4-Frame (Cấp S / SSR)!"
+    : "Đã tắt hiệu ứng Weapon Animation (hiển thị tĩnh weapon_anim_0).";
+}
+
+function onSelectWeapon() {
+  const wid = document.getElementById("weaponSelect").value;
+  applyWeaponPack(wid);
+  const pack = window.WEAPON_REGISTRY[wid];
+  if (pack) {
+    document.getElementById("statusToast").textContent = "Đang trang bị: " + pack.name;
+  }
+}
+
+function initUI() {
+  const sel = document.getElementById("weaponSelect");
+  sel.innerHTML = "";
+  const order = window.WEAPON_ORDER || Object.keys(window.WEAPON_REGISTRY || {});
+  order.forEach(wid => {
+    const pack = window.WEAPON_REGISTRY[wid];
+    if (!pack) return;
+    const opt = document.createElement("option");
+    opt.value = wid;
+    opt.textContent = pack.name;
+    if (wid === currentWeaponId) opt.selected = true;
+    sel.appendChild(opt);
+  });
+
+  applyWeaponPack(currentWeaponId);
+
+  const actionBar = document.getElementById("actionBar");
+  actionBar.innerHTML = "";
+  Object.keys(ACTIONS).forEach(act => {
+    const btn = document.createElement("button");
+    btn.textContent = act.toUpperCase();
+    btn.className = act === currentAction ? "active" : "";
+    btn.onclick = () => selectAction(act);
+    actionBar.appendChild(btn);
+  });
+}
+
+function selectAction(act) {
+  currentAction = act;
+  currentFrameIdx = 0;
+  currentTime = 0.0;
+  const sc = document.getElementById("timeScrubber");
+  sc.max = ACTIONS[act].length;
+  sc.value = 0;
+  document.querySelectorAll("#actionBar button").forEach(b => {
+    b.classList.toggle("active", b.textContent === act.toUpperCase());
+  });
+  rebuildFramePills();
+  syncInspector();
+}
+
+function rebuildFramePills() {
+  const pills = document.getElementById("framePills");
+  if (!pills || !ACTIONS[currentAction]) return;
+  pills.innerHTML = "";
+  const frames = ACTIONS[currentAction].frames;
+  frames.forEach((f, idx) => {
+    const b = document.createElement("button");
+    b.textContent = `F${idx + 1} (${f.t.toFixed(2)}s)`;
+    b.className = idx === currentFrameIdx ? "active" : "";
+    b.onclick = () => {
+      isPlaying = false;
+      updatePlayBtn();
+      currentFrameIdx = idx;
+      currentTime = f.t;
+      document.getElementById("timeScrubber").value = currentTime;
+      rebuildFramePills();
+      syncInspector();
+    };
+    pills.appendChild(b);
+  });
+}
+
+function selectBone(bname) {
+  selectedBone = bname;
+  document.querySelectorAll(".bone-item").forEach(el => {
+    el.classList.toggle("selected", el.firstChild.textContent === bname);
+  });
+  syncInspector();
+}
+
+function getFramePoseAtTime(actName, t) {
+  const act = ACTIONS[actName];
+  const frames = act.frames;
+  if (!isPlaying) return frames[currentFrameIdx];
+  if (frames.length === 1) return frames[0];
+  let i0 = 0;
+  for (let i = 0; i < frames.length - 1; i++) {
+    if (t >= frames[i].t && t <= frames[i + 1].t) { i0 = i; break; }
+    if (t > frames[frames.length - 1].t) i0 = frames.length - 1;
+  }
+  const i1 = (i0 + 1) % frames.length;
+  const f0 = frames[i0], f1 = frames[i1];
+  const t0 = f0.t, t1 = i1 === 0 ? act.length : f1.t;
+  const alpha = t1 > t0 ? Math.max(0, Math.min(1, (t - t0) / (t1 - t0))) : 0;
+  const interp = { t };
+  BONES.forEach(b => {
+    const name = b.name;
+    const v0 = f0[name] || [0, 0, 0];
+    const v1 = (i1 === 0 && !act.loop) ? v0 : (f1[name] || [0, 0, 0]);
+    interp[name] = [
+      v0[0] + (v1[0] - v0[0]) * alpha,
+      v0[1] + (v1[1] - v0[1]) * alpha,
+      v0[2] + (v1[2] - v0[2]) * alpha,
+    ];
+  });
+  const m0 = f0.modulate_a !== undefined ? f0.modulate_a : 1.0;
+  const m1 = f1.modulate_a !== undefined ? f1.modulate_a : 1.0;
+  interp.modulate_a = m0 + (m1 - m0) * alpha;
+  interp.vfx = f0.vfx || {};
+  return interp;
+}
+
+function computeWorldTransforms(framePose) {
+  const world = {};
+  BONES.forEach(b => {
+    const name = b.name, parent = b.parent;
+    let dx = 0, dy = 0, drot = 0;
+    const val = framePose[name] || [0, 0, 0];
+    if (name === "Hip") { dx = val[0]; dy = val[1]; drot = val[2]; }
+    else { drot = val[0]; dx = val[1]; dy = val[2]; }
+    const lx = b.rest_x + dx, ly = b.rest_y + dy, lrot = b.rest_rot + drot;
+    let wx, wy, wrot;
+    if (!parent) { wx = lx; wy = ly; wrot = lrot; }
+    else {
+      const p = world[parent];
+      const rad = p.wrot * Math.PI / 180.0;
+      const ca = Math.cos(rad), sa = Math.sin(rad);
+      wx = p.wx + lx * ca - ly * sa;
+      wy = p.wy + lx * sa + ly * ca;
+      wrot = p.wrot + lrot;
+    }
+    world[name] = { wx, wy, wrot, tx: wx, ty: wy };
+  });
+  BONES.forEach(b => {
+    const w = world[b.name];
+    if (b.tip_child && world[b.tip_child]) {
+      w.tx = world[b.tip_child].wx;
+      w.ty = world[b.tip_child].wy;
+    } else if (b.tip_offset) {
+      const rad = w.wrot * Math.PI / 180.0;
+      const ca = Math.cos(rad), sa = Math.sin(rad);
+      w.tx = w.wx + b.tip_offset[0] * ca - b.tip_offset[1] * sa;
+      w.ty = w.wy + b.tip_offset[0] * sa + b.tip_offset[1] * ca;
+    }
+  });
+  return world;
+}
+
+function syncInspector() {
+  const b = BONE_MAP[selectedBone];
+  if (!b || !ACTIONS[currentAction]) return;
+  const f = ACTIONS[currentAction].frames[currentFrameIdx];
+  const val = f[selectedBone] || [0, 0, 0];
+  let rot = 0, dx = 0, dy = 0;
+  if (selectedBone === "Hip") { dx = val[0]; dy = val[1]; rot = val[2]; }
+  else { rot = val[0]; dx = val[1]; dy = val[2]; }
+  document.getElementById("selectedBoneName").textContent = selectedBone;
+  document.getElementById("sldRot").value = rot;
+  document.getElementById("numRot").value = rot;
+  document.getElementById("sldDx").value = dx;
+  document.getElementById("numDx").value = dx;
+  document.getElementById("sldDy").value = dy;
+  document.getElementById("numDy").value = dy;
+  document.getElementById("sldRestX").value = b.rest_x;
+  document.getElementById("numRestX").value = b.rest_x;
+  document.getElementById("sldRestY").value = b.rest_y;
+  document.getElementById("numRestY").value = b.rest_y;
+  document.getElementById("sldPivX").value = b.pivot_x;
+  document.getElementById("numPivX").value = b.pivot_x;
+  document.getElementById("sldPivY").value = b.pivot_y;
+  document.getElementById("numPivY").value = b.pivot_y;
+  document.getElementById("lblActionInfo").textContent =
+    `Action: ${currentAction.toUpperCase()} (Frame ${currentFrameIdx + 1}/${ACTIONS[currentAction].frames.length})`;
+}
+
+function onBoneInput(field, rawVal) {
+  isPlaying = false;
+  updatePlayBtn();
+  const v = parseFloat(rawVal) || 0;
+  const f = ACTIONS[currentAction].frames[currentFrameIdx];
+  if (!f[selectedBone]) f[selectedBone] = [0, 0, 0];
+  if (selectedBone === "Hip") {
+    if (field === "dx") f.Hip[0] = v;
+    if (field === "dy") f.Hip[1] = v;
+    if (field === "rot") f.Hip[2] = v;
+  } else {
+    if (field === "rot") f[selectedBone][0] = v;
+    if (field === "dx") f[selectedBone][1] = v;
+    if (field === "dy") f[selectedBone][2] = v;
+  }
+  syncInspector();
+}
+
+function onRestInput(field, rawVal) {
+  const v = parseFloat(rawVal) || 0;
+  const b = BONE_MAP[selectedBone];
+  b[field] = v;
+  b.offset_x = Number((b.width / 2.0 - b.pivot_x).toFixed(2));
+  b.offset_y = Number((b.height / 2.0 - b.pivot_y).toFixed(2));
+  syncInspector();
+}
+
+function resetSelectedBone() {
+  const f = ACTIONS[currentAction].frames[currentFrameIdx];
+  f[selectedBone] = [0, 0, 0];
+  syncInspector();
+}
+
+function togglePlay() {
+  isPlaying = !isPlaying;
+  updatePlayBtn();
+}
+
+function updatePlayBtn() {
+  const btn = document.getElementById("btnPlay");
+  btn.textContent = isPlaying ? "⏸ Pause" : "▶ Play";
+  btn.classList.toggle("active", isPlaying);
+}
+
+function toggleBones() {
+  showBones = !showBones;
+  const btn = document.getElementById("btnBones");
+  btn.textContent = showBones ? "🦴 Bones: ON" : "🦴 Bones: OFF";
+  btn.classList.toggle("active", showBones);
+}
+
+function onScrubTime(val) {
+  isPlaying = false;
+  updatePlayBtn();
+  currentTime = parseFloat(val) || 0;
+  const frames = ACTIONS[currentAction].frames;
+  let best = 0;
+  for (let i = 0; i < frames.length; i++) {
+    if (Math.abs(frames[i].t - currentTime) < Math.abs(frames[best].t - currentTime)) best = i;
+  }
+  currentFrameIdx = best;
+  rebuildFramePills();
+  syncInspector();
+}
+
+const canvas = document.getElementById("rigCanvas");
+const ctx = canvas.getContext("2d");
+let dragging = false;
+
+canvas.addEventListener("mousedown", e => {
+  const rect = canvas.getBoundingClientRect();
+  const mx = (e.clientX - rect.left) * (canvas.width / rect.width);
+  const my = (e.clientY - rect.top) * (canvas.height / rect.height);
+  const pose = getFramePoseAtTime(currentAction, currentTime);
+  const world = computeWorldTransforms(pose);
+  let bestBone = null, bestDist = 22;
+  BONES.forEach(b => {
+    if (b.name === "Weapon_Back" && !showDualWield) return;
+    const w = world[b.name];
+    const d = Math.hypot(mx - w.wx, my - w.wy);
+    if (d < bestDist) { bestDist = d; bestBone = b.name; }
+  });
+  if (bestBone) {
+    selectBone(bestBone);
+    dragging = true;
+    isPlaying = false;
+    updatePlayBtn();
+  }
+});
+
+window.addEventListener("mousemove", e => {
+  if (!dragging) return;
+  const rect = canvas.getBoundingClientRect();
+  const mx = (e.clientX - rect.left) * (canvas.width / rect.width);
+  const my = (e.clientY - rect.top) * (canvas.height / rect.height);
+  const pose = getFramePoseAtTime(currentAction, currentTime);
+  const world = computeWorldTransforms(pose);
+  const w = world[selectedBone];
+  const f = ACTIONS[currentAction].frames[currentFrameIdx];
+  if (!f[selectedBone]) f[selectedBone] = [0, 0, 0];
+  if (selectedBone === "Hip" && e.shiftKey) {
+    const b = BONE_MAP["Hip"];
+    f.Hip[0] = Math.round((mx - b.rest_x) * 2) / 2;
+    f.Hip[1] = Math.round((my - b.rest_y) * 2) / 2;
+  } else {
+    const targetAngle = Math.atan2(my - w.wy, mx - w.wx) * 180 / Math.PI - 90;
+    const b = BONE_MAP[selectedBone];
+    const pRot = b.parent ? world[b.parent].wrot : 0;
+    let drot = targetAngle - pRot - b.rest_rot;
+    while (drot > 180) drot -= 360;
+    while (drot < -180) drot += 360;
+    if (selectedBone === "Hip") f.Hip[2] = Math.round(drot * 2) / 2;
+    else f[selectedBone][0] = Math.round(drot * 2) / 2;
+  }
+  syncInspector();
+});
+
+window.addEventListener("mouseup", () => { dragging = false; });
+
+function renderLoop(now) {
+  const dt = (now - lastTs) / 1000.0;
+  lastTs = now;
+  const act = ACTIONS[currentAction];
+  if (isPlaying && act) {
+    currentTime += dt;
+    if (currentTime >= act.length) {
+      currentTime = act.loop ? (currentTime % act.length) : 0.0;
+    }
+    document.getElementById("timeScrubber").value = currentTime;
+    let best = 0;
+    for (let i = 0; i < act.frames.length; i++) {
+      if (currentTime >= act.frames[i].t) best = i;
+    }
+    if (best !== currentFrameIdx) {
+      currentFrameIdx = best;
+      rebuildFramePills();
+      syncInspector();
+    }
+  }
+  document.getElementById("lblTimeInfo").textContent = `t = ${currentTime.toFixed(2)}s`;
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.strokeStyle = "rgba(255,255,255,0.08)";
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(48, 396); ctx.lineTo(464, 396);
+  ctx.stroke();
+
+  if (act) {
+    const pose = getFramePoseAtTime(currentAction, currentTime);
+    const world = computeWorldTransforms(pose);
+    const sorted = [...BONES].sort((a, b) => a.z_index - b.z_index);
+    const modA = pose.modulate_a !== undefined ? pose.modulate_a : 1.0;
+
+    sorted.forEach(b => {
+      if (b.name === "Weapon_Back" && !showDualWield) return;
+      const w = world[b.name];
+      const img = b.is_weapon ? WEAPON_IMAGES[b.part] : (TEAM_IMAGES[currentTeam] && TEAM_IMAGES[currentTeam][b.part]);
+      if (!img || !img.complete) return;
+      ctx.save();
+      ctx.globalAlpha = modA;
+      ctx.translate(w.wx, w.wy);
+      ctx.rotate(w.wrot * Math.PI / 180.0);
+      let drawImg = img;
+      if (b.name === "Weapon_Front" && showWeaponAura && WEAPON_IMAGES["weapon_anim_1"]) {
+        const animIdx = Math.floor(now / 150) % 4;
+        const animCand = WEAPON_IMAGES["weapon_anim_" + animIdx];
+        if (animCand && animCand.complete) drawImg = animCand;
+      } else if (b.name === "Weapon_Front" && WEAPON_IMAGES["weapon_anim_0"] && WEAPON_IMAGES["weapon_anim_0"].complete) {
+        drawImg = WEAPON_IMAGES["weapon_anim_0"];
+      }
+      ctx.drawImage(drawImg, -b.pivot_x, -b.pivot_y);
+
+      if (showBones && b.name === "Weapon_Front") {
+        ctx.fillStyle = "#ef4444";
+        ctx.strokeStyle = "#ffffff";
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.arc(b.grip1_x - b.pivot_x, b.grip1_y - b.pivot_y, 4.5, 0, Math.PI * 2);
+        ctx.fill(); ctx.stroke();
+
+        ctx.fillStyle = "#38bdf8";
+        ctx.beginPath();
+        ctx.arc(b.grip2_x - b.pivot_x, b.grip2_y - b.pivot_y, 4.5, 0, Math.PI * 2);
+        ctx.fill(); ctx.stroke();
+      }
+      ctx.restore();
+    });
+
+    if (pose.vfx) {
+      Object.entries(pose.vfx).forEach(([vname, vcfg]) => {
+        const vimg = WEAPON_IMAGES[vname];
+        if (!vimg || !vimg.complete) return;
+        ctx.save();
+        ctx.globalAlpha = vcfg.alpha !== undefined ? vcfg.alpha : 1.0;
+        ctx.translate(vcfg.pos[0], vcfg.pos[1]);
+        ctx.rotate((vcfg.rot || 0) * Math.PI / 180.0);
+        const sc = vcfg.scale || 1.0;
+        ctx.scale(sc, sc);
+        ctx.drawImage(vimg, -vimg.width / 2, -vimg.height / 2);
+        ctx.restore();
+      });
+    }
+
+    if (showBones) {
+      BONES.forEach(b => {
+        if (b.name === "Weapon_Back" && !showDualWield) return;
+        const w = world[b.name];
+        const isSel = b.name === selectedBone;
+        ctx.strokeStyle = isSel ? "#f59e0b" : (b.is_weapon ? "#f43f5e" : "rgba(56, 189, 248, 0.78)");
+        ctx.lineWidth = isSel ? 2.6 : 1.6;
+        ctx.beginPath();
+        ctx.moveTo(w.wx, w.wy);
+        ctx.lineTo(w.tx, w.ty);
+        ctx.stroke();
+
+        ctx.fillStyle = isSel ? "#f59e0b" : "#38bdf8";
+        ctx.beginPath();
+        ctx.arc(w.wx, w.wy, isSel ? 4.5 : 3.0, 0, Math.PI * 2);
+        ctx.fill();
+      });
+    }
+  }
+
+  requestAnimationFrame(renderLoop);
+}
+
+function buildGodotTscnString() {
+  const pack = window.WEAPON_REGISTRY[currentWeaponId];
+  const slug = pack.slug || (currentWeaponId + "_weapon");
+  const tscnName = pack.tscn_name || (currentWeaponId + ".tscn");
+  const gdName = tscnName.replace(".tscn", ".gd");
+  const nodeName = pack.node_name || currentWeaponId.toUpperCase();
+
+  const extList = [["1_script", "Script", `res://assets/weapons/${slug}/godot/${gdName}`]];
+  const partExtId = {};
+  let idx = 2;
+  BONES.forEach(b => {
+    if (!partExtId[b.part]) {
+      partExtId[b.part] = `${idx}_${b.part}`;
+      if (b.is_weapon) {
+        extList.push([partExtId[b.part], "Texture2D", `res://assets/weapons/${slug}/parts/${b.part}.png`]);
+      } else {
+        extList.push([partExtId[b.part], "Texture2D", `res://assets/sticker_hero/godot/parts/${currentTeam}/${b.part}.png`]);
+      }
+      idx++;
+    }
+  });
+  VFX_LIST.forEach(fx => {
+    partExtId[fx] = `${idx}_${fx}`;
+    extList.push([partExtId[fx], "Texture2D", `res://assets/vfx_shared/${fx}.png`]);
+    idx++;
+  });
+
+  const bonePaths = {};
+  BONES.forEach(b => {
+    bonePaths[b.name] = b.parent ? `${bonePaths[b.parent]}/${b.name}` : `Skeleton2D/${b.name}`;
+  });
+
+  const lines = [];
+  lines.push(`[gd_scene load_steps=${extList.length + 8} format=3]`);
+  lines.push("");
+  extList.forEach(([eid, etype, epath]) => {
+    lines.push(`[ext_resource type="${etype}" path="${epath}" id="${eid}"]`);
+  });
+  lines.push("");
+
+  Object.entries(ACTIONS).forEach(([actName, act]) => {
+    lines.push(`[sub_resource type="Animation" id="Animation_${actName}"]`);
+    lines.push(`resource_name = "${actName}"`);
+    lines.push(`length = ${act.length}`);
+    lines.push(`loop_mode = ${act.loop ? 1 : 0}`);
+    const frames = act.frames;
+    const tStr = frames.map(f => f.t.toFixed(2)).join(", ");
+    const transStr = frames.map(() => "1").join(", ");
+    let ti = 0;
+    BONES.forEach(b => {
+      const bname = b.name;
+      const bpath = bonePaths[bname];
+      const pVals = [], rVals = [];
+      frames.forEach(f => {
+        const val = f[bname] || [0, 0, 0];
+        let dx = 0, dy = 0, drot = 0;
+        if (bname === "Hip") { dx = val[0]; dy = val[1]; drot = val[2]; }
+        else { drot = val[0]; dx = val[1]; dy = val[2]; }
+        pVals.push(`Vector2(${(b.rest_x + dx).toFixed(1)}, ${(b.rest_y + dy).toFixed(1)})`);
+        rVals.push(((b.rest_rot + drot) * Math.PI / 180.0).toFixed(4));
+      });
+      lines.push(`tracks/${ti}/type = "value"`);
+      lines.push(`tracks/${ti}/imported = false`);
+      lines.push(`tracks/${ti}/enabled = true`);
+      lines.push(`tracks/${ti}/path = NodePath("${bpath}:position")`);
+      lines.push(`tracks/${ti}/interp = 1`);
+      lines.push(`tracks/${ti}/loop_wrap = true`);
+      lines.push(`tracks/${ti}/keys = {"times": PackedFloat32Array(${tStr}), "transitions": PackedFloat32Array(${transStr}), "update": 0, "values": [${pVals.join(", ")}]}`);
+      ti++;
+      lines.push(`tracks/${ti}/type = "value"`);
+      lines.push(`tracks/${ti}/imported = false`);
+      lines.push(`tracks/${ti}/enabled = true`);
+      lines.push(`tracks/${ti}/path = NodePath("${bpath}:rotation")`);
+      lines.push(`tracks/${ti}/interp = 1`);
+      lines.push(`tracks/${ti}/loop_wrap = true`);
+      lines.push(`tracks/${ti}/keys = {"times": PackedFloat32Array(${tStr}), "transitions": PackedFloat32Array(${transStr}), "update": 0, "values": [${rVals.join(", ")}]}`);
+      ti++;
+    });
+    lines.push("");
+  });
+
+  lines.push('[sub_resource type="AnimationLibrary" id="AnimationLibrary_main"]');
+  lines.push('_data = {');
+  Object.keys(ACTIONS).forEach(actName => {
+    lines.push(`"${actName}": SubResource("Animation_${actName}"),`);
+  });
+  lines.push('}');
+  lines.push("");
+
+  lines.push(`[node name="${nodeName}" type="Node2D"]`);
+  lines.push('script = ExtResource("1_script")');
+  lines.push("");
+  lines.push('[node name="Skeleton2D" type="Skeleton2D" parent="."]');
+  lines.push("");
+
+  BONES.forEach(b => {
+    const bname = b.name;
+    const parentPath = b.parent ? bonePaths[b.parent] : "Skeleton2D";
+    const rad = b.rest_rot * Math.PI / 180.0;
+    const ca = Math.cos(rad), sa = Math.sin(rad);
+    let tx = 0, ty = 42;
+    if (b.tip_child && BONE_MAP[b.tip_child]) {
+      tx = BONE_MAP[b.tip_child].rest_x;
+      ty = BONE_MAP[b.tip_child].rest_y;
+    } else if (b.tip_offset) {
+      tx = b.tip_offset[0];
+      ty = b.tip_offset[1];
+    }
+    const bLen = Math.max(8.0, Math.hypot(tx, ty));
+    const bAng = Math.atan2(ty, tx);
+
+    lines.push(`[node name="${bname}" type="Bone2D" parent="${parentPath}"]`);
+    lines.push(`position = Vector2(${b.rest_x.toFixed(1)}, ${b.rest_y.toFixed(1)})`);
+    lines.push(`rotation = ${rad.toFixed(4)}`);
+    lines.push(`rest = Transform2D(${ca.toFixed(4)}, ${sa.toFixed(4)}, ${-sa.toFixed(4)}, ${ca.toFixed(4)}, ${b.rest_x.toFixed(1)}, ${b.rest_y.toFixed(1)})`);
+    lines.push('auto_calculate_length_and_angle = false');
+    lines.push(`length = ${bLen.toFixed(1)}`);
+    lines.push(`bone_angle = ${bAng.toFixed(4)}`);
+    if (b.is_weapon) {
+      lines.push(`metadata/grip1 = Vector2(${b.grip1_x.toFixed(1)}, ${b.grip1_y.toFixed(1)})`);
+      lines.push(`metadata/grip2 = Vector2(${b.grip2_x.toFixed(1)}, ${b.grip2_y.toFixed(1)})`);
+    }
+    lines.push("");
+    lines.push(`[node name="Sprite" type="Sprite2D" parent="${bonePaths[bname]}"]`);
+    if (b.name === "Weapon_Back" && !showDualWield) lines.push('visible = false');
+    lines.push(`z_index = ${b.z_index}`);
+    lines.push('z_as_relative = false');
+    lines.push(`texture = ExtResource("${partExtId[b.part]}")`);
+    lines.push(`offset = Vector2(${b.offset_x.toFixed(2)}, ${b.offset_y.toFixed(2)})`);
+    lines.push("");
+  });
+
+  lines.push('[node name="VFXLayer" type="Node2D" parent="."]');
+  lines.push('z_index = 20');
+  lines.push('z_as_relative = false');
+  lines.push("");
+  VFX_LIST.forEach(fx => {
+    lines.push(`[node name="${fx}" type="Sprite2D" parent="VFXLayer"]`);
+    lines.push('visible = false');
+    lines.push('position = Vector2(256, 256)');
+    lines.push(`texture = ExtResource("${partExtId[fx]}")`);
+    lines.push("");
+  });
+
+  lines.push('[node name="AnimationPlayer" type="AnimationPlayer" parent="."]');
+  lines.push('libraries = {');
+  lines.push('"": SubResource("AnimationLibrary_main")');
+  lines.push('}');
+  lines.push('autoplay = "idle"');
+  lines.push("");
+  return lines.join("\n");
+}
+
+async function saveToGodotTscn() {
+  const tscnContent = buildGodotTscnString();
+  const pack = window.WEAPON_REGISTRY[currentWeaponId] || {};
+  const suggestedName = pack.tscn_name || `${currentWeaponId}.tscn`;
+  const toast = document.getElementById("statusToast");
+  try {
+    if (window.showSaveFilePicker) {
+      const handle = await window.showSaveFilePicker({
+        suggestedName,
+        types: [{ description: "Godot 4 Scene (.tscn)", accept: { "text/plain": [".tscn"] } }],
+      });
+      const writable = await handle.createWritable();
+      await writable.write(tscnContent);
+      await writable.close();
+      toast.textContent = "✅ Đã lưu trực tiếp vào file " + suggestedName + "!";
+      return;
+    }
+  } catch (err) {
+    if (err && err.name === "AbortError") return;
+  }
+  const blob = new Blob([tscnContent], { type: "text/plain;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = suggestedName;
+  a.click();
+  URL.revokeObjectURL(url);
+  toast.textContent = "✅ Đã xuất file " + suggestedName + "!";
+}
+
+initUI();
+requestAnimationFrame(renderLoop);
+</script>
+</body>
+</html>

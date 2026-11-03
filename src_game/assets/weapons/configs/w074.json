@@ -1,0 +1,21 @@
+{
+  "id": "w074",
+  "slug": "w074_ke_det_thoi_gian",
+  "name": "C074 Kẻ Dệt Thời Gian (Quyền Trượng Đồng Hồ Cát Thời Không)",
+  "tier": "S",
+  "archetype": "magic_staff",
+  "grip1_norm": [
+    0.46,
+    0.56
+  ],
+  "grip2_norm": [
+    0.34,
+    0.68
+  ],
+  "scale_mult": 1.22,
+  "prompt_ref": "Create a single-cell 1x1 reference sheet of an Epic dark-fantasy Time Weaver's chronos hourglass staff (Quyền Trượng Đồng Hồ Cát Thời Không - C074 Kẻ Dệt Thời Gian) following the exact square cell of the attached reference layout_guide_1x1.png.\n\nCOMPOSITION & ORIENTATION (100% MANDATORY):\n- Draw ONE complete chronomancer staff oriented DIAGONALLY from bottom-left (bronze clockwork shaft) to top-right (an intricate golden clockwork halo and celestial gear frame enclosing a crystalline hourglass filled with glowing cyan-and-gold temporal sand).\n- Must show 100% of the entire staff from bottom tip to top clockwork hourglass head with generous padding inside the frame (occupying 65%-75% of the canvas).\n- Zero clipping at canvas edges.\n\nCOLOR & BACKGROUND (100% MANDATORY):\n- Background MUST be flat solid pure magenta (#FF00FF) edge-to-edge.\n- DO NOT use any magenta/pink tones on the staff itself (use antique brass, celestial gold, dark gunmetal gears, and luminous cyan-turqoise & gold time-sand).\n- No character hands, no text, no borders.",
+  "prompt_anim_2x2": "Create a 2x2 sprite sheet (4 frames total: row 1 left-to-right, row 2 left-to-right) of the EXACT SAME Chronos Hourglass Staff from the first attached reference image, following the 2x2 grid layout of the second attached reference image (layout_guide_2x2.png).\n\n100% CONSISTENCY & ANIMATION RULES:\n- Every cell must show the exact same diagonal clockwork hourglass staff at the exact same angle, size, and position.\n- Animate a looping 4-frame temporal acceleration aura: glowing cyan-and-gold Roman clock numerals, swirling golden time-sand ribbons, and shimmering chronos rings orbiting the hourglass head.\n- Background MUST be flat solid pure magenta (#FF00FF) in all 4 cells. DO NOT draw the blue layout guide lines or cell borders. Keep each frame strictly inside its cell with zero clipping.",
+  "prompt_card": "Create a wide horizontal 16:11 dark-fantasy card illustration featuring the exact same Chronos Hourglass Staff (Quyền Trượng Đồng Hồ Cát Thời Không - C074 Kẻ Dệt Thời Gian) from the attached reference images.\n\nCOMPOSITION & BACKGROUND (100% MANDATORY):\n- Place the golden clockwork hourglass staff diagonally across the center of the horizontal frame.\n- Full atmospheric dark-fantasy background (100% opaque RGB illustration, NO magenta, NO transparency): a timeless astral clock-tower chamber where glowing cyan-and-gold temporal gears and streams of golden time-sand warp reality around the staff.\n- Do NOT draw any card frame, borders, or text.",
+  "tscn_name": "c074_ke_det_thoi_gian.tscn",
+  "node_name": "C074_KeDetThoiGian"
+}

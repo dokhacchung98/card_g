@@ -1,0 +1,25 @@
+{
+  "id": "w052",
+  "slug": "w052_golem_nuot_sat_thuong",
+  "tier": "R",
+  "name": "W052 — Đại Chùy Đá Nuốt Sát Thương (Cấp R — Vũ Khí Tĩnh)",
+  "tscn_name": "c052_golem_nuot_sat_thuong.tscn",
+  "node_name": "C052_GolemNuotSatThuong",
+  "archetype": "melee_cleaver",
+  "target_size": [
+    222,
+    178
+  ],
+  "grip1_norm": [
+    0.32,
+    0.68
+  ],
+  "grip2_norm": [
+    0.14,
+    0.86
+  ],
+  "rest_rot": 18.0,
+  "flip_horizontal": false,
+  "prompt_ref": "A single standalone 2D game weapon sprite on a pure solid magenta #FF00FF background, following the attached layout_guide_1x1.png safe zone (centered inside 65% of the canvas, zero border clipping). The weapon is W052 'Đại Chùy Đá Nuốt Sát Thương' (Damage-Absorbing Golem's Kinetic Core Greatmaul, Tier R Rare weapon), placed diagonally from bottom-left (rune-stone pommel at the base of the handle) to top-right (massive hollow basalt golem hammerhead housing a glowing violet-amber absorption crystal core). Design details: a colossal dark-fantasy golem warhammer carved from dark volcanic stone bound in heavy bronze-iron bands, with deep rune fissures channeling absorbed damage into a glowing violet-gold crystal heart inside the hammerhead; thick leather-wrapped ironwood shaft at Grip 1 and Grip 2. Crisp dark outlines, stylized 2D hand-painted game art matching Arcana Five aesthetic, NO character, NO hands, NO detached floating particles, 100% flat solid #FF00FF magenta background.",
+  "prompt_card": "Extreme close-up macro weapon portrait (horizontal rectangular 4:3, 884x632, 100% opaque RGB painting, NO transparent background, NO UI frame). ONE GIANT GOLEM KINETIC-ABSORPTION GREATMAUL (Đại Chùy Đá Nuốt Sát Thương) identical to the attached reference image MUST FILL 85% OF THE FRAME diagonally from bottom-left (leather-wrapped ironwood shaft) to top-right (volcanic stone hammerhead with glowing violet-gold absorption crystal core). Keep the dark-fantasy ancient golem foundry background softly blurred in deep obsidian-violet shadow so the giant warhammer is the sole hero subject in the foreground."
+}

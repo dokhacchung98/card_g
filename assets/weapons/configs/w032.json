@@ -1,0 +1,25 @@
+{
+  "id": "w032",
+  "slug": "w032_thuat_si_phan_ra",
+  "tier": "R",
+  "name": "W032 — Trượng Độc Dịch Phân Rã (Cấp R — Vũ Khí Tĩnh)",
+  "tscn_name": "c032_thuat_si_phan_ra.tscn",
+  "node_name": "C032_ThuatSiPhanRa",
+  "archetype": "magic_staff",
+  "target_size": [
+    220,
+    176
+  ],
+  "grip1_norm": [
+    0.34,
+    0.66
+  ],
+  "grip2_norm": [
+    0.14,
+    0.86
+  ],
+  "rest_rot": 22.0,
+  "flip_horizontal": false,
+  "prompt_ref": "A single standalone 2D game weapon sprite on a pure solid magenta #FF00FF background, following the attached layout_guide_1x1.png safe zone (centered inside 65% of the canvas, zero border clipping). The weapon is W032 'Trượng Độc Dịch Phân Rã' (Contagion Warlock's Blight-Censer Staff, Tier R Rare weapon), placed diagonally from bottom-left (corroded iron spike pommel at the base of the shaft) to top-right (toxic bone-cage censer staff head). Design details: a sinister dark-fantasy contagion mage staff topped with a ribbed iron-and-bone censer cage enclosing a glowing acid-green blight core with corroded bronze fangs; the twisted dark bog-wood shaft is bound with copper tubing and wrapped in dark olive-brown leather at Grip 1 and Grip 2, ending in a spiked iron counterweight at the bottom-left. Crisp dark outlines, stylized 2D hand-painted game art matching Arcana Five aesthetic, NO character, NO hands, NO detached floating particles, 100% flat solid #FF00FF magenta background.",
+  "prompt_card": "Extreme close-up macro weapon portrait (horizontal rectangular 4:3, 884x632, 100% opaque RGB painting, NO transparent background, NO UI frame). ONE GIANT CONTAGION BLIGHT-CENSER STAFF (Trượng Độc Dịch Phân Rã) identical to the attached reference image MUST FILL 85% OF THE FRAME diagonally from bottom-left (twisted bog-wood shaft with leather grips) to top-right (ribbed iron-and-bone censer cage holding the acid-green blight core). Keep the dark-fantasy plagued alchemical catacomb background softly blurred in deep toxic-emerald shadow so the giant diagonal staff is the sole hero subject in the foreground."
+}

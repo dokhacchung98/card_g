@@ -1,0 +1,25 @@
+{
+  "id": "w046",
+  "slug": "w046_ky_si_day_thung",
+  "tier": "N",
+  "name": "W046 — Móc Câu Dây Thừng Trói Chân (Cấp N — Vũ Khí Tĩnh)",
+  "tscn_name": "c046_ky_si_day_thung.tscn",
+  "node_name": "C046_KySiDayThung",
+  "archetype": "melee_spear",
+  "target_size": [
+    224,
+    176
+  ],
+  "grip1_norm": [
+    0.34,
+    0.66
+  ],
+  "grip2_norm": [
+    0.14,
+    0.86
+  ],
+  "rest_rot": 20.0,
+  "flip_horizontal": false,
+  "prompt_ref": "A single standalone 2D game weapon sprite on a pure solid magenta #FF00FF background, following the attached layout_guide_1x1.png safe zone (centered inside 65% of the canvas, zero border clipping). The weapon is W046 'Móc Câu Dây Thừng Trói Chân' (Rope-Knight's Grappling Snare Billhook, Tier N Normal weapon), placed diagonally from bottom-left (iron anchor-ring pommel at the base of the shaft) to top-right (twin-clawed grappling billhook spearhead). Design details: a rugged dark-fantasy tanker catch-pole and billhook spear featuring a heavy forged-iron spear tip flanked by curved leg-snaring grappling hooks, with thick braided hemp snare-rope coiled neatly around the collar below the blade; the sturdy hardwood shaft is wrapped in dark leather at Grip 1 and Grip 2, ending in an iron rope-ring pommel at the bottom-left. Crisp dark outlines, stylized 2D hand-painted game art matching Arcana Five aesthetic, NO character, NO hands, NO detached floating particles, 100% flat solid #FF00FF magenta background.",
+  "prompt_card": "Extreme close-up macro weapon portrait (horizontal rectangular 4:3, 884x632, 100% opaque RGB painting, NO transparent background, NO UI frame). ONE GIANT GRAPPLING SNARE BILLHOOK POLEARM (Móc Câu Dây Thừng Trói Chân) identical to the attached reference image MUST FILL 85% OF THE FRAME diagonally from bottom-left (hardwood shaft with leather grips) to top-right (forged-iron grappling hooks, spear tip, and coiled braided hemp snare-rope). Keep the dark-fantasy frontier palisade background softly blurred in warm dusk shadow so the giant diagonal billhook is the sole hero subject in the foreground."
+}

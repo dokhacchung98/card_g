@@ -1,0 +1,25 @@
+{
+  "id": "w006",
+  "slug": "w006_du_kich_no_lien_chau",
+  "tier": "N",
+  "name": "W006 — Nỏ Liên Châu Du Kích (Cấp N — Vũ Khí Tĩnh)",
+  "tscn_name": "c006_du_kich_no_lien_chau.tscn",
+  "node_name": "C006_DuKichNoLienChau",
+  "archetype": "ranged_crossbow",
+  "target_size": [
+    212,
+    128
+  ],
+  "grip1_norm": [
+    0.34,
+    0.58
+  ],
+  "grip2_norm": [
+    0.62,
+    0.52
+  ],
+  "rest_rot": 34.0,
+  "flip_horizontal": false,
+  "prompt_ref": "A single standalone 2D game weapon sprite on a pure solid magenta #FF00FF background, following the attached layout_guide_1x1.png safe zone (centered inside 65% of the canvas, zero border clipping). The weapon is W006 'Nỏ Liên Châu Du Kích' (Guerrilla Repeating Crossbow / Chu-Ko-Nu Mechanical Crossbow, Tier N Normal weapon), angled diagonally from bottom-left (wooden rear stock and iron cocking lever handle) toward top-right (front twin steel bow prod). Design details: a dark-fantasy mechanical repeating crossbow crafted from weathered dark walnut wood and riveted blackened iron plates, featuring a rectangular top-mounted wooden magazine box with brass hinges, an iron cocking lever linked to the rear grip (Grip 1), a sturdy front foregrip (Grip 2) under the barrel, and heavy recurved blackened steel bow limbs at the front with a taut hemp bowstring. CRITICAL RULE FOR RANGED WEAPONS: DO NOT draw any arrows, bolts, darts, or projectiles inside, on, or near the crossbow (100% empty flight rail). Crisp dark outlines, stylized 2D hand-painted game art matching Arcana Five aesthetic, NO character, NO hands, NO ammo/bolts, NO aura, 100% flat solid #FF00FF magenta background.",
+  "prompt_card": "Close-up hero weapon showcase illustration (horizontal rectangular 4:3, 884x632, 100% opaque RGB full scenic painting, NO transparent background, NO card frame or text UI). THE GIANT MECHANICAL REPEATING CROSSBOW (Nỏ Liên Châu Du Kích) from the attached reference image MUST FILL 75% OF THE FOREGROUND, placed prominently diagonally from bottom-left (rear stock and iron cocking lever) to top-right (heavy blackened steel prod and rectangular top wooden magazine box, with NO arrows or bolts). Behind the giant foreground repeating crossbow is an atmospheric dark-fantasy guerrilla ambush setting: moonlit ancient forest canopy, mossy stone ruins, and cold night mist. Focus 100% on the giant diagonal repeating crossbow in the center-foreground matching the reference weapon geometry."
+}

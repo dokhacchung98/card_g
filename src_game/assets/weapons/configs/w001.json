@@ -1,0 +1,30 @@
+{
+  "id": "w001",
+  "slug": "w001_hac_kiem_tan_binh",
+  "tier": "N",
+  "name": "W001 — Hắc Kiếm Tàn Binh (Cấp N — Vũ Khí Tĩnh)",
+  "tscn_name": "c001_hac_kiem_tan_binh.tscn",
+  "node_name": "C001_HacKiemTanBinh",
+  "archetype": "melee_sword",
+  "target_size": [
+    204,
+    171
+  ],
+  "grip1": [
+    49.7,
+    126.4
+  ],
+  "grip2": [
+    23.7,
+    147.3
+  ],
+  "offhand_grip1": [
+    38.8,
+    98.6
+  ],
+  "offhand_grip2": [
+    18.5,
+    114.9
+  ],
+  "rest_rot": 48.0
+}
