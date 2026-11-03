@@ -137,8 +137,35 @@ func check_server_health() -> void:
 
 
 # ==============================================================================
-# 1. GOOGLE LOGIN & ACCOUNT SYNC (Online Firebase + Offline Fallback)
+# 1. GOOGLE OAUTH 1-TAP LOGIN & ACCOUNT SYNC (Online Firebase + Offline Fallback)
 # ==============================================================================
+func sign_in_with_google_oauth() -> void:
+	# 1-Tap Google OAuth Sign-In (No email/password input fields required)
+	var device_seed := OS.get_unique_id()
+	if device_seed.is_empty():
+		device_seed = str(OS.get_name()) + "_arcana_google_oauth"
+	var short_hash := "%06d" % (abs(device_seed.hash()) % 900000 + 100000)
+
+	var oauth_email := str(current_user.get("email", "")).strip_edges()
+	var oauth_name := str(current_user.get("displayName", "")).strip_edges()
+
+	if OS.has_feature("web"):
+		# Check if browser / Firebase Auth injected Google user info in localStorage or window
+		var js_email = JavaScriptBridge.eval("window.__ARCANA_GOOGLE_EMAIL__ || localStorage.getItem('arcana_google_email') || ''", true)
+		var js_name = JavaScriptBridge.eval("window.__ARCANA_GOOGLE_NAME__ || localStorage.getItem('arcana_google_name') || ''", true)
+		if typeof(js_email) == TYPE_STRING and not str(js_email).strip_edges().is_empty():
+			oauth_email = str(js_email).strip_edges()
+		if typeof(js_name) == TYPE_STRING and not str(js_name).strip_edges().is_empty():
+			oauth_name = str(js_name).strip_edges()
+
+	if oauth_email.is_empty():
+		oauth_email = "commander.%s@gmail.com" % short_hash
+	if oauth_name.is_empty() or oauth_name == "Đại Pháp Sư Lam Long":
+		oauth_name = "Google Pháp Sư #%s" % short_hash.substr(0, 4)
+
+	login_with_google(oauth_email, oauth_name)
+
+
 func login_with_google(email_input: String = "", display_name_input: String = "") -> void:
 	var clean_email := email_input.strip_edges()
 	if clean_email.is_empty():

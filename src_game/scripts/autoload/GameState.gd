@@ -226,7 +226,7 @@ var diamonds: int = 600                    # Kim Cương (Chỉ mua được 2 P
 
 # Match configuration
 var selected_player_count: int = 4         # 2, 3, or 4 players
-var player_is_bot: bool = true             # Current player controlled by Bot AI by default
+var player_is_bot: bool = false            # Human player always plays manually (no auto-bot for player)
 var match_speed: float = 1.0
 
 # Texture, Font & JSON caches
@@ -401,7 +401,7 @@ func _load_or_init_save() -> void:
 			gold = int(data.get("gold", 3500))
 			diamonds = int(data.get("diamonds", 600))
 			selected_player_count = clampi(int(data.get("selected_player_count", 4)), 2, 4)
-			player_is_bot = bool(data.get("player_is_bot", true))
+			player_is_bot = false
 			return
 
 	# Brand-new unauthenticated state: Player starts with 0 cards until First Google Login!
@@ -986,8 +986,12 @@ func make_gui_button_style(variant: String = "slate", is_large: bool = false, mo
 	return sb
 
 
+var is_touch_scrolling: bool = false
+
+
 func apply_gui_button(btn: Button, variant: String = "slate", is_large: bool = false, pad_x: int = 16, pad_y: int = 8) -> void:
 	btn.focus_mode = Control.FOCUS_NONE
+	btn.mouse_filter = Control.MOUSE_FILTER_PASS
 	btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	var sb_normal := make_gui_button_style(variant, is_large, Color.WHITE, pad_x, pad_y)
 	var sb_hover := make_gui_button_style(variant, is_large, Color(1.08, 1.08, 1.08, 1.0), pad_x, pad_y)
@@ -999,4 +1003,91 @@ func apply_gui_button(btn: Button, variant: String = "slate", is_large: bool = f
 	btn.add_theme_stylebox_override("disabled", sb_disabled)
 	btn.add_theme_color_override("font_outline_color", Color(0.03, 0.03, 0.05, 0.96))
 	btn.add_theme_constant_override("outline_size", 3)
+
+
+func setup_touch_scroll(scroll: ScrollContainer) -> void:
+	if scroll == null:
+		return
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
+	scroll.follow_focus = false
+	scroll.mouse_filter = Control.MOUSE_FILTER_PASS
+	var vbar := scroll.get_v_scroll_bar()
+	if vbar:
+		vbar.custom_minimum_size.x = 14
+		vbar.mouse_filter = Control.MOUSE_FILTER_PASS
+	if not scroll.has_node("_TouchScrollController"):
+		var helper := _TouchScrollController.new()
+		helper.name = "_TouchScrollController"
+		helper.target_scroll = scroll
+		scroll.add_child(helper)
+
+
+class _TouchScrollController extends Node:
+	var target_scroll: ScrollContainer = null
+	var _pressing: bool = false
+	var _dragging: bool = false
+	var _start_pos: Vector2 = Vector2.ZERO
+	var _start_scroll_v: int = 0
+	var _velocity_y: float = 0.0
+
+	func _process(delta: float) -> void:
+		if target_scroll == null or not is_instance_valid(target_scroll) or not target_scroll.is_visible_in_tree():
+			_pressing = false
+			_dragging = false
+			_velocity_y = 0.0
+			return
+		if not _pressing and absf(_velocity_y) > 15.0:
+			target_scroll.scroll_vertical = maxi(0, int(round(float(target_scroll.scroll_vertical) + _velocity_y * delta)))
+			_velocity_y = move_toward(_velocity_y, 0.0, 2600.0 * delta)
+
+	func _input(event: InputEvent) -> void:
+		if target_scroll == null or not is_instance_valid(target_scroll) or not target_scroll.is_visible_in_tree():
+			return
+
+		if event is InputEventScreenTouch:
+			if event.pressed:
+				if target_scroll.get_global_rect().has_point(event.position):
+					_pressing = true
+					_dragging = false
+					_velocity_y = 0.0
+					_start_pos = event.position
+					_start_scroll_v = target_scroll.scroll_vertical
+					GameState.is_touch_scrolling = false
+			else:
+				_pressing = false
+				if _dragging:
+					_dragging = false
+					get_tree().create_timer(0.06).timeout.connect(func(): GameState.is_touch_scrolling = false)
+		elif event is InputEventScreenDrag and _pressing:
+			var dy: float = _start_pos.y - event.position.y
+			if not _dragging and absf(dy) > 10.0:
+				_dragging = true
+				GameState.is_touch_scrolling = true
+			if _dragging:
+				target_scroll.scroll_vertical = maxi(0, _start_scroll_v + int(round(dy)))
+				_velocity_y = -event.velocity.y * 0.65
+		elif event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
+			if event.pressed:
+				if target_scroll.get_global_rect().has_point(event.position):
+					_pressing = true
+					_dragging = false
+					_velocity_y = 0.0
+					_start_pos = event.position
+					_start_scroll_v = target_scroll.scroll_vertical
+					GameState.is_touch_scrolling = false
+			else:
+				_pressing = false
+				if _dragging:
+					_dragging = false
+					get_tree().create_timer(0.06).timeout.connect(func(): GameState.is_touch_scrolling = false)
+		elif event is InputEventMouseMotion and _pressing:
+			var dy_m: float = _start_pos.y - event.position.y
+			if not _dragging and absf(dy_m) > 10.0:
+				_dragging = true
+				GameState.is_touch_scrolling = true
+			if _dragging:
+				target_scroll.scroll_vertical = maxi(0, _start_scroll_v + int(round(dy_m)))
+				_velocity_y = -event.velocity.y * 0.45
+
 

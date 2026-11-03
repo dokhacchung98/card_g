@@ -161,7 +161,7 @@ func _build_ui() -> void:
 	# Content Host (Scrollable)
 	var scroll := ScrollContainer.new()
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	GameState.setup_touch_scroll(scroll)
 	root_v.add_child(scroll)
 
 	var content_stack := VBoxContainer.new()

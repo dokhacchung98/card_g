@@ -76,6 +76,10 @@ func play_flip_reveal_anim(delay_sec: float = 0.0) -> void:
 	queue_redraw()
 
 
+var _press_global_pos: Vector2 = Vector2.ZERO
+var _is_pressed_down: bool = false
+
+
 func setup(p_card_id: String, p_element: String = "", p_face_down: bool = false, p_hd: bool = false) -> void:
 	card_id = GameState.get_base_card_id(p_card_id)
 	element = p_element if not p_element.is_empty() else GameState.get_card_element(p_card_id)
@@ -84,18 +88,29 @@ func setup(p_card_id: String, p_element: String = "", p_face_down: bool = false,
 	_cached_card = GameState.get_card(card_id)
 	_cached_rarity = str(_cached_card.get("rarity", "N"))
 	clip_contents = false
-	mouse_filter = Control.MOUSE_FILTER_STOP
+	mouse_filter = Control.MOUSE_FILTER_PASS
 	mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	_update_process_mode()
 	queue_redraw()
 
 
 func _gui_input(event: InputEvent) -> void:
-	if event is InputEventMouseButton and event.pressed:
-		if event.button_index == MOUSE_BUTTON_LEFT:
-			emit_signal("card_clicked", card_id, element)
-		elif event.button_index == MOUSE_BUTTON_RIGHT:
-			emit_signal("card_secondary_clicked", card_id, element)
+	if event is InputEventMouseButton:
+		var mb: InputEventMouseButton = event as InputEventMouseButton
+		if mb.button_index == MOUSE_BUTTON_LEFT:
+			if mb.pressed:
+				_is_pressed_down = true
+				_press_global_pos = mb.global_position
+			else:
+				if _is_pressed_down:
+					_is_pressed_down = false
+					var dist: float = mb.global_position.distance_to(_press_global_pos)
+					if dist <= 18.0 and not GameState.is_touch_scrolling:
+						emit_signal("card_clicked", card_id, element)
+		elif mb.button_index == MOUSE_BUTTON_RIGHT and mb.pressed:
+			if not GameState.is_touch_scrolling:
+				emit_signal("card_secondary_clicked", card_id, element)
+
 
 
 func _draw() -> void:
@@ -172,7 +187,7 @@ func _draw() -> void:
 
 	# 5. Name Header Slot (77, 63, 358, 42)
 	var name_rect := Rect2(77.0 * sx, 63.0 * sy, 358.0 * sx, 42.0 * sy)
-	var name_fsize := maxi(10, int(22.0 * sx))
+	var name_fsize := maxi(12, int(24.5 * sx))
 	var card_name: String = str(card.get("name", card_id))
 	draw_string(
 		font,
@@ -192,15 +207,15 @@ func _draw() -> void:
 			font,
 			skill_rect,
 			skill_desc,
-			maxi(9, int(17.5 * sx)),
-			maxi(7, int(11.0 * sx)),
+			maxi(11, int(19.5 * sx)),
+			maxi(9, int(13.0 * sx)),
 			Color(0.92, 0.95, 0.99),
 			HORIZONTAL_ALIGNMENT_CENTER
 		)
 
 	# 7. Stats Grid (76, 547, 360, 112)
 	var is_item: bool = bool(card.get("is_item", false))
-	var stat_fsize := maxi(10, int(17.5 * sx))
+	var stat_fsize := maxi(12, int(20.0 * sx))
 	if is_item:
 		var item_bg := Rect2(76.0 * sx, 547.0 * sy, 360.0 * sx, 112.0 * sy)
 		draw_rect(item_bg, Color(0.06, 0.08, 0.13, 0.95), true)
@@ -211,8 +226,8 @@ func _draw() -> void:
 			font,
 			item_box,
 			item_txt,
-			maxi(9, int(15.5 * sx)),
-			maxi(7, int(11.0 * sx)),
+			maxi(11, int(18.0 * sx)),
+			maxi(9, int(13.0 * sx)),
 			Color(0.98, 0.84, 0.36),
 			HORIZONTAL_ALIGNMENT_CENTER
 		)
@@ -230,7 +245,7 @@ func _draw() -> void:
 		]
 		var col_x := [78.0, 199.0, 320.0]
 		var row_y := [549.0, 588.0, 628.0]
-		var stat_outline := maxi(2, int(3.5 * sx))
+		var stat_outline := maxi(2, int(4.0 * sx))
 		for s_i in range(9):
 			var r_idx := s_i / 3
 			var c_idx := s_i % 3
@@ -239,8 +254,8 @@ func _draw() -> void:
 			var s_info: Array = stat_vals[s_i]
 			var s_icon := GameState.tex("res://assets/cards/icons/stats/%s/prop.png" % s_info[0])
 			if s_icon:
-				draw_texture_rect(s_icon, Rect2(bx + 3.0 * sx, by + 2.0 * sy, 24.0 * sx, 24.0 * sy), false)
-			var s_pos := Vector2(bx + 31.0 * sx, by + 22.5 * sy)
+				draw_texture_rect(s_icon, Rect2(bx + 3.0 * sx, by + 2.0 * sy, 26.0 * sx, 26.0 * sy), false)
+			var s_pos := Vector2(bx + 32.0 * sx, by + 23.0 * sy)
 			draw_string_outline(
 				num_font,
 				s_pos,
@@ -262,8 +277,8 @@ func _draw() -> void:
 			)
 
 	# 8. Card ID Slot (362, 677, 76, 30) & Owned Copy Counter
-	var id_fsize := maxi(9, int(15.0 * sx))
-	var id_outline := maxi(2, int(3.5 * sx))
+	var id_fsize := maxi(11, int(17.0 * sx))
+	var id_outline := maxi(2, int(4.0 * sx))
 	draw_string_outline(
 		font,
 		Vector2(362.0 * sx, 698.0 * sy),
@@ -285,7 +300,7 @@ func _draw() -> void:
 	)
 
 	if is_owned and owned_cnt > 0:
-		var cnt_rect := Rect2(76.0 * sx, 674.0 * sy, 104.0 * sx, 30.0 * sy)
+		var cnt_rect := Rect2(76.0 * sx, 674.0 * sy, 108.0 * sx, 30.0 * sy)
 		draw_rect(cnt_rect, Color(0.08, 0.14, 0.22, 0.9), true)
 		draw_string(
 			font,
@@ -293,13 +308,13 @@ func _draw() -> void:
 			"Sở hữu x%d" % owned_cnt,
 			HORIZONTAL_ALIGNMENT_CENTER,
 			-1,
-			maxi(8, int(13.0 * sx)),
+			maxi(10, int(15.0 * sx)),
 			Color(0.55, 0.92, 0.65)
 		)
 
 	# 9. In-Loadout Badge or Unowned Lock Overlay
 	if in_loadout and show_lock_if_unowned:
-		var badge_rect := Rect2(178.0 * sx, 674.0 * sy, 168.0 * sx, 30.0 * sy)
+		var badge_rect := Rect2(182.0 * sx, 674.0 * sy, 168.0 * sx, 30.0 * sy)
 		draw_rect(badge_rect, Color(0.12, 0.52, 0.26, 0.95), true)
 		draw_rect(badge_rect, Color(0.38, 0.95, 0.56), false, 1.5)
 		draw_string(
@@ -308,7 +323,7 @@ func _draw() -> void:
 			"TRONG BỘ 15 LÁ",
 			HORIZONTAL_ALIGNMENT_CENTER,
 			badge_rect.size.x,
-			maxi(8, int(13.0 * sx)),
+			maxi(10, int(14.5 * sx)),
 			Color.WHITE
 		)
 

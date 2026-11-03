@@ -134,9 +134,9 @@ func _build_ui() -> void:
 	for p_id in range(1, 6):
 		var b := Button.new()
 		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		b.custom_minimum_size = Vector2(0, 88)
+		b.custom_minimum_size = Vector2(0, 102)
 		b.clip_text = true
-		b.add_theme_font_size_override("font_size", 13)
+		b.add_theme_font_size_override("font_size", 16)
 		var captured_id := p_id
 		b.pressed.connect(func():
 			if not is_animating:
@@ -169,19 +169,19 @@ func _build_ui() -> void:
 	var ctrl_vbox := VBoxContainer.new()
 	ctrl_vbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	ctrl_vbox.alignment = BoxContainer.ALIGNMENT_CENTER
-	ctrl_vbox.add_theme_constant_override("separation", 8)
+	ctrl_vbox.add_theme_constant_override("separation", 10)
 	stage_hbox.add_child(ctrl_vbox)
 
 	lbl_selected_pack_title = Label.new()
 	lbl_selected_pack_title.clip_text = true
-	lbl_selected_pack_title.add_theme_font_size_override("font_size", 21)
+	lbl_selected_pack_title.add_theme_font_size_override("font_size", 24)
 	ctrl_vbox.add_child(lbl_selected_pack_title)
 
 	lbl_rates = Label.new()
 	lbl_rates.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	lbl_rates.custom_minimum_size = Vector2(680, 0)
 	lbl_rates.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	lbl_rates.add_theme_font_size_override("font_size", 15)
+	lbl_rates.add_theme_font_size_override("font_size", 18)
 	lbl_rates.add_theme_color_override("font_color", Color(0.84, 0.90, 0.96))
 	ctrl_vbox.add_child(lbl_rates)
 
@@ -191,17 +191,17 @@ func _build_ui() -> void:
 
 	btn_buy_pack = Button.new()
 	btn_buy_pack.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	btn_buy_pack.custom_minimum_size = Vector2(0, 58)
+	btn_buy_pack.custom_minimum_size = Vector2(0, 68)
 	btn_buy_pack.clip_text = true
-	btn_buy_pack.add_theme_font_size_override("font_size", 18)
+	btn_buy_pack.add_theme_font_size_override("font_size", 20)
 	btn_buy_pack.pressed.connect(_on_buy_pack_pressed)
 	action_btns_row.add_child(btn_buy_pack)
 
 	btn_open_pack = Button.new()
 	btn_open_pack.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	btn_open_pack.custom_minimum_size = Vector2(0, 58)
+	btn_open_pack.custom_minimum_size = Vector2(0, 68)
 	btn_open_pack.clip_text = true
-	btn_open_pack.add_theme_font_size_override("font_size", 18)
+	btn_open_pack.add_theme_font_size_override("font_size", 20)
 	GameState.apply_gui_button(btn_open_pack, "gold", false)
 	btn_open_pack.pressed.connect(_on_open_pack_pressed)
 	action_btns_row.add_child(btn_open_pack)
@@ -211,19 +211,21 @@ func _build_ui() -> void:
 	lbl_pull_summary.custom_minimum_size = Vector2(680, 0)
 	lbl_pull_summary.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	lbl_pull_summary.text = "Chọn 1 trong 5 loại Pack ở trên và bấm Khai Mở để xem nghi thức mở gói & lật 10 tấm thẻ!"
-	lbl_pull_summary.add_theme_font_size_override("font_size", 16)
+	lbl_pull_summary.add_theme_font_size_override("font_size", 18)
 	lbl_pull_summary.add_theme_color_override("font_color", Color(0.98, 0.84, 0.36))
 	ctrl_vbox.add_child(lbl_pull_summary)
 
-	# 4. Last-Pulled 10-Card History Grid on main screen
+	# 4. Last-Pulled 10-Card History Grid on main screen (Large 3-Column Grid + Touch Scroll)
 	var scroll := ScrollContainer.new()
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	GameState.setup_touch_scroll(scroll)
 	main_vbox.add_child(scroll)
 
 	results_grid = GridContainer.new()
-	results_grid.columns = 5
-	results_grid.add_theme_constant_override("h_separation", 12)
-	results_grid.add_theme_constant_override("v_separation", 12)
+	results_grid.columns = 3
+	results_grid.add_theme_constant_override("h_separation", 16)
+	results_grid.add_theme_constant_override("v_separation", 18)
+	results_grid.mouse_filter = Control.MOUSE_FILTER_PASS
 	scroll.add_child(results_grid)
 
 	# 5. Build Full-Screen Black Pack Opening Ceremony & Interactive Flip Overlay
@@ -617,7 +619,7 @@ func _populate_ceremony_and_background_cards(sel_id: int) -> void:
 
 		# 2. Face-Up Card in the background PackScreen history grid
 		var cw_bg: Control = CardWidget.new()
-		cw_bg.custom_minimum_size = Vector2(192, 288)
+		cw_bg.custom_minimum_size = Vector2(306, 459)
 		cw_bg.show_lock_if_unowned = false
 		cw_bg.is_new_badge = is_new
 		cw_bg.setup(cid, elem, false, false)

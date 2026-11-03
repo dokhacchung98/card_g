@@ -81,21 +81,21 @@ func _build_ui() -> void:
 	lbl_title.text = "KHO THẺ CỔ NGỮ"
 	lbl_title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	lbl_title.clip_text = true
-	lbl_title.add_theme_font_size_override("font_size", 21)
+	lbl_title.add_theme_font_size_override("font_size", 25)
 	lbl_title.add_theme_color_override("font_color", Color(0.98, 0.80, 0.24))
 	top_row.add_child(lbl_title)
 
 	lbl_summary = Label.new()
-	lbl_summary.add_theme_font_size_override("font_size", 16)
+	lbl_summary.add_theme_font_size_override("font_size", 19)
 	lbl_summary.add_theme_color_override("font_color", Color(0.52, 0.95, 0.65))
 	top_row.add_child(lbl_summary)
 
 	var btn_guide := Button.new()
-	btn_guide.text = "HƯỚNG DẪN"
+	btn_guide.text = "CẨM NANG"
 	btn_guide.icon = GameState.tex("res://assets/ui_hud/icons/icon_guide_book.png")
 	btn_guide.expand_icon = true
-	btn_guide.custom_minimum_size = Vector2(158, 50)
-	btn_guide.add_theme_font_size_override("font_size", 15)
+	btn_guide.custom_minimum_size = Vector2(180, 58)
+	btn_guide.add_theme_font_size_override("font_size", 18)
 	GameState.apply_gui_button(btn_guide, "purple", false, 12, 8)
 	btn_guide.pressed.connect(func():
 		GameState.emit_signal("guide_requested", 0)
@@ -219,23 +219,25 @@ func _build_ui() -> void:
 	btn_reset_filters.pressed.connect(_reset_all_filters)
 	row3.add_child(btn_reset_filters)
 
-	# 2. Scrollable 4-Column Card Grid
+	# 2. Scrollable 3-Column Large Card Grid (Swipe Up/Down to Scroll)
 	var scroll := ScrollContainer.new()
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	GameState.setup_touch_scroll(scroll)
 	main_vbox.add_child(scroll)
 
 	cards_grid = GridContainer.new()
-	cards_grid.columns = 4
-	cards_grid.add_theme_constant_override("h_separation", 14)
-	cards_grid.add_theme_constant_override("v_separation", 16)
+	cards_grid.columns = 3
+	cards_grid.add_theme_constant_override("h_separation", 18)
+	cards_grid.add_theme_constant_override("v_separation", 20)
+	cards_grid.mouse_filter = Control.MOUSE_FILTER_PASS
 	scroll.add_child(cards_grid)
 
 
 func _make_back_home_button() -> Button:
 	var b := Button.new()
 	b.text = "SẢNH CHÍNH"
-	b.custom_minimum_size = Vector2(190, 56)
-	b.add_theme_font_size_override("font_size", 16)
+	b.custom_minimum_size = Vector2(204, 60)
+	b.add_theme_font_size_override("font_size", 19)
 	b.add_theme_color_override("font_color", Color(1.0, 0.92, 0.65))
 	GameState.apply_gui_button(b, "back_home", false, 44, 8)
 	b.pressed.connect(func(): GameState.emit_signal("screen_requested", "home"))
@@ -248,8 +250,8 @@ func _make_dropdown(items: Array, on_select: Callable) -> OptionButton:
 	ob.clip_text = true
 	ob.expand_icon = true
 	ob.fit_to_longest_item = false
-	ob.custom_minimum_size = Vector2(0, 48)
-	ob.add_theme_font_size_override("font_size", 16)
+	ob.custom_minimum_size = Vector2(0, 56)
+	ob.add_theme_font_size_override("font_size", 18)
 	GameState.apply_gui_button(ob, "slate", false, 14, 8)
 	for i in range(items.size()):
 		if items[i].size() >= 3:
@@ -355,7 +357,7 @@ func rebuild_grid() -> void:
 			cw.visible = true
 		else:
 			cw = CardWidget.new()
-			cw.custom_minimum_size = Vector2(244, 366)
+			cw.custom_minimum_size = Vector2(316, 474)
 			cw.show_lock_if_unowned = true
 			cw.card_clicked.connect(func(c_id: String, el: String):
 				if quick_deck_toggle_mode:

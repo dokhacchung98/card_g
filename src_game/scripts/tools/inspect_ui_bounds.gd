@@ -42,10 +42,10 @@ func _run_audit() -> void:
 	await process_frame
 	await process_frame
 
-	for scr in ["login", "home_starter_modal", "home_normal", "home_lobby_modal", "packs", "collection", "battle"]:
+	for scr in ["login", "home_first_login", "home_normal", "home_matchmaking_modal", "packs", "collection", "battle"]:
 		if scr == "login":
 			main_inst._switch_screen("login")
-		elif scr == "home_starter_modal":
+		elif scr == "home_first_login":
 			gs.grant_first_login_starter_15_cards()
 			gs.just_granted_starter_15 = true
 			bc.current_user["isGoogleLinked"] = true
@@ -55,8 +55,8 @@ func _run_audit() -> void:
 		elif scr == "home_normal":
 			gs.just_granted_starter_15 = false
 			main_inst.current_screen_node.refresh_ui()
-		elif scr == "home_lobby_modal":
-			main_inst.current_screen_node.lobby_overlay.visible = true
+		elif scr == "home_matchmaking_modal":
+			main_inst.current_screen_node.matchmaking_overlay.visible = true
 		else:
 			main_inst._switch_screen(scr)
 

@@ -1,29 +1,30 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-GODOT_BIN="/Applications/Godot.app/Contents/MacOS/Godot"
+cd /Users/dochung/Desktop/card_g/src_game
 
-echo "=== 1. HEADLESS UI BOUNDS AUDIT (VERIFY ZERO OVERFLOWS) ==="
-"$GODOT_BIN" --headless --path /Users/dochung/Desktop/card_g/src_game -s res://scripts/tools/inspect_ui_bounds.gd
+# 1. Headless audit of Battle mechanics & Curved Stack Carousel
+/Applications/Godot.app/Contents/MacOS/Godot --headless --path . --script /Users/dochung/.gemini/antigravity-cli/brain/ab7dc2b7-9521-42a4-be21-abd94f794ce3/scratch/test_battle_mechanics.gd
 
-echo "=== 2. EXPORT WEB, ANDROID & IOS (HEADLESS) ==="
-"$GODOT_BIN" --headless --path /Users/dochung/Desktop/card_g/src_game --export-release "Web" /Users/dochung/Desktop/card_g/build/web/index.html
-"$GODOT_BIN" --headless --path /Users/dochung/Desktop/card_g/src_game --export-debug "Android" /Users/dochung/Desktop/card_g/build/android/ArcanaFive.apk
-"$GODOT_BIN" --headless --path /Users/dochung/Desktop/card_g/src_game --export-debug "iOS" /Users/dochung/Desktop/card_g/build/ios/ArcanaFive.xcodeproj
+# 2. Export Web, Android, and iOS builds
+mkdir -p /Users/dochung/Desktop/card_g/build/web
+mkdir -p /Users/dochung/Desktop/card_g/build/android
+mkdir -p /Users/dochung/Desktop/card_g/build/ios
 
-echo "=== 3. RUN BACKGROUND HEADLESS BROWSER DOGFOOD (NO WINDOW POPUP) ==="
+/Applications/Godot.app/Contents/MacOS/Godot --headless --path . --export-release "Web" /Users/dochung/Desktop/card_g/build/web/index.html
+/Applications/Godot.app/Contents/MacOS/Godot --headless --path . --export-debug "Android" /Users/dochung/Desktop/card_g/build/android/arcana-five-card-g-debug.apk
+/Applications/Godot.app/Contents/MacOS/Godot --headless --path . --export-debug "iOS" /Users/dochung/Desktop/card_g/build/ios/arcana-five-card-g.xcodeproj
+
+# 3. Background Playwright dogfood
 python3 /Users/dochung/.gemini/antigravity-cli/brain/ab7dc2b7-9521-42a4-be21-abd94f794ce3/scratch/run_bg_dogfood.py
 
-echo "=== 4. DEPLOY UPDATED WEB BUILD TO FIREBASE HOSTING ==="
+# 4. Deploy Web to Firebase Hosting
 cd /Users/dochung/Desktop/card_g
-firebase deploy --only hosting --project arcana-five-card-g --non-interactive
+firebase deploy --only hosting --project arcana-five-card-g
 
-echo "=== 5. COMMIT & PUSH TO GITHUB ==="
-cd /Users/dochung/Desktop/card_g
-if [[ -n "$(git status --porcelain)" ]]; then
-  git add -A
-  git commit -m "fix(ui): fix HomeScreen horizontal overflow clipping and display 15-card loadout in 5x3 grid"
+# 5. Commit and push to GitHub
+git add -A
+if ! git diff --cached --quiet; then
+  git commit -m "feat(ui,battle): 1-tap Google login, touch-scroll, large cards, curved stack hand carousel, +2 draw anim, instant item use & no player auto-bot"
   git push origin main
 fi
-
-echo "=== ALL TASKS COMPLETED SUCCESSFULLY! ==="

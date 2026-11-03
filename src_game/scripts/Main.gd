@@ -39,11 +39,13 @@ func _build_root_layout() -> void:
 
 	# Global Card Detail Modal Overlay (1080x1920)
 	detail_modal = CardDetailModalScript.new()
+	detail_modal.z_index = 200
 	add_child(detail_modal)
 	detail_modal.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 
 	# Global Tutorial & Guide Modal Overlay (1080x1920)
 	guide_modal = GuideModalScript.new()
+	guide_modal.z_index = 210
 	add_child(guide_modal)
 	guide_modal.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 

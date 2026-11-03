@@ -83,7 +83,7 @@ func _build_ui() -> void:
 	var right_scroll := ScrollContainer.new()
 	right_scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	right_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	right_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	GameState.setup_touch_scroll(right_scroll)
 	body.add_child(right_scroll)
 
 	var right_col := VBoxContainer.new()
