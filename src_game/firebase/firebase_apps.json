@@ -1,0 +1,35 @@
+{
+  "status": "success",
+  "result": [
+    {
+      "name": "projects/arcana-five-card-g/androidApps/1:673339667273:android:03922dbe27f2e78336a098",
+      "displayName": "Arcana Five Android",
+      "platform": "ANDROID",
+      "appId": "1:673339667273:android:03922dbe27f2e78336a098",
+      "namespace": "com.dochung.arcanafive",
+      "apiKeyId": "d1cff80d-bbfb-426f-babb-a86f43c214da",
+      "state": "ACTIVE",
+      "expireTime": "1970-01-01T00:00:00Z"
+    },
+    {
+      "name": "projects/arcana-five-card-g/iosApps/1:673339667273:ios:8c700ab687abfdc236a098",
+      "displayName": "Arcana Five iOS",
+      "platform": "IOS",
+      "appId": "1:673339667273:ios:8c700ab687abfdc236a098",
+      "namespace": "com.dochung.arcanafive",
+      "apiKeyId": "726b5287-12f8-4afa-99cc-8579ac59a4a6",
+      "state": "ACTIVE",
+      "expireTime": "1970-01-01T00:00:00Z"
+    },
+    {
+      "name": "projects/arcana-five-card-g/webApps/1:673339667273:web:24654b1b2267e9e136a098",
+      "displayName": "Arcana Five Web",
+      "platform": "WEB",
+      "appId": "1:673339667273:web:24654b1b2267e9e136a098",
+      "namespace": "NDRmM2M3MjAtZGMxYS00YzcyLWE1YWItNTg1NjVjMWJjOTFi",
+      "apiKeyId": "f06c146c-ace8-4473-a065-9d4e50079849",
+      "state": "ACTIVE",
+      "expireTime": "1970-01-01T00:00:00Z"
+    }
+  ]
+}

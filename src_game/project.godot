@@ -19,6 +19,7 @@ config/icon="res://assets/ui_hud/branding/app_icon.png"
 [autoload]
 
 GameState="*res://scripts/autoload/GameState.gd"
+BackendClient="*res://scripts/autoload/BackendClient.gd"
 
 [display]
 

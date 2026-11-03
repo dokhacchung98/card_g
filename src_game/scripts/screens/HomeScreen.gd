@@ -8,6 +8,8 @@ var lbl_deck_status: Label
 var lbl_gacha_sub: Label
 var lbl_col_sub: Label
 var lbl_play_sub: Label
+var lbl_sub: Label
+var btn_google_auth: Button
 var btn_p2: Button
 var btn_p3: Button
 var btn_p4: Button
@@ -16,6 +18,12 @@ var deck_strip: HBoxContainer
 var commander_cards: Array[PanelContainer] = []
 var commander_avatars: Array[TextureRect] = []
 var commander_status_lbls: Array[Label] = []
+var lobby_overlay: ColorRect
+var lbl_lobby_title: Label
+var lbl_lobby_timer: Label
+var lbl_lobby_room_code: Label
+var lbl_lobby_seats: Label
+var inp_room_code: LineEdit
 
 
 func _init() -> void:
@@ -26,6 +34,10 @@ func _init() -> void:
 
 func _ready() -> void:
 	GameState.state_changed.connect(refresh_ui)
+	BackendClient.auth_state_changed.connect(func(_u): refresh_ui())
+	BackendClient.matchmaking_updated.connect(_on_matchmaking_updated)
+	BackendClient.matchmaking_started_battle.connect(_on_matchmaking_started_battle)
+	BackendClient.room_error.connect(_on_room_error)
 	refresh_ui()
 
 
@@ -92,9 +104,10 @@ func _build_ui() -> void:
 	lbl_title.add_theme_constant_override("outline_size", 4)
 	title_vbox.add_child(lbl_title)
 
-	var lbl_sub := Label.new()
+	lbl_sub = Label.new()
 	lbl_sub.text = "Huyết Bài Ngũ Hành  ·  Đại Pháp Sư Lam Long (BẠN)"
-	lbl_sub.add_theme_font_size_override("font_size", 16)
+	lbl_sub.clip_text = true
+	lbl_sub.add_theme_font_size_override("font_size", 15)
 	lbl_sub.add_theme_color_override("font_color", Color(0.68, 0.86, 1.0))
 	title_vbox.add_child(lbl_sub)
 
@@ -126,18 +139,36 @@ func _build_ui() -> void:
 	lbl_pack_stat.add_theme_color_override("font_color", Color(0.48, 0.92, 1.0))
 	stat_row.add_child(lbl_pack_stat)
 
+	var right_btn_vbox := VBoxContainer.new()
+	right_btn_vbox.alignment = BoxContainer.ALIGNMENT_CENTER
+	right_btn_vbox.add_theme_constant_override("separation", 6)
+	h_row.add_child(right_btn_vbox)
+
+	btn_google_auth = Button.new()
+	btn_google_auth.text = "LIÊN KẾT GOOGLE"
+	btn_google_auth.icon = GameState.tex("res://assets/ui_hud/icons/icon_star_new.png")
+	btn_google_auth.expand_icon = true
+	btn_google_auth.custom_minimum_size = Vector2(188, 44)
+	btn_google_auth.add_theme_font_size_override("font_size", 14)
+	btn_google_auth.add_theme_color_override("font_color", Color(1.0, 0.96, 0.82))
+	GameState.apply_gui_button(btn_google_auth, "gold", false, 12, 6)
+	btn_google_auth.pressed.connect(func():
+		BackendClient.login_with_google("dokhacchung98@gmail.com", "Đại Pháp Sư Lam Long")
+	)
+	right_btn_vbox.add_child(btn_google_auth)
+
 	var btn_guide := Button.new()
-	btn_guide.text = "HƯỚNG DẪN\nLUẬT & 5 HỆ"
+	btn_guide.text = "HƯỚNG DẪN & 5 HỆ"
 	btn_guide.icon = GameState.tex("res://assets/ui_hud/icons/icon_guide_book.png")
 	btn_guide.expand_icon = true
-	btn_guide.custom_minimum_size = Vector2(184, 88)
-	btn_guide.add_theme_font_size_override("font_size", 16)
+	btn_guide.custom_minimum_size = Vector2(188, 44)
+	btn_guide.add_theme_font_size_override("font_size", 14)
 	btn_guide.add_theme_color_override("font_color", Color(1.0, 0.94, 0.72))
-	GameState.apply_gui_button(btn_guide, "purple", false, 14, 8)
+	GameState.apply_gui_button(btn_guide, "purple", false, 12, 6)
 	btn_guide.pressed.connect(func():
 		GameState.emit_signal("guide_requested", 0)
 	)
-	h_row.add_child(btn_guide)
+	right_btn_vbox.add_child(btn_guide)
 
 	# ==========================================================================
 	# SECTION 2: CENTRAL BATTLE ARENA & 4-COMMANDER MATCHMAKING PANEL
@@ -261,15 +292,15 @@ func _build_ui() -> void:
 	var play_btn_info := _make_ornate_gui_button(
 		"res://assets/ui_hud/gui/btn_play_battle.png",
 		Vector2(880, 174),
-		"VÀO BÀN ĐẤU NGAY (PLAY BATTLE)",
-		"Chế độ 4 Người · Bộ Bài Chung 100 Lá · Hết Tướng Bị Đánh Thẳng Vào Góc!",
+		"GHÉP TRẬN & TẠO PHÒNG (PLAY BATTLE)",
+		"Chế độ 4 Người · Sau 10s Không Đủ Người Tự Động Bù Bot Vào Đấu!",
 		Color(1.0, 0.92, 0.48),
 		27,
 		14,
 		func():
 			if not GameState.is_loadout_valid(GameState.loadout_deck).ok:
 				GameState.auto_build_valid_loadout()
-			GameState.emit_signal("screen_requested", "battle")
+			_open_matchmaking_lobby_modal()
 	)
 	lbl_play_sub = play_btn_info["sub_label"]
 	play_holder.add_child(play_btn_info["button"])
@@ -370,6 +401,184 @@ func _build_ui() -> void:
 	deck_strip.add_theme_constant_override("separation", 14)
 	scroll.add_child(deck_strip)
 
+	_build_lobby_overlay()
+
+
+func _build_lobby_overlay() -> void:
+	lobby_overlay = ColorRect.new()
+	lobby_overlay.color = Color(0.01, 0.02, 0.04, 0.88)
+	lobby_overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	lobby_overlay.visible = false
+	lobby_overlay.z_index = 90
+	add_child(lobby_overlay)
+
+	var center_box := CenterContainer.new()
+	center_box.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	lobby_overlay.add_child(center_box)
+
+	var modal := PanelContainer.new()
+	modal.custom_minimum_size = Vector2(960, 720)
+	modal.add_theme_stylebox_override("panel", GameState.make_gui_panel_style("dialog", 26))
+	center_box.add_child(modal)
+
+	var v := VBoxContainer.new()
+	v.add_theme_constant_override("separation", 16)
+	modal.add_child(v)
+
+	lbl_lobby_title = Label.new()
+	lbl_lobby_title.text = "ĐÀI GHÉP TRẬN & PHÒNG ĐẤU NGŨ HÀNH"
+	lbl_lobby_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	lbl_lobby_title.add_theme_font_size_override("font_size", 26)
+	lbl_lobby_title.add_theme_color_override("font_color", Color(1.0, 0.86, 0.34))
+	lbl_lobby_title.add_theme_color_override("font_outline_color", Color(0.02, 0.02, 0.04, 0.98))
+	lbl_lobby_title.add_theme_constant_override("outline_size", 5)
+	v.add_child(lbl_lobby_title)
+
+	lbl_lobby_room_code = Label.new()
+	lbl_lobby_room_code.text = "Chế độ: Ghép Trận Tự Động (Online / Offline Bot)"
+	lbl_lobby_room_code.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	lbl_lobby_room_code.add_theme_font_size_override("font_size", 20)
+	lbl_lobby_room_code.add_theme_color_override("font_color", Color(0.55, 0.92, 1.0))
+	v.add_child(lbl_lobby_room_code)
+
+	var timer_pnl := _make_panel("slot_active", 16)
+	v.add_child(timer_pnl)
+
+	lbl_lobby_timer = Label.new()
+	lbl_lobby_timer.text = "Đang tìm người chơi khác... Tự động ghép Bot sau 10.0s"
+	lbl_lobby_timer.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	lbl_lobby_timer.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	lbl_lobby_timer.add_theme_font_size_override("font_size", 22)
+	lbl_lobby_timer.add_theme_color_override("font_color", Color(0.45, 0.98, 0.62))
+	timer_pnl.add_child(lbl_lobby_timer)
+
+	var seats_pnl := _make_panel("section", 16)
+	seats_pnl.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	v.add_child(seats_pnl)
+
+	lbl_lobby_seats = Label.new()
+	lbl_lobby_seats.text = ""
+	lbl_lobby_seats.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	lbl_lobby_seats.add_theme_font_size_override("font_size", 18)
+	lbl_lobby_seats.add_theme_color_override("font_color", Color(0.92, 0.95, 1.0))
+	seats_pnl.add_child(lbl_lobby_seats)
+
+	# Room Actions Row: Create Room & Join Room by Code
+	var room_row := HBoxContainer.new()
+	room_row.add_theme_constant_override("separation", 12)
+	v.add_child(room_row)
+
+	var btn_create_room := Button.new()
+	btn_create_room.text = "TẠO PHÒNG MỚI\n(Bot Bù Nếu Thiếu)"
+	btn_create_room.icon = GameState.tex("res://assets/ui_hud/icons/icon_star_new.png")
+	btn_create_room.expand_icon = true
+	btn_create_room.custom_minimum_size = Vector2(260, 62)
+	btn_create_room.add_theme_font_size_override("font_size", 16)
+	GameState.apply_gui_button(btn_create_room, "purple", false, 14, 8)
+	btn_create_room.pressed.connect(func():
+		BackendClient.create_custom_room(GameState.selected_player_count)
+	)
+	room_row.add_child(btn_create_room)
+
+	inp_room_code = LineEdit.new()
+	inp_room_code.placeholder_text = "Nhập Mã Phòng (VD: ARC589)..."
+	inp_room_code.max_length = 12
+	inp_room_code.alignment = HORIZONTAL_ALIGNMENT_CENTER
+	inp_room_code.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	inp_room_code.custom_minimum_size = Vector2(240, 62)
+	inp_room_code.add_theme_font_size_override("font_size", 20)
+	room_row.add_child(inp_room_code)
+
+	var btn_join_room := Button.new()
+	btn_join_room.text = "VÀO PHÒNG"
+	btn_join_room.icon = GameState.tex("res://assets/ui_hud/icons/icon_cards_hand.png")
+	btn_join_room.expand_icon = true
+	btn_join_room.custom_minimum_size = Vector2(210, 62)
+	btn_join_room.add_theme_font_size_override("font_size", 17)
+	GameState.apply_gui_button(btn_join_room, "green", false, 14, 8)
+	btn_join_room.pressed.connect(func():
+		BackendClient.join_custom_room(inp_room_code.text)
+	)
+	room_row.add_child(btn_join_room)
+
+	# Bottom Row: Start Immediately with Bots OR Cancel
+	var bot_row := HBoxContainer.new()
+	bot_row.add_theme_constant_override("separation", 16)
+	v.add_child(bot_row)
+
+	var btn_start_bot_now := Button.new()
+	btn_start_bot_now.text = "VÀO ĐẤU NGAY VỚI BOT (BỎ QUA ĐẾM NGƯỢC 10S)"
+	btn_start_bot_now.icon = GameState.tex("res://assets/ui_hud/icons/icon_bot_ai.png")
+	btn_start_bot_now.expand_icon = true
+	btn_start_bot_now.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	btn_start_bot_now.custom_minimum_size = Vector2(0, 68)
+	btn_start_bot_now.add_theme_font_size_override("font_size", 19)
+	btn_start_bot_now.add_theme_color_override("font_color", Color(1.0, 0.96, 0.80))
+	GameState.apply_gui_button(btn_start_bot_now, "gold", false, 16, 10)
+	btn_start_bot_now.pressed.connect(func():
+		BackendClient.start_active_room_immediately()
+	)
+	bot_row.add_child(btn_start_bot_now)
+
+	var btn_cancel := Button.new()
+	btn_cancel.text = "HỦY GHÉP"
+	btn_cancel.custom_minimum_size = Vector2(200, 68)
+	btn_cancel.add_theme_font_size_override("font_size", 18)
+	GameState.apply_gui_button(btn_cancel, "wood", false, 14, 10)
+	btn_cancel.pressed.connect(func():
+		BackendClient.cancel_matchmaking()
+		lobby_overlay.visible = false
+	)
+	bot_row.add_child(btn_cancel)
+
+
+func _open_matchmaking_lobby_modal() -> void:
+	lobby_overlay.visible = true
+	BackendClient.start_quick_matchmaking(GameState.selected_player_count)
+
+
+func _on_matchmaking_updated(room_data: Dictionary) -> void:
+	if not lobby_overlay or not lobby_overlay.visible:
+		return
+	if room_data.is_empty():
+		return
+
+	var r_type := str(room_data.get("type", "matchmaking"))
+	var r_code := str(room_data.get("roomCode", "------"))
+	var max_p := int(room_data.get("maxPlayers", GameState.selected_player_count))
+	var rem_s := float(room_data.get("remainingWaitSec", 10.0))
+	var net_lbl := "ONLINE SERVER" if BackendClient.is_online else "CHẾ ĐỘ OFFLINE"
+
+	if r_type == "custom_room":
+		lbl_lobby_room_code.text = "PHÒNG ĐẤU TÙY CHỈNH  ·  MÃ PHÒNG: %s  ·  [%s]" % [r_code, net_lbl]
+		lbl_lobby_timer.text = "Đang chờ người chơi khác vào phòng (%ds)... Nếu thiếu người sẽ tự động bù Bot!" % ceili(rem_s)
+	else:
+		lbl_lobby_room_code.text = "GHÉP TRẬN %d NGƯỜI  ·  MÃ TRẬN: %s  ·  [%s]" % [max_p, r_code, net_lbl]
+		lbl_lobby_timer.text = "Đang tìm đối thủ sẵn sàng... Sau %.1fs không có người sẽ tự động đấu với Bot!" % rem_s
+
+	var players: Array = room_data.get("players", [])
+	var lines: Array[String] = []
+	for i in range(max_p):
+		if i < players.size():
+			var p: Dictionary = players[i]
+			var tag := "[BOT AI]" if bool(p.get("isBot", false)) else "[NGƯỜI CHƠI]"
+			lines.append("• Góc P%d: %s  %s  —  SẴN SÀNG" % [i + 1, str(p.get("displayName", "Pháp Sư")), tag])
+		else:
+			lines.append("• Góc P%d: Đang chờ người chơi join... (Tự động điền Bot sau %.1fs)" % [i + 1, rem_s])
+	lbl_lobby_seats.text = "\n".join(lines)
+
+
+func _on_matchmaking_started_battle(_room_data: Dictionary) -> void:
+	if lobby_overlay:
+		lobby_overlay.visible = false
+	GameState.emit_signal("screen_requested", "battle")
+
+
+func _on_room_error(err_msg: String) -> void:
+	if lbl_lobby_timer:
+		lbl_lobby_timer.text = err_msg
+		lbl_lobby_timer.add_theme_color_override("font_color", Color(1.0, 0.52, 0.45))
+
 
 func _make_ornate_gui_button(
 	tex_path: String,
@@ -467,6 +676,17 @@ func refresh_ui() -> void:
 		return
 	var owned_u := GameState.get_owned_unique_count()
 	var total_c := GameState.get_total_owned_copies()
+
+	var u_info := BackendClient.current_user
+	var net_mode := "Online" if BackendClient.is_online else "Offline"
+	if bool(u_info.get("isGoogleLinked", false)):
+		lbl_sub.text = "Google: %s (%s)  ·  Hạng: Huyền Thoại" % [str(u_info.get("email", "")), net_mode]
+		btn_google_auth.text = "ĐÃ LIÊN KẾT GOOGLE"
+		GameState.apply_gui_button(btn_google_auth, "green", false, 12, 6)
+	else:
+		lbl_sub.text = "%s (%s)  ·  Chơi Online & Offline" % [str(u_info.get("displayName", "Đại Pháp Sư Lam Long")), net_mode]
+		btn_google_auth.text = "LIÊN KẾT GOOGLE"
+		GameState.apply_gui_button(btn_google_auth, "gold", false, 12, 6)
 
 	lbl_owned_stat.text = "Coin: %d   ·   Sở hữu: %d/500 Thẻ (%d Bản)" % [GameState.gold, owned_u, total_c]
 	lbl_pack_stat.text = "Kim Cương: %d   ·   Rương: %d Pack" % [

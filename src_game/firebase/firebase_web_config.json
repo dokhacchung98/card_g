@@ -1,0 +1,17 @@
+{
+  "status": "success",
+  "result": {
+    "fileName": "firebase-js-config.json",
+    "fileContents": "{\n  \"projectId\": \"arcana-five-card-g\",\n  \"appId\": \"1:673339667273:web:24654b1b2267e9e136a098\",\n  \"storageBucket\": \"arcana-five-card-g.firebasestorage.app\",\n  \"apiKey\": \"AIzaSyBf-cdTWa5rXQPFIcUXa1BI8b65Fp5u9M4\",\n  \"authDomain\": \"arcana-five-card-g.firebaseapp.com\",\n  \"messagingSenderId\": \"673339667273\",\n  \"projectNumber\": \"673339667273\",\n  \"version\": \"2\"\n}",
+    "sdkConfig": {
+      "projectId": "arcana-five-card-g",
+      "appId": "1:673339667273:web:24654b1b2267e9e136a098",
+      "storageBucket": "arcana-five-card-g.firebasestorage.app",
+      "apiKey": "AIzaSyBf-cdTWa5rXQPFIcUXa1BI8b65Fp5u9M4",
+      "authDomain": "arcana-five-card-g.firebaseapp.com",
+      "messagingSenderId": "673339667273",
+      "projectNumber": "673339667273",
+      "version": "2"
+    }
+  }
+}
