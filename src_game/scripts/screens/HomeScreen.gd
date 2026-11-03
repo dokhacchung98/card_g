@@ -66,10 +66,17 @@ func _build_ui() -> void:
 
 	var cmd_avatar := TextureRect.new()
 	cmd_avatar.texture = GameState.tex("res://assets/ui_hud/avatars/commander_p1_blue.png")
-	cmd_avatar.custom_minimum_size = Vector2(108, 108)
+	cmd_avatar.custom_minimum_size = Vector2(104, 104)
 	cmd_avatar.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	cmd_avatar.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	h_row.add_child(cmd_avatar)
+
+	var logo_rect := TextureRect.new()
+	logo_rect.texture = GameState.tex("res://assets/ui_hud/branding/game_logo.png")
+	logo_rect.custom_minimum_size = Vector2(138, 104)
+	logo_rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	logo_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	h_row.add_child(logo_rect)
 
 	var title_vbox := VBoxContainer.new()
 	title_vbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -78,16 +85,16 @@ func _build_ui() -> void:
 	h_row.add_child(title_vbox)
 
 	var lbl_title := Label.new()
-	lbl_title.text = "ARCANA FIVE: HUYẾT BÀI NGŨ HÀNH"
-	lbl_title.add_theme_font_size_override("font_size", 29)
+	lbl_title.text = "ARCANA FIVE: WUXING BLOOD CARDS"
+	lbl_title.add_theme_font_size_override("font_size", 24)
 	lbl_title.add_theme_color_override("font_color", Color(1.0, 0.84, 0.28))
 	lbl_title.add_theme_color_override("font_outline_color", Color(0.02, 0.02, 0.04, 0.98))
 	lbl_title.add_theme_constant_override("outline_size", 4)
 	title_vbox.add_child(lbl_title)
 
 	var lbl_sub := Label.new()
-	lbl_sub.text = "Đại Pháp Sư Lam Long (BẠN)  ·  Hạng: Huyền Thoại Ngũ Hành"
-	lbl_sub.add_theme_font_size_override("font_size", 17)
+	lbl_sub.text = "Huyết Bài Ngũ Hành  ·  Đại Pháp Sư Lam Long (BẠN)"
+	lbl_sub.add_theme_font_size_override("font_size", 16)
 	lbl_sub.add_theme_color_override("font_color", Color(0.68, 0.86, 1.0))
 	title_vbox.add_child(lbl_sub)
 

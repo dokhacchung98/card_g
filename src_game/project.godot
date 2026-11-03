@@ -10,11 +10,11 @@ config_version=5
 
 [application]
 
-config/name="Arcana Five: Huyết Bài Ngũ Hành"
+config/name="Arcana Five: Wuxing Blood Cards"
 config/description="2D Dark-Fantasy Tactical Card Auto-Battler + 4-Player Poker Bluffing (Mobile Portrait)"
 run/main_scene="res://scenes/Main.tscn"
 config/features=PackedStringArray("4.3", "Mobile")
-config/icon="res://assets/ui_hud/gacha_pack/pack_0_sealed.png"
+config/icon="res://assets/ui_hud/branding/app_icon.png"
 
 [autoload]
 
