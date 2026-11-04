@@ -10,6 +10,6 @@ echo "=== 2. Committing and Pushing Changes to GitHub ==="
 git add -A
 git status -s
 if ! git diff --cached --quiet; then
-  git commit -m "feat(ui,battle): enlarge fonts, declutter UI/cards, fix hand tap pull-up animation, remove skip/speed header buttons"
+  git commit -m "fix(battle): raise hand carousel arc higher inside bottom panel and verify via headless dogfood"
   git push origin main
 fi

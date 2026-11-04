@@ -2072,7 +2072,7 @@ func _rebuild_hand_ui() -> void:
 		var cw: Control = CardWidget.new()
 		cw.custom_minimum_size = Vector2(340, 510)
 		cw.size = Vector2(340, 510)
-		cw.pivot_offset = Vector2(170, 460)
+		cw.pivot_offset = Vector2(170, 255)
 		cw.use_hd_frame = true
 		cw.show_lock_if_unowned = false
 		cw.is_selected_highlight = (h_i == selected_hand_idx)
@@ -2134,15 +2134,15 @@ func _update_hand_carousel_layout(delta: float) -> void:
 
 		# Curved fan & overlapping stack ("dạng stack và carousel, danh sách thẻ sẽ dạng cong cong")
 		var spread_x: float = rel * 144.0 - signf(rel) * pow(abs_rel, 1.28) * 14.0 + neighbor_push
-		var base_arc_y: float = 96.0 + minf((rel * rel) * 19.0 + abs_rel * 11.0, 148.0)
-		var pulled_y: float = 2.0
+		var base_arc_y: float = 4.0 + minf((rel * rel) * 6.5 + abs_rel * 4.0, 36.0)
+		var pulled_y: float = -18.0
 		var final_y: float = lerpf(base_arc_y, pulled_y, pull_ease) - pull_hop + entry_y
 
-		var base_rot: float = clampf(rel * 7.8, -24.0, 24.0)
+		var base_rot: float = clampf(rel * 6.2, -18.0, 18.0)
 		var rot_deg: float = lerpf(base_rot, 0.0, pull_ease)
 
-		var base_sc: float = clampf(0.95 - abs_rel * 0.05, 0.78, 0.95)
-		var sc: float = lerpf(base_sc, 1.10, pull_ease)
+		var base_sc: float = clampf(0.95 - abs_rel * 0.04, 0.82, 0.95)
+		var sc: float = lerpf(base_sc, 1.04, pull_ease)
 
 		cw.position = Vector2(center_x + spread_x - card_w * 0.5, final_y)
 		cw.rotation_degrees = rot_deg
