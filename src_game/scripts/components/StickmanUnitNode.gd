@@ -26,6 +26,8 @@ var show_offhand: bool = false
 var is_s_or_ssr: bool = false
 var vfx_flash_timer: float = 0.0
 var active_vfx_key: String = ""
+var action_anim_timer: float = 0.0
+var action_anim_duration: float = 0.44
 
 const STICKER_PART_LIST := [
 	"hip_kilt", "chest", "neck", "head",
@@ -91,6 +93,8 @@ func setup_unit(u: Dictionary) -> void:
 func trigger_combat_vfx(vfx_name: String, duration: float = 0.28) -> void:
 	active_vfx_key = vfx_name
 	vfx_flash_timer = duration
+	action_anim_duration = 0.56 if anim_state == "cast" else 0.44
+	action_anim_timer = action_anim_duration
 	queue_redraw()
 
 
@@ -98,6 +102,10 @@ func update_visual(dt: float) -> void:
 	anim_time += dt
 	if vfx_flash_timer > 0.0:
 		vfx_flash_timer = maxf(0.0, vfx_flash_timer - dt)
+	if action_anim_timer > 0.0:
+		action_anim_timer = maxf(0.0, action_anim_timer - dt)
+		if action_anim_timer <= 0.0 and (anim_state == "attack" or anim_state == "cast"):
+			anim_state = "idle"
 	queue_redraw()
 
 
@@ -119,24 +127,26 @@ func _draw() -> void:
 	if has_synergy:
 		var aura_tex := GameState.tex("%s/synergy_aura.png" % str(elem_meta.get("vfx_dir", "res://assets/vfx_elements/kim_metal")))
 		if aura_tex:
-			draw_set_transform(Vector2(0, 15.0), anim_time * 1.4, Vector2(0.21, 0.11))
+			draw_set_transform(Vector2(0, 15.0), anim_time * 0.9, Vector2(0.21, 0.11))
 			draw_texture(aura_tex, -aura_tex.get_size() * 0.5, Color(1, 1, 1, 0.85))
 			draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 
 	# 2. Compact Body Rendering (Summon vs 17-Bone2D Stickman Hero)
-	var bob := sin(anim_time * 6.0) * 1.2
-	var walk_swing := sin(anim_time * 11.0) * 0.45 if anim_state == "walk" else sin(anim_time * 3.5) * 0.08
+	var bob := sin(anim_time * 3.6) * 1.0
+	var walk_swing := sin(anim_time * 5.2) * 0.36 if anim_state == "walk" else sin(anim_time * 2.4) * 0.06
 	var atk_swing := 0.0
-	if anim_state == "attack":
-		atk_swing = sin(minf(1.0, fmod(anim_time * 4.5, 1.0)) * PI) * 1.25
-	elif anim_state == "cast":
-		atk_swing = -0.85 + sin(anim_time * 12.0) * 0.35
+	if anim_state == "attack" and action_anim_timer > 0.0:
+		var prog := 1.0 - (action_anim_timer / maxf(0.01, action_anim_duration))
+		atk_swing = sin(prog * PI) * 1.18
+	elif anim_state == "cast" and action_anim_timer > 0.0:
+		var prog_c := 1.0 - (action_anim_timer / maxf(0.01, action_anim_duration))
+		atk_swing = -0.75 * sin(prog_c * PI) + sin(prog_c * PI * 3.0) * 0.22
 
 	var unit_scale := 0.28 * HERO_BODY_SCALE
 	var flip_x := -1.0 if facing_dir < 0.0 else 1.0
 
 	if is_summon and not summon_frames.is_empty():
-		var f_idx := int(anim_time * 6.0) % summon_frames.size()
+		var f_idx := int(anim_time * 4.2) % summon_frames.size()
 		var stex: Texture2D = summon_frames[f_idx]
 		draw_set_transform(Vector2(0, -6.0 + bob), 0.0, Vector2(0.22 * flip_x, 0.22))
 		draw_texture(stex, -stex.get_size() * 0.5)

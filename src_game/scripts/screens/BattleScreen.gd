@@ -616,23 +616,38 @@ func recall_card_from_slot(p_idx: int, slot_idx: int) -> bool:
 # ==============================================================================
 # HERO SPAWNING, WUXING SYNERGY & ITEM ACTIVATION
 # ==============================================================================
+const COMBAT_MSPD_SCALE := 0.44
+const COMBAT_ASPD_SCALE := 0.48
+const MAX_SUMMONS_PER_PLAYER := 2
+const SUMMONER_HERO_NUMS := [19, 24, 30, 34, 35, 36, 79]
+const SUMMONER_SKILL_CD := 14.0
+const DEFAULT_SKILL_CD := 5.0
 var _next_unit_uid: int = 1
 
-func _spawn_hero_unit(p_idx: int, slot_idx: int, card_id: String, elem: String, is_summon: bool, summon_id: String) -> int:
+func _spawn_hero_unit(p_idx: int, slot_idx: int, card_id: String, elem: String, is_summon: bool, summon_id: String, summoner_uid: int = -1, custom_spawn_pos: Vector2 = Vector2(-1, -1)) -> int:
 	var c := GameState.get_card(card_id)
 	var uid := _next_unit_uid
 	_next_unit_uid += 1
 
 	var spawn_pos := _get_slot_arena_spawn_pos(p_idx, slot_idx)
-	var hp_val := float(c.get("hp", 250)) * (0.52 if is_summon else 1.0)
-	var mana_max := float(c.get("mana", 60))
-	var sh_val := float(c.get("shield", 0))
-	var dame_val := float(c.get("dame", 30)) * (0.55 if is_summon else 1.0)
-	var aspd_val := float(c.get("aspd", 1.1))
+	if custom_spawn_pos.x >= 0.0 and custom_spawn_pos.y >= 0.0:
+		spawn_pos = custom_spawn_pos
+	elif is_summon:
+		spawn_pos += Vector2(randf_range(-26.0, 26.0), randf_range(-22.0, 22.0))
+	spawn_pos.x = clampf(spawn_pos.x, 196.0, 828.0)
+	spawn_pos.y = clampf(spawn_pos.y, 196.0, 828.0)
+
+	var raw_num: int = 0 if is_summon else int(c.get("num", 1))
+	var is_summoner_hero: bool = (not is_summon) and (raw_num in SUMMONER_HERO_NUMS)
+	var hp_val := float(c.get("hp", 250)) * (0.42 if is_summon else 1.0)
+	var mana_max := 0.0 if is_summon else (maxf(150.0, float(c.get("mana", 160))) if is_summoner_hero else maxf(55.0, float(c.get("mana", 65))))
+	var sh_val := 0.0 if is_summon else float(c.get("shield", 0))
+	var dame_val := float(c.get("dame", 30)) * (0.42 if is_summon else 1.0)
+	var aspd_val := float(c.get("aspd", 1.1)) * COMBAT_ASPD_SCALE * (0.85 if is_summon else 1.0)
 	var rng_val := (1.2 if is_summon and summon_id != "s02_phao_co_ngu" else float(c.get("range", 1.2)))
 	var pdef_val := float(c.get("def", 20))
 	var mdef_val := float(c.get("mdef", 20))
-	var mspd_val := (0.0 if summon_id == "s02_phao_co_ngu" else float(c.get("mspd", 120)))
+	var mspd_val := (0.0 if summon_id == "s02_phao_co_ngu" else float(c.get("mspd", 120)) * COMBAT_MSPD_SCALE)
 
 	# Apply Elemental Passive Modifier per GDD Section 3.0
 	if elem == "hoa":
@@ -647,10 +662,11 @@ func _spawn_hero_unit(p_idx: int, slot_idx: int, card_id: String, elem: String, 
 		"owner_idx": p_idx,
 		"slot_idx": slot_idx,
 		"card_id": card_id,
-		"num": int(c.get("num", 1)),
-		"name": str(c.get("name", card_id)),
-		"rarity": str(c.get("rarity", "N")),
-		"role_group": str(c.get("role_group", "atk_phys")),
+		"num": raw_num,
+		"is_summoner_hero": is_summoner_hero,
+		"name": ("Linh Thú" if is_summon else str(c.get("name", card_id))),
+		"rarity": ("N" if is_summon else str(c.get("rarity", "N"))),
+		"role_group": ("atk_phys" if is_summon else str(c.get("role_group", "atk_phys"))),
 		"element": elem,
 		"team_color": TEAM_COLORS[p_idx],
 		"pos": spawn_pos,
@@ -666,7 +682,10 @@ func _spawn_hero_unit(p_idx: int, slot_idx: int, card_id: String, elem: String, 
 		"def": pdef_val,
 		"mdef": mdef_val,
 		"mspd": mspd_val,
-		"atk_cd": randf_range(0.1, 0.4),
+		"atk_cd": randf_range(0.45, 0.95),
+		"skill_cd": (6.5 if is_summoner_hero else 2.2),
+		"summon_ttl": (10.0 if is_summon else 0.0),
+		"summoner_uid": summoner_uid,
 		"stun_timer": 0.0,
 		"silence_timer": 0.0,
 		"taunt_target_uid": -1,
@@ -751,7 +770,7 @@ func _activate_item_card(p_idx: int, slot_idx: int, card_id: String, elem: Strin
 	var allies: Array = []
 	var enemies: Array = []
 	for u in units:
-		if float(u["hp"]) <= 0.0:
+		if float(u["hp"]) <= 0.0 or bool(u.get("is_summon", false)):
 			continue
 		if int(u["owner_idx"]) == p_idx:
 			allies.append(u)
@@ -950,17 +969,27 @@ func _process_bots_in_prep_phase(dt: float) -> void:
 
 
 func _process_combat_simulation(dt: float) -> void:
-	# 1. Update Units AI, Movement, Attack & Full-Mana Skill Execution
-	for u in units:
+	# 1. Update Units AI, Movement, Attack & Full-Mana Skill Execution (iterate over snapshot so spawning never mutates active loop)
+	var active_units := units.duplicate()
+	for u in active_units:
 		if float(u["hp"]) <= 0.0:
 			continue
 		var u_node: Node2D = u.get("node", null)
 		if is_instance_valid(u_node):
 			u_node.update_visual(dt)
 
+		# Expire summoned units after their duration so summons never accumulate infinitely
+		if bool(u.get("is_summon", false)):
+			u["summon_ttl"] = float(u.get("summon_ttl", 14.0)) - dt
+			if float(u["summon_ttl"]) <= 0.0:
+				_on_unit_killed(u)
+				continue
+
 		# Timers & Synergy Regen (+2% Max HP/s when Wuxing generated)
 		if bool(u.get("has_wuxing_synergy", false)):
 			u["hp"] = minf(float(u["max_hp"]), float(u["hp"]) + float(u["max_hp"]) * 0.02 * dt)
+		if float(u.get("skill_cd", 0.0)) > 0.0:
+			u["skill_cd"] = maxf(0.0, float(u["skill_cd"]) - dt)
 		if float(u["stun_timer"]) > 0.0:
 			u["stun_timer"] = maxf(0.0, float(u["stun_timer"]) - dt)
 			continue
@@ -1006,12 +1035,21 @@ func _process_combat_simulation(dt: float) -> void:
 					u_node.position = u["pos"]
 					u_node.anim_state = "walk"
 			else:
-				# In attack range -> Attack or Cast Skill if Full Mana!
+				# In attack range -> Attack or Cast Skill if Full Mana (only real heroes can cast skills!)
 				u["atk_cd"] = float(u["atk_cd"]) - dt
-				if float(u["mana"]) >= float(u["max_mana"]) and float(u["silence_timer"]) <= 0.0:
+				var can_cast := (
+					not bool(u.get("is_summon", false))
+					and float(u["max_mana"]) > 0.0
+					and float(u["mana"]) >= float(u["max_mana"])
+					and float(u["silence_timer"]) <= 0.0
+					and float(u.get("skill_cd", 0.0)) <= 0.0
+				)
+				if can_cast:
+					u["atk_cd"] = 1.0 / maxf(0.22, float(u["aspd"]))
+					u["skill_cd"] = SUMMONER_SKILL_CD if bool(u.get("is_summoner_hero", false)) else DEFAULT_SKILL_CD
 					_execute_unit_unique_skill(u, target_u)
 				elif float(u["atk_cd"]) <= 0.0:
-					u["atk_cd"] = 1.0 / maxf(0.35, float(u["aspd"]))
+					u["atk_cd"] = 1.0 / maxf(0.22, float(u["aspd"]))
 					_perform_basic_attack(u, target_u)
 		else:
 			# Enemy player has 0 heroes on the board -> March to that player's Corner Info/HP Socket and attack it!
@@ -1034,8 +1072,13 @@ func _process_combat_simulation(dt: float) -> void:
 				else:
 					u["atk_cd"] = float(u["atk_cd"]) - dt
 					if float(u["atk_cd"]) <= 0.0:
-						u["atk_cd"] = 1.0 / maxf(0.4, float(u["aspd"]))
+						u["atk_cd"] = 1.0 / maxf(0.22, float(u["aspd"]))
 						_attack_player_directly(u, target_p_idx)
+
+	# Prune dead units so the array never grows unbounded
+	for i in range(units.size() - 1, -1, -1):
+		if float(units[i]["hp"]) <= 0.0:
+			units.remove_at(i)
 
 	# 2. Update Flying Projectiles
 	for i in range(projectiles.size() - 1, -1, -1):
@@ -1097,10 +1140,12 @@ func _perform_basic_attack(attacker: Dictionary, target: Dictionary) -> void:
 	var is_magic := (rg == "atk_mag" or rg == "support")
 	var raw_dmg := float(attacker["dame"]) * float(attacker.get("synergy_atk_mult", 1.0))
 
-	# Gain Mana on basic attack (+14 Mana; +15% bonus if Water element)
-	if float(attacker["silence_timer"]) <= 0.0:
-		var mana_gain := 14.0 * (1.15 if elem == "thuy" else 1.0)
-		attacker["mana"] = minf(float(attacker["max_mana"]), float(attacker["mana"]) + mana_gain)
+	# Gain Mana on basic attack (summons never gain mana; summoner heroes gain no mana while on skill_cd and gain slower mana)
+	if not bool(attacker.get("is_summon", false)) and float(attacker["max_mana"]) > 0.0 and float(attacker["silence_timer"]) <= 0.0:
+		var is_sum_hero := bool(attacker.get("is_summoner_hero", false))
+		if not (is_sum_hero and float(attacker.get("skill_cd", 0.0)) > 0.0):
+			var mana_gain := (6.5 if is_sum_hero else 10.0) * (1.15 if elem == "thuy" else 1.0)
+			attacker["mana"] = minf(float(attacker["max_mana"]), float(attacker["mana"]) + mana_gain)
 
 	if is_instance_valid(u_node):
 		u_node.anim_state = "attack"
@@ -1131,7 +1176,7 @@ func _perform_basic_attack(attacker: Dictionary, target: Dictionary) -> void:
 			"element": elem,
 			"frames": proj_frames,
 			"anim_t": 0.0,
-			"speed": 420.0,
+			"speed": 250.0,
 			"rot": (target["pos"] - attacker["pos"]).angle(),
 		})
 	else:
@@ -1139,6 +1184,9 @@ func _perform_basic_attack(attacker: Dictionary, target: Dictionary) -> void:
 
 
 func _execute_unit_unique_skill(caster: Dictionary, target: Dictionary) -> void:
+	if bool(caster.get("is_summon", false)):
+		caster["mana"] = 0.0
+		return
 	caster["mana"] = 0.0
 	var u_node: Node2D = caster.get("node", null)
 	if is_instance_valid(u_node):
@@ -1154,14 +1202,37 @@ func _execute_unit_unique_skill(caster: Dictionary, target: Dictionary) -> void:
 
 	_add_floating_text(caster["pos"] + Vector2(0, -45), skill_name + "!", GameState.ELEMENT_META[elem]["color"])
 
-	# Summoner Heroes (C024 Hound, C030 Turret, C034/C036 Skeleton)
-	if c_num in [24, 30, 34, 36]:
+	# Summoner Heroes (C019 Clone, C024 Hound, C030 Turret, C034/C035/C036 Wraith/Skeleton) — high mana, long cooldown, max 1 summon per caster
+	if c_num in [19, 24, 30, 34, 35, 36]:
+		caster["skill_cd"] = SUMMONER_SKILL_CD
 		var sum_id := "s01_linh_cau"
 		if c_num == 30:
 			sum_id = "s02_phao_co_ngu"
-		elif c_num in [34, 36]:
+		elif c_num in [19, 34, 35, 36]:
 			sum_id = "s03_chien_binh_xuong"
-		_spawn_hero_unit(int(caster["owner_idx"]), int(caster["slot_idx"]), str(caster["card_id"]), elem, true, sum_id)
+
+		var caster_uid: int = int(caster["uid"])
+		var owner_i: int = int(caster["owner_idx"])
+		var max_for_caster: int = 1
+		var caster_summons: Array = []
+		var team_summon_cnt: int = 0
+		for su in units:
+			if float(su["hp"]) > 0.0 and bool(su.get("is_summon", false)) and int(su["owner_idx"]) == owner_i:
+				team_summon_cnt += 1
+				if int(su.get("summoner_uid", -1)) == caster_uid:
+					caster_summons.append(su)
+
+		if caster_summons.size() < max_for_caster and team_summon_cnt < MAX_SUMMONS_PER_PLAYER:
+			var sum_pos: Vector2 = caster["pos"] + Vector2(randf_range(-28.0, 28.0), randf_range(-24.0, 24.0))
+			_spawn_hero_unit(owner_i, int(caster["slot_idx"]), str(caster["card_id"]), elem, true, sum_id, caster_uid, sum_pos)
+		elif not caster_summons.is_empty():
+			# Heal existing summon modestly instead of spawning duplicates
+			var ex_s: Dictionary = caster_summons[0]
+			ex_s["summon_ttl"] = 10.0
+			_heal_unit(ex_s, float(ex_s["max_hp"]) * 0.35)
+		_apply_damage(target, base_dame * 0.65, (rg == "atk_mag"), elem, caster)
+		_spawn_element_impact_vfx(target["pos"], elem)
+		return
 
 	if rg == "tanker":
 		# Tanker Skill: Self/Team Shield + Area Taunt + Counter
@@ -1194,7 +1265,8 @@ func _execute_unit_unique_skill(caster: Dictionary, target: Dictionary) -> void:
 					al["shield"] = float(al["shield"]) + 135.0 * boost
 			else:
 				_heal_unit(low_ally, 155.0 * boost)
-				low_ally["mana"] = minf(low_ally["max_mana"], float(low_ally["mana"]) + 25.0)
+				if not bool(low_ally.get("is_summon", false)) and float(low_ally["max_mana"]) > 0.0:
+					low_ally["mana"] = minf(low_ally["max_mana"], float(low_ally["mana"]) + 20.0)
 	else:
 		# Physical or Magic Offense Skill
 		var is_mag := (rg == "atk_mag")
@@ -1265,9 +1337,11 @@ func _apply_damage(target: Dictionary, raw_dmg: float, is_magic: bool, atk_elem:
 		target["hp"] = float(target["hp"]) - final_dmg
 		if float(target.get("undying_timer", 0.0)) > 0.0 and float(target["hp"]) < 1.0:
 			target["hp"] = 1.0
-		# Target gains Mana when taking damage
-		if float(target["silence_timer"]) <= 0.0:
-			target["mana"] = minf(float(target["max_mana"]), float(target["mana"]) + 8.0)
+		# Target gains Mana when taking damage (summons never gain mana; summoner heroes gain no mana on skill_cd)
+		if not bool(target.get("is_summon", false)) and float(target["max_mana"]) > 0.0 and float(target["silence_timer"]) <= 0.0:
+			var is_t_sum := bool(target.get("is_summoner_hero", false))
+			if not (is_t_sum and float(target.get("skill_cd", 0.0)) > 0.0):
+				target["mana"] = minf(float(target["max_mana"]), float(target["mana"]) + (3.0 if is_t_sum else 5.0))
 
 	_add_floating_text(target["pos"] + Vector2(randf_range(-12, 12), -28), "-%d" % int(round(maxf(1.0, final_dmg))), Color(1.0, 0.36, 0.32))
 
@@ -1360,7 +1434,7 @@ func _attack_player_directly(u: Dictionary, target_p_idx: int) -> void:
 			"element": elem,
 			"frames": proj_frames,
 			"anim_t": 0.0,
-			"speed": 460.0,
+			"speed": 260.0,
 			"rot": (corner_pos - Vector2(u["pos"])).angle(),
 		})
 	else:
