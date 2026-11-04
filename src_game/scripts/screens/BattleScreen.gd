@@ -26,6 +26,8 @@ var bot_profiles: Array = []         # Array of BotAI profiles
 var units: Array = []                # Active battlefield units (persisted across freeze phases!)
 var projectiles: Array = []          # Active projectiles
 var vfx_bursts: Array = []           # Active hit impacts / item animations
+var item_cast_beams: Array = []      # Active item cast beams & flying item orbs (slot -> target)
+var shatter_popups: Array = []       # Enlarged pop-up 4-shard card shatter overlays on fx_layer
 var floating_texts: Array = []       # Floating combat numbers & skill callouts
 var last_opponent_item_id: String = "C082"
 
@@ -328,6 +330,8 @@ func start_new_match(p_count: int) -> void:
 	units.clear()
 	projectiles.clear()
 	vfx_bursts.clear()
+	item_cast_beams.clear()
+	shatter_popups.clear()
 	floating_texts.clear()
 	players.clear()
 	bot_profiles.clear()
@@ -343,6 +347,7 @@ func start_new_match(p_count: int) -> void:
 				"element": "kim",
 				"unit_uid": -1,
 				"trigger_timer": 0.0,
+				"energy_cost": 0,
 			})
 		players.append({
 			"idx": i,
@@ -351,6 +356,8 @@ func start_new_match(p_count: int) -> void:
 			"ui_color": TEAM_UI_COLS[i],
 			"hp": 100.0,
 			"max_hp": 100.0,
+			"energy": GameState.ROUND_ENERGY_GAIN,
+			"max_energy": GameState.MAX_ROUND_ENERGY,
 			"alive": true,
 			"is_bot": (i > 0),
 			"hand": [],
@@ -436,11 +443,18 @@ func _enter_prep_phase() -> void:
 
 	for i in range(player_count):
 		BotAI.reset_round_profile(bot_profiles[i], round_num)
+		var max_e: int = int(players[i].get("max_energy", GameState.MAX_ROUND_ENERGY))
+		if round_num <= 1:
+			players[i]["energy"] = GameState.ROUND_ENERGY_GAIN
+		else:
+			players[i]["energy"] = mini(max_e, int(players[i].get("energy", 0)) + GameState.ROUND_ENERGY_GAIN)
 		for s in players[i]["slots"]:
 			if s["state"] == "trigger_break":
 				s["state"] = "empty"
 
-	lbl_bot_log.text = "Vòng %d — Vuốt ngang xem bài · Chạm 1 thẻ để rút lên!" % round_num
+	var p0_e: int = int(players[0].get("energy", 4)) if not players.is_empty() else 4
+	var p0_max_e: int = int(players[0].get("max_energy", 6)) if not players.is_empty() else 6
+	lbl_bot_log.text = "Vòng %d · Linh Lực: %d/%d — Ghép Ô Liền Kề Tương Sinh & Tiền Tuyến (Ô 4-7) / Cánh!" % [round_num, p0_e, p0_max_e]
 	_rebuild_hand_ui()
 	board_canvas.queue_redraw()
 
@@ -536,7 +550,7 @@ func _on_combat_15s_finished() -> void:
 
 
 # ==============================================================================
-# PLACE & RECALL POKER MECHANICS (FREE PLACE & RECALL TO HAND)
+# PLACE & RECALL POKER MECHANICS (COMMAND ENERGY COST & ADJACENCY REFUND)
 # ==============================================================================
 func place_card_from_hand(p_idx: int, hand_idx: int, slot_idx: int) -> bool:
 	if phase != MatchPhase.PREP:
@@ -554,6 +568,19 @@ func place_card_from_hand(p_idx: int, hand_idx: int, slot_idx: int) -> bool:
 	var card_inst: Dictionary = hand[hand_idx]
 	var cid := str(card_inst["card_id"])
 	var elem := str(card_inst["element"])
+	var cost: int = GameState.get_card_energy_cost(cid)
+	var cur_energy: int = int(p.get("energy", 0))
+	var max_energy: int = int(p.get("max_energy", GameState.MAX_ROUND_ENERGY))
+	if cur_energy < cost:
+		if p_idx == 0:
+			var c_data := GameState.get_card(cid)
+			lbl_bot_log.text = "Không đủ Linh Lực! [%s] cần %dLL (Đang có: %d/%dLL). Chạm ô đang úp để nhặt lại bài!" % [
+				str(c_data.get("name", cid)),
+				cost,
+				cur_energy,
+				max_energy
+			]
+		return false
 
 	var from_global := Vector2(540.0, 1460.0)
 	if p_idx == 0 and hand_idx >= 0 and hand_idx < hand_cards_widgets.size():
@@ -561,10 +588,12 @@ func place_card_from_hand(p_idx: int, hand_idx: int, slot_idx: int) -> bool:
 		if is_instance_valid(cw_from):
 			from_global = cw_from.global_position
 
+	p["energy"] = cur_energy - cost
 	hand.remove_at(hand_idx)
 	slots[slot_idx]["state"] = "facedown"
 	slots[slot_idx]["card_id"] = cid
 	slots[slot_idx]["element"] = elem
+	slots[slot_idx]["energy_cost"] = cost
 
 	if p_idx == 0:
 		# Reset selected_hand_idx to -1 so the next card in hand does NOT automatically pop up!
@@ -577,6 +606,22 @@ func place_card_from_hand(p_idx: int, hand_idx: int, slot_idx: int) -> bool:
 			carousel_pos = clampf(carousel_pos, 0.0, float(hand.size() - 1))
 		_play_card_fly_to_slot_animation(cid, elem, from_global, slot_idx)
 		_rebuild_hand_ui()
+		var adj_info := _evaluate_slot_adjacency(0, slot_idx, elem, true)
+		var zone_tag := "Tiền Tuyến (+25% HP/Khiên)" if _is_vanguard_slot(slot_idx) else "Hậu Phương (+20% Tầm/Tốc đánh)"
+		var link_tag := ""
+		if int(adj_info["gen_links"]) > 0:
+			link_tag = " · LIÊN KẾT TƯƠNG SINH (+30% Công, +25% Thủ)!"
+		elif int(adj_info["clash_links"]) > 0:
+			link_tag = " · CẢNH BÁO XUNG KHẮC LIỀN KỀ (-20% Công/Tốc)!"
+		lbl_bot_log.text = "Đặt [%s] (-%dLL, còn %d/%dLL) vào Ô #%d [%s]%s" % [
+			cid,
+			cost,
+			int(p["energy"]),
+			max_energy,
+			slot_idx + 1,
+			zone_tag,
+			link_tag
+		]
 	board_canvas.queue_redraw()
 	return true
 
@@ -593,23 +638,36 @@ func recall_card_from_slot(p_idx: int, slot_idx: int) -> bool:
 	if slots[slot_idx]["state"] != "facedown":
 		return false
 
+	var cid := str(slots[slot_idx]["card_id"])
+	var refund: int = int(slots[slot_idx].get("energy_cost", GameState.get_card_energy_cost(cid)))
+	var max_energy: int = int(p.get("max_energy", GameState.MAX_ROUND_ENERGY))
+	p["energy"] = mini(max_energy, int(p.get("energy", 0)) + refund)
+
 	p["hand"].append({
-		"card_id": str(slots[slot_idx]["card_id"]),
+		"card_id": cid,
 		"element": str(slots[slot_idx]["element"]),
 	})
 	slots[slot_idx]["state"] = "empty"
 	slots[slot_idx]["card_id"] = ""
+	slots[slot_idx]["energy_cost"] = 0
 
 	if p_idx == 0:
 		selected_hand_idx = -1
 		carousel_target_pos = float(maxi(0, p["hand"].size() - 1))
 		_rebuild_hand_ui()
+		lbl_bot_log.text = "Đã nhặt lại [%s] từ Ô #%d (Hoàn +%dLL -> %d/%dLL)!" % [
+			cid,
+			slot_idx + 1,
+			refund,
+			int(p["energy"]),
+			max_energy
+		]
 	board_canvas.queue_redraw()
 	return true
 
 
 # ==============================================================================
-# HERO SPAWNING, WUXING SYNERGY & ITEM ACTIVATION
+# HERO SPAWNING, POSITIONAL ROLES, ADJACENCY WUXING SYNERGY & ITEM ACTIVATION
 # ==============================================================================
 const COMBAT_MSPD_SCALE := 0.44
 const COMBAT_ASPD_SCALE := 0.48
@@ -618,6 +676,46 @@ const SUMMONER_HERO_NUMS := [19, 24, 30, 34, 35, 36, 79]
 const SUMMONER_SKILL_CD := 14.0
 const DEFAULT_SKILL_CD := 5.0
 var _next_unit_uid: int = 1
+
+
+func _is_vanguard_slot(slot_idx: int) -> bool:
+	# Center 4 slots (Ô #4, #5, #6, #7 -> indices 3..6) are Tiền Tuyến (Vanguard);
+	# Outer 6 slots (Ô #1..#3 & Ô #8..#10 -> indices 0..2, 7..9) are Hậu Phương / Cánh (Flank).
+	return slot_idx >= 3 and slot_idx <= 6
+
+
+func _get_slot_link_relation(elem_a: String, elem_b: String) -> int:
+	if elem_a.is_empty() or elem_b.is_empty():
+		return 0
+	if GameState.does_element_generate(elem_a, elem_b) or GameState.does_element_generate(elem_b, elem_a):
+		return 1
+	if GameState.does_element_counter(elem_a, elem_b) or GameState.does_element_counter(elem_b, elem_a):
+		return -1
+	return 0
+
+
+func _evaluate_slot_adjacency(p_idx: int, slot_idx: int, elem: String, include_facedown: bool = true) -> Dictionary:
+	var gen_links := 0
+	var clash_links := 0
+	if p_idx < 0 or p_idx >= players.size() or elem.is_empty():
+		return {"gen_links": 0, "clash_links": 0}
+	var slots: Array = players[p_idx]["slots"]
+	for nb_idx in [slot_idx - 1, slot_idx + 1]:
+		if nb_idx < 0 or nb_idx >= slots.size():
+			continue
+		var nb: Dictionary = slots[nb_idx]
+		var st: String = str(nb.get("state", "empty"))
+		var valid_nb := (st == "active_hero") or (include_facedown and st == "facedown")
+		if not valid_nb:
+			continue
+		var nb_elem: String = str(nb.get("element", ""))
+		var rel := _get_slot_link_relation(elem, nb_elem)
+		if rel == 1:
+			gen_links += 1
+		elif rel == -1:
+			clash_links += 1
+	return {"gen_links": gen_links, "clash_links": clash_links}
+
 
 func _spawn_hero_unit(p_idx: int, slot_idx: int, card_id: String, elem: String, is_summon: bool, summon_id: String, summoner_uid: int = -1, custom_spawn_pos: Vector2 = Vector2(-1, -1)) -> int:
 	var c := GameState.get_card(card_id)
@@ -644,6 +742,18 @@ func _spawn_hero_unit(p_idx: int, slot_idx: int, card_id: String, elem: String, 
 	var mdef_val := float(c.get("mdef", 20))
 	var mspd_val := (0.0 if summon_id == "s02_phao_co_ngu" else float(c.get("mspd", 120)) * COMBAT_MSPD_SCALE)
 
+	# Positional Slot Role Bonus (Ô 4..7 Tiền Tuyến vs Ô 1..3 & 8..10 Hậu Phương)
+	var is_vanguard := _is_vanguard_slot(slot_idx)
+	if not is_summon and slot_idx >= 0:
+		if is_vanguard:
+			# Tiền Tuyến (4 Ô Giữa): +25% Máu tối đa & +25% Khiên khởi đầu (+10% HP chắn đòn)
+			hp_val *= 1.25
+			sh_val = sh_val * 1.25 + hp_val * 0.10
+		else:
+			# Hậu Phương / Cánh (6 Ô Hai Bên): +20% Tầm đánh & +20% Tốc đánh
+			rng_val *= 1.20
+			aspd_val *= 1.20
+
 	# Apply Elemental Passive Modifier per GDD Section 3.0
 	if elem == "hoa":
 		dame_val *= 1.12
@@ -656,6 +766,7 @@ func _spawn_hero_unit(p_idx: int, slot_idx: int, card_id: String, elem: String, 
 		"uid": uid,
 		"owner_idx": p_idx,
 		"slot_idx": slot_idx,
+		"is_vanguard_slot": is_vanguard,
 		"card_id": card_id,
 		"num": raw_num,
 		"is_summoner_hero": is_summoner_hero,
@@ -691,6 +802,11 @@ func _spawn_hero_unit(p_idx: int, slot_idx: int, card_id: String, elem: String, 
 		"undying_timer": 0.0,
 		"has_wuxing_synergy": false,
 		"synergy_atk_mult": 1.0,
+		"synergy_def_mult": 1.0,
+		"synergy_aspd_mult": 1.0,
+		"synergy_regen_pct": 0.0,
+		"adj_gen_links": 0,
+		"adj_clash_links": 0,
 		"is_summon": is_summon,
 		"summon_id": summon_id,
 		"status_icons": [],
@@ -723,13 +839,48 @@ func _recalculate_team_synergies() -> void:
 				if GameState.does_element_generate(str(other_e), my_e):
 					generated_by_ally = true
 					break
-			u["has_wuxing_synergy"] = (generated_by_ally or has_all_5)
-			u["synergy_atk_mult"] = (1.25 if has_all_5 else (1.15 if generated_by_ally else 1.0))
+
+			var atk_mult := (1.20 if has_all_5 else (1.10 if generated_by_ally else 1.0))
+			var def_mult := 1.0
+			var aspd_mult := 1.0
+			var regen_pct := (0.015 if (generated_by_ally or has_all_5) else 0.0)
+			var g_links := 0
+			var c_links := 0
+
+			if not bool(u.get("is_summon", false)) and int(u["slot_idx"]) >= 0:
+				var adj := _evaluate_slot_adjacency(p_i, int(u["slot_idx"]), my_e, false)
+				g_links = int(adj["gen_links"])
+				c_links = int(adj["clash_links"])
+				if g_links > 0:
+					# Liên Kết Ô Liền Kề Tương Sinh: +30% Công (+40% nếu nối 2 bên), +25% Giáp/Kháng Phép, +3% HP/s
+					atk_mult += 0.30 + (0.10 if g_links >= 2 else 0.0)
+					def_mult += 0.25
+					regen_pct += 0.03
+				if c_links > 0:
+					# Xung Khắc Nội Bộ Liền Kề: -20% Công & -20% Tốc đánh
+					atk_mult = maxf(0.55, atk_mult - 0.20 * float(c_links))
+					aspd_mult = maxf(0.60, aspd_mult - 0.20 * float(c_links))
+
+			u["has_wuxing_synergy"] = (generated_by_ally or has_all_5 or g_links > 0)
+			u["synergy_atk_mult"] = atk_mult
+			u["synergy_def_mult"] = def_mult
+			u["synergy_aspd_mult"] = aspd_mult
+			u["synergy_regen_pct"] = regen_pct
+			u["adj_gen_links"] = g_links
+			u["adj_clash_links"] = c_links
 
 	var hand_cnt: int = players[0]["hand"].size() if not players.is_empty() else 0
+	var p0_energy: int = int(players[0].get("energy", 0)) if not players.is_empty() else 0
+	var p0_max_energy: int = int(players[0].get("max_energy", 6)) if not players.is_empty() else 6
 	var has_sel := (selected_hand_idx >= 0 and selected_hand_idx < hand_cnt)
+	var sel_cost := 1
+	if has_sel:
+		var sel_c_inst: Dictionary = players[0]["hand"][selected_hand_idx]
+		sel_cost = GameState.get_card_energy_cost(str(sel_c_inst["card_id"]))
+
 	if is_instance_valid(btn_place_selected):
-		btn_place_selected.disabled = (phase != MatchPhase.PREP or not has_sel)
+		btn_place_selected.text = ("ĐẶT (%dLL)" % sel_cost) if has_sel else "ĐẶT LÊN BÀN"
+		btn_place_selected.disabled = (phase != MatchPhase.PREP or not has_sel or p0_energy < sel_cost)
 	if is_instance_valid(btn_inspect_selected):
 		btn_inspect_selected.disabled = not has_sel
 	if is_instance_valid(btn_hand_next):
@@ -738,17 +889,23 @@ func _recalculate_team_synergies() -> void:
 	if not is_instance_valid(lbl_synergy_info):
 		return
 	if hand_cnt <= 0:
-		lbl_synergy_info.text = "Đã hết thẻ trên tay"
+		lbl_synergy_info.text = "Hết thẻ trên tay · Linh Lực: %d/%dLL" % [p0_energy, p0_max_energy]
 	elif has_sel:
 		var sel_c: Dictionary = players[0]["hand"][selected_hand_idx]
 		var c_data := GameState.get_card(str(sel_c["card_id"]))
-		lbl_synergy_info.text = "Đang rút: %s (%d/%d)" % [
+		var rg: String = str(c_data.get("role_group", "atk_phys"))
+		var rec_zone := "Ô Giữa 4-7" if (rg == "tanker" or (rg == "atk_phys" and float(c_data.get("range", 1.2)) < 2.2)) else "Ô Cánh 1-3,8-10"
+		if bool(c_data.get("is_item", false)):
+			rec_zone = "Đặt vào Ô cần chi viện"
+		lbl_synergy_info.text = "%s (%dLL · Đang có %d/%dLL · Gợi ý: %s)" % [
 			str(c_data.get("name", sel_c["card_id"])),
-			selected_hand_idx + 1,
-			hand_cnt
+			sel_cost,
+			p0_energy,
+			p0_max_energy,
+			rec_zone
 		]
 	else:
-		lbl_synergy_info.text = "Chạm 1 thẻ để rút lên (%d lá)" % hand_cnt
+		lbl_synergy_info.text = "Linh Lực: %d/%dLL · Chạm 1 thẻ để rút lên (%d lá)" % [p0_energy, p0_max_energy, hand_cnt]
 
 
 func _activate_item_card(p_idx: int, slot_idx: int, card_id: String, elem: String) -> void:
@@ -773,19 +930,28 @@ func _activate_item_card(p_idx: int, slot_idx: int, card_id: String, elem: Strin
 			enemies.append(u)
 
 	var start_pos := _get_slot_center_pos(p_idx, slot_idx)
-	var target_pos := Vector2(512, 512)
+	var lane_focus_pos := _get_slot_arena_spawn_pos(p_idx, slot_idx)
+	var target_pos := lane_focus_pos
 	var st_icon: String = str(c.get("status_icon", "res://assets/items/status_icons/status_haste_frenzy_16x16.png"))
 
-	# Execute Item logic by card number (C081..C100)
+	# Execute Item logic by card number (C081..C100) — prioritizes targets near the placed slot's tactical lane!
 	if c_num in [81, 83, 84, 85, 87, 90, 92, 94, 97, 99, 100]:
 		if not allies.is_empty():
-			allies.sort_custom(func(a, b): return (a["hp"] / a["max_hp"]) < (b["hp"] / b["max_hp"]))
+			allies.sort_custom(func(a, b):
+				var score_a: float = (1.0 - float(a["hp"]) / maxf(1.0, float(a["max_hp"]))) * 100.0 - Vector2(a["pos"]).distance_to(lane_focus_pos) * 0.18
+				var score_b: float = (1.0 - float(b["hp"]) / maxf(1.0, float(b["max_hp"]))) * 100.0 - Vector2(b["pos"]).distance_to(lane_focus_pos) * 0.18
+				return score_a > score_b
+			)
 			var ally: Dictionary = allies[0]
 			if c_num in [87, 90, 100]:
-				allies.sort_custom(func(a, b): return float(a["dame"]) > float(b["dame"]))
+				allies.sort_custom(func(a, b):
+					var score_a: float = float(a["dame"]) * 1.5 - Vector2(a["pos"]).distance_to(lane_focus_pos) * 0.22
+					var score_b: float = float(b["dame"]) * 1.5 - Vector2(b["pos"]).distance_to(lane_focus_pos) * 0.22
+					return score_a > score_b
+				)
 				ally = allies[0]
 			target_pos = ally["pos"]
-			var boost := 1.25 if GameState.does_element_generate(elem, str(ally["element"])) else 1.0
+			var boost := 1.35 if GameState.does_element_generate(elem, str(ally["element"])) else 1.0
 
 			if c_num == 81:
 				_heal_unit(ally, 160.0 * boost)
@@ -830,15 +996,19 @@ func _activate_item_card(p_idx: int, slot_idx: int, card_id: String, elem: Strin
 			_attach_status_icon(ally, st_icon)
 			_add_floating_text(target_pos, str(c.get("name", "Item")), Color(0.38, 0.98, 0.58))
 		else:
-			target_pos = _get_slot_arena_spawn_pos(p_idx, slot_idx)
+			target_pos = lane_focus_pos
 			_add_floating_text(start_pos, "%s (Kích hoạt!)" % str(c.get("name", "Item")), Color(0.38, 0.98, 0.58))
 	else:
-		# Offensive / Debuff Items (C082, C086, C088, C089, C091, C093, C096, C098)
+		# Offensive / Debuff Items (C082, C086, C088, C089, C091, C093, C096, C098) — prioritizes enemies near this slot's lane!
 		if not enemies.is_empty():
-			enemies.sort_custom(func(a, b): return float(a["mana"]) > float(b["mana"]))
+			enemies.sort_custom(func(a, b):
+				var score_a: float = float(a["mana"]) * 1.2 + float(a["dame"]) - Vector2(a["pos"]).distance_to(lane_focus_pos) * 0.25
+				var score_b: float = float(b["mana"]) * 1.2 + float(b["dame"]) - Vector2(b["pos"]).distance_to(lane_focus_pos) * 0.25
+				return score_a > score_b
+			)
 			var target_e: Dictionary = enemies[0]
 			target_pos = target_e["pos"]
-			var mult := 1.25 if GameState.does_element_counter(elem, str(target_e["element"])) else 1.0
+			var mult := 1.50 if GameState.does_element_counter(elem, str(target_e["element"])) else 1.0
 
 			if c_num == 82:
 				for en in enemies:
@@ -889,16 +1059,35 @@ func _activate_item_card(p_idx: int, slot_idx: int, card_id: String, elem: Strin
 			target_pos = _get_slot_arena_spawn_pos(p_idx, slot_idx)
 			_add_floating_text(start_pos, "%s (Kích hoạt!)" % str(c.get("name", "Item")), Color(0.98, 0.45, 0.35))
 
-	# Spawn 4-frame Item Use Spritesheet animation at target_pos
+	# Spawn 4-frame Item Use Spritesheet animation at BOTH start_pos (slot) and target_pos (hero/arena),
+	# plus a glowing Item Cast Beam & traveling orb from slot -> target_pos!
 	var use_frames: Array = c.get("use_frames", [])
+	var is_support_item := (c_num in [81, 83, 84, 85, 87, 90, 92, 94, 95, 97, 99, 100])
 	if not use_frames.is_empty():
+		vfx_bursts.append({
+			"pos": start_pos,
+			"frames": use_frames,
+			"time": 0.0,
+			"duration": 0.65,
+			"scale": 0.48,
+		})
 		vfx_bursts.append({
 			"pos": target_pos,
 			"frames": use_frames,
 			"time": 0.0,
-			"duration": 0.45,
-			"scale": 0.44,
+			"duration": 0.92,
+			"scale": 0.68,
 		})
+	item_cast_beams.append({
+		"from": start_pos,
+		"to": target_pos,
+		"elem": elem,
+		"is_support": is_support_item,
+		"frames": use_frames,
+		"name": str(c.get("name", "Item")),
+		"time": 0.0,
+		"duration": 0.88,
+	})
 
 
 func _attach_status_icon(u: Dictionary, icon_path: String) -> void:
@@ -986,9 +1175,10 @@ func _process_combat_simulation(dt: float) -> void:
 				_on_unit_killed(u)
 				continue
 
-		# Timers & Synergy Regen (+2% Max HP/s when Wuxing generated)
-		if bool(u.get("has_wuxing_synergy", false)):
-			u["hp"] = minf(float(u["max_hp"]), float(u["hp"]) + float(u["max_hp"]) * 0.02 * dt)
+		# Timers & Synergy Regen (+1.5%..4.5% Max HP/s when Wuxing generated or adjacent Tương Sinh linked)
+		var regen_pct := float(u.get("synergy_regen_pct", 0.02 if bool(u.get("has_wuxing_synergy", false)) else 0.0))
+		if regen_pct > 0.0:
+			u["hp"] = minf(float(u["max_hp"]), float(u["hp"]) + float(u["max_hp"]) * regen_pct * dt)
 		if float(u.get("skill_cd", 0.0)) > 0.0:
 			u["skill_cd"] = maxf(0.0, float(u["skill_cd"]) - dt)
 		if float(u["stun_timer"]) > 0.0:
@@ -1045,12 +1235,13 @@ func _process_combat_simulation(dt: float) -> void:
 					and float(u["silence_timer"]) <= 0.0
 					and float(u.get("skill_cd", 0.0)) <= 0.0
 				)
+				var eff_aspd := maxf(0.22, float(u["aspd"]) * float(u.get("synergy_aspd_mult", 1.0)))
 				if can_cast:
-					u["atk_cd"] = 1.0 / maxf(0.22, float(u["aspd"]))
+					u["atk_cd"] = 1.0 / eff_aspd
 					u["skill_cd"] = SUMMONER_SKILL_CD if bool(u.get("is_summoner_hero", false)) else DEFAULT_SKILL_CD
 					_execute_unit_unique_skill(u, target_u)
 				elif float(u["atk_cd"]) <= 0.0:
-					u["atk_cd"] = 1.0 / maxf(0.22, float(u["aspd"]))
+					u["atk_cd"] = 1.0 / eff_aspd
 					_perform_basic_attack(u, target_u)
 		else:
 			# Enemy player has 0 heroes on the board -> March to that player's Corner Info/HP Socket and attack it!
@@ -1102,11 +1293,21 @@ func _process_combat_simulation(dt: float) -> void:
 			pr["pos"] += diff.normalized() * step
 			pr["rot"] = diff.angle()
 
-	# 3. Update VFX Bursts & Floating Texts
+	# 3. Update VFX Bursts, Item Cast Beams, Card Shatter Popups & Floating Texts
 	for i in range(vfx_bursts.size() - 1, -1, -1):
 		vfx_bursts[i]["time"] = float(vfx_bursts[i]["time"]) + dt
 		if float(vfx_bursts[i]["time"]) >= float(vfx_bursts[i]["duration"]):
 			vfx_bursts.remove_at(i)
+
+	for i in range(item_cast_beams.size() - 1, -1, -1):
+		item_cast_beams[i]["time"] = float(item_cast_beams[i]["time"]) + dt
+		if float(item_cast_beams[i]["time"]) >= float(item_cast_beams[i]["duration"]):
+			item_cast_beams.remove_at(i)
+
+	for i in range(shatter_popups.size() - 1, -1, -1):
+		shatter_popups[i]["time"] = float(shatter_popups[i]["time"]) + dt
+		if float(shatter_popups[i]["time"]) >= float(shatter_popups[i]["duration"]):
+			shatter_popups.remove_at(i)
 
 	for i in range(floating_texts.size() - 1, -1, -1):
 		floating_texts[i]["pos"] += Vector2(0, -34.0 * dt)
@@ -1299,17 +1500,17 @@ func _apply_damage(target: Dictionary, raw_dmg: float, is_magic: bool, atk_elem:
 	if float(target["hp"]) <= 0.0:
 		return
 
-	var def_stat := float(target["mdef"]) if is_magic else float(target["def"])
+	var def_stat := (float(target["mdef"]) if is_magic else float(target["def"])) * float(target.get("synergy_def_mult", 1.0))
 	if atk_elem == "kim":
 		def_stat *= 0.85
 
-	# GDD Section 3.1 Elemental Counter multiplier (+25% / -15%)
+	# Tactical Elemental Counter multiplier (+50% Dame dealt when countering / -30% Dame taken when countered)
 	var elem_mult := 1.0
 	var def_elem: String = str(target["element"])
 	if GameState.does_element_counter(atk_elem, def_elem):
-		elem_mult = 1.25
+		elem_mult = 1.50
 	elif GameState.does_element_counter(def_elem, atk_elem):
-		elem_mult = 0.85
+		elem_mult = 0.70
 
 	var final_dmg := raw_dmg * (100.0 / (100.0 + maxf(0.0, def_stat))) * elem_mult
 
@@ -1368,21 +1569,38 @@ func _trigger_slot_card_destroy(p_idx: int, slot_idx: int, reason_txt: String = 
 	if slot_idx < 0 or slot_idx >= slots.size():
 		return
 	var slot: Dictionary = slots[slot_idx]
+	var cid: String = str(slot.get("card_id", ""))
 	var elem: String = str(slot.get("element", "hoa"))
+	var c := GameState.get_card(cid) if not cid.is_empty() else {}
+	var is_item_card := bool(c.get("is_item", false))
+
 	slot["state"] = "trigger_break"
 	slot["unit_uid"] = -1
 	slot["trigger_timer"] = 1.45
 	slot["trigger_max_timer"] = 1.45
 
 	var sc_pos := _get_slot_center_pos(p_idx, slot_idx)
+	var inward_dir := (Vector2(512.0, 512.0) - sc_pos).normalized()
+	var popup_pos := sc_pos + inward_dir * 32.0
+
 	_spawn_element_impact_vfx(sc_pos, elem)
 	vfx_bursts.append({
 		"pos": sc_pos,
 		"frames": ["res://assets/board_map/slots/slot_4_trigger_break.png"],
 		"time": 0.0,
 		"duration": 1.25,
-		"scale": 0.50,
+		"scale": 0.56,
 	})
+	if not cid.is_empty():
+		shatter_popups.append({
+			"pos": popup_pos,
+			"card_id": cid,
+			"element": elem,
+			"is_item": is_item_card,
+			"use_frames": c.get("use_frames", []),
+			"time": 0.0,
+			"duration": 1.38,
+		})
 	if not reason_txt.is_empty():
 		_add_floating_text(sc_pos + Vector2(0, -18), reason_txt, Color(1.0, 0.64, 0.24))
 
@@ -1582,14 +1800,17 @@ func _get_slot_center_pos(p_idx: int, slot_idx: int) -> Vector2:
 
 func _get_slot_arena_spawn_pos(p_idx: int, slot_idx: int) -> Vector2:
 	var sc := _get_slot_center_pos(p_idx, slot_idx)
+	# Tiền Tuyến (Ô #4..#7 -> slot_idx 3..6) steps 26px deeper into the arena;
+	# Hậu Phương / Cánh (Ô #1..#3 & #8..#10) stays 14px further back near the player's edge.
+	var depth_offset := 26.0 if _is_vanguard_slot(slot_idx) else -14.0
 	if p_idx == 0:
-		return Vector2(sc.x, 785.0)
+		return Vector2(sc.x, 785.0 - depth_offset)
 	elif p_idx == 1:
-		return Vector2(sc.x, 239.0)
+		return Vector2(sc.x, 239.0 + depth_offset)
 	elif p_idx == 2:
-		return Vector2(239.0, sc.y)
+		return Vector2(239.0 + depth_offset, sc.y)
 	else:
-		return Vector2(785.0, sc.y)
+		return Vector2(785.0 - depth_offset, sc.y)
 
 
 func _get_player_corner_attack_stand_pos(p_idx: int) -> Vector2:
@@ -1647,10 +1868,11 @@ func _get_player_history_btn_rect(p_idx: int) -> Rect2:
 	return Rect2(c_rect.position.x + 8, c_rect.position.y + 118, c_rect.size.x - 16, 36)
 
 
-func _draw_card_in_carved_slot(p_i: int, s_rect: Rect2, slot: Dictionary, u_col: Color) -> void:
+func _draw_card_in_carved_slot(p_i: int, s_i: int, s_rect: Rect2, slot: Dictionary, u_col: Color) -> void:
 	var st: String = str(slot["state"])
 	var outer_slot := s_rect.grow(-1.5)
 	var inner_rect := s_rect.grow(-3.0)
+	var is_vanguard := _is_vanguard_slot(s_i)
 
 	# Always tint the slot background & frame slightly with the owner player's team color for instant visual grouping
 	var bg_tint := Color(u_col.r * 0.42, u_col.g * 0.42, u_col.b * 0.42, 0.34)
@@ -1661,14 +1883,56 @@ func _draw_card_in_carved_slot(p_i: int, s_rect: Rect2, slot: Dictionary, u_col:
 		0.82
 	)
 
-	# 1. Empty Carved Socket: team-tinted background + team-colored frame
+	# 1. Empty Carved Socket: team-tinted background + team-colored frame + Tactical Adjacency/Zone preview
 	if st == "empty":
-		if p_i == 0 and phase == MatchPhase.PREP and selected_hand_idx >= 0:
-			board_canvas.draw_rect(inner_rect, Color(0.18, 0.62, 1.0, 0.38), true)
-			board_canvas.draw_rect(outer_slot, Color(0.48, 0.92, 1.0, 0.96), false, 2.2)
+		if p_i == 0 and phase == MatchPhase.PREP and selected_hand_idx >= 0 and selected_hand_idx < players[0]["hand"].size():
+			var sel_c_inst: Dictionary = players[0]["hand"][selected_hand_idx]
+			var sel_elem: String = str(sel_c_inst["element"])
+			var adj_preview := _evaluate_slot_adjacency(0, s_i, sel_elem, true)
+			var g_cnt: int = int(adj_preview["gen_links"])
+			var c_cnt: int = int(adj_preview["clash_links"])
+			var zone_lbl := "TIỀN" if is_vanguard else "CÁNH"
+			var zone_col := Color(0.76, 0.92, 1.0, 0.90)
+
+			if g_cnt > 0 and c_cnt == 0:
+				# Highlight Tương Sinh combo slot in bright emerald-gold!
+				board_canvas.draw_rect(inner_rect, Color(0.14, 0.68, 0.34, 0.48), true)
+				board_canvas.draw_rect(outer_slot, Color(0.42, 1.0, 0.58, 0.98), false, 2.8)
+				zone_lbl = "+SINH"
+				zone_col = Color(0.52, 1.0, 0.64, 1.0)
+			elif c_cnt > 0 and g_cnt == 0:
+				# Highlight Xung Khắc warning slot in crimson!
+				board_canvas.draw_rect(inner_rect, Color(0.68, 0.14, 0.20, 0.46), true)
+				board_canvas.draw_rect(outer_slot, Color(1.0, 0.36, 0.38, 0.98), false, 2.6)
+				zone_lbl = "-KHẮC"
+				zone_col = Color(1.0, 0.52, 0.52, 1.0)
+			else:
+				board_canvas.draw_rect(inner_rect, Color(0.18, 0.62, 1.0, 0.38), true)
+				board_canvas.draw_rect(outer_slot, Color(0.48, 0.92, 1.0, 0.96), false, 2.2)
+
+			var f_slot := GameState.get_font()
+			board_canvas.draw_string_outline(
+				f_slot,
+				Vector2(inner_rect.position.x, inner_rect.position.y + inner_rect.size.y * 0.56),
+				zone_lbl,
+				HORIZONTAL_ALIGNMENT_CENTER,
+				inner_rect.size.x,
+				11,
+				3,
+				Color(0.01, 0.01, 0.03, 0.96)
+			)
+			board_canvas.draw_string(
+				f_slot,
+				Vector2(inner_rect.position.x, inner_rect.position.y + inner_rect.size.y * 0.56),
+				zone_lbl,
+				HORIZONTAL_ALIGNMENT_CENTER,
+				inner_rect.size.x,
+				11,
+				zone_col
+			)
 		else:
 			board_canvas.draw_rect(inner_rect, bg_tint, true)
-			board_canvas.draw_rect(outer_slot, border_tint, false, 1.8)
+			board_canvas.draw_rect(outer_slot, border_tint, false, (2.2 if is_vanguard else 1.6))
 		return
 
 	# Orientation: Top/Bottom slots are vertical (2:3), Left/Right slots are horizontal (rotated 90 deg)
@@ -1701,8 +1965,8 @@ func _draw_card_in_carved_slot(p_i: int, s_rect: Rect2, slot: Dictionary, u_col:
 		var el_br: String = str(slot["element"])
 		var c_br := GameState.get_card(cid_br)
 		var rarity_br: String = str(c_br.get("rarity", "N"))
+		var rar_col_br: Color = GameState.RARITY_COLOR.get(rarity_br, Color(0.78, 0.82, 0.88))
 		var art_tex_br := GameState.tex(str(c_br.get("card_art", "")))
-		var frame_tex_br := GameState.tex("res://assets/mobile/cards/frames/frame_%s_slot_256x384.png" % rarity_br)
 		var sh_tex := GameState.tex("res://assets/board_map/slots/slot_4_trigger_break.png")
 
 		var max_t := maxf(0.01, float(slot.get("trigger_max_timer", 1.45)))
@@ -1751,22 +2015,13 @@ func _draw_card_in_carved_slot(p_i: int, s_rect: Rect2, slot: Dictionary, u_col:
 				var asz := art_tex_br.get_size()
 				board_canvas.draw_texture_rect_region(
 					art_tex_br,
-					q_rect.grow(-1.5),
+					q_rect,
 					Rect2(asz.x * uv_x, asz.y * uv_y, asz.x * 0.5, asz.y * 0.5),
 					burn_mod
 				)
-			if frame_tex_br:
-				var f_uv_x := 0.0 if d_vec.x < 0.0 else 0.5
-				var f_uv_y := 0.0 if d_vec.y < 0.0 else 0.5
-				var fsz := frame_tex_br.get_size()
-				board_canvas.draw_texture_rect_region(
-					frame_tex_br,
-					q_rect.grow(1.5),
-					Rect2(fsz.x * f_uv_x, fsz.y * f_uv_y, fsz.x * 0.5, fsz.y * 0.5),
-					burn_mod
-				)
-			# Glowing fracture edge on each shard
-			board_canvas.draw_rect(q_rect, Color(1.0, 0.62, 0.18, shard_alpha * 0.92), false, 1.6)
+			# Rarity border + glowing fracture edge on each shard
+			board_canvas.draw_rect(q_rect, Color(rar_col_br.r, rar_col_br.g, rar_col_br.b, shard_alpha * 0.85), false, 1.8)
+			board_canvas.draw_rect(q_rect.grow(-1.0), Color(1.0, 0.62, 0.18, shard_alpha * 0.92), false, 1.4)
 
 		# Draw expanding `slot_4_trigger_break.png` explosion & crack lines over the shattering slot
 		var burst_sc := 1.05 + prog * 0.65
@@ -1795,76 +2050,64 @@ func _draw_card_in_carved_slot(p_i: int, s_rect: Rect2, slot: Dictionary, u_col:
 		board_canvas.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 		return
 
-	# 5. Player 0 Face-Down Card OR Any Active Revealed Card (active_hero) -> Render Actual Miniature Card!
+	# 5. Player 0 Face-Down Card OR Any Active Revealed Card (active_hero)
+	#    -> Render Full-Bleed Card Artwork + 2 Circular Badges (Element & Card Type/Role) + Rarity Border!
 	var cid: String = str(slot["card_id"])
 	var el: String = str(slot["element"])
 	var c := GameState.get_card(cid)
 	var rarity: String = str(c.get("rarity", "N"))
+	var rarity_col: Color = GameState.RARITY_COLOR.get(rarity, Color(0.78, 0.82, 0.88))
 	var role_group: String = str(c.get("role_group", "atk_phys"))
 	var elem_meta: Dictionary = GameState.ELEMENT_META.get(el, GameState.ELEMENT_META["kim"])
 	var e_col: Color = elem_meta["color"]
 
+	# Subtle outer rarity aura for S / SSR cards on the board
+	if rarity == "SSR":
+		board_canvas.draw_rect(local_rect.grow(2.5), Color(1.0, 0.78, 0.16, 0.55), false, 2.5)
+	elif rarity == "S":
+		board_canvas.draw_rect(local_rect.grow(2.0), Color(0.82, 0.38, 1.0, 0.50), false, 2.2)
+
 	# Dark card base
-	board_canvas.draw_rect(local_rect, Color(0.06, 0.08, 0.12, 0.98), true)
+	board_canvas.draw_rect(local_rect, Color(0.05, 0.07, 0.11, 0.98), true)
 
-	# Weapon / Item Illustration inside the card art window (79, 133, 354, 253 in 512x768 space)
+	# Full-Slot Weapon / Item Illustration (center-cropped so artwork fills the entire slot cleanly)
 	var art_tex := GameState.tex(str(c.get("card_art", "")))
-	var art_rect := Rect2(
-		-cw * 0.5 + cw * (33.0 / 419.0),
-		-ch * 0.5 + ch * (95.0 / 697.0),
-		cw * (354.0 / 419.0),
-		ch * (253.0 / 697.0)
-	)
+	var art_fill_rect := local_rect.grow(-1.5)
 	if art_tex:
-		board_canvas.draw_texture_rect(art_tex, art_rect, false)
+		var asz := art_tex.get_size()
+		var crop_w := asz.x * 0.78
+		var crop_x := (asz.x - crop_w) * 0.5
+		board_canvas.draw_texture_rect_region(
+			art_tex,
+			art_fill_rect,
+			Rect2(crop_x, 0.0, crop_w, asz.y),
+			Color(1.0, 1.0, 1.0, 0.88 if st == "facedown" else 1.0)
+		)
 
-	# Rarity Card Frame overlay (N / R / S / SSR) fitted 1:1 to local_rect
-	var frame_path := "res://assets/mobile/cards/frames/frame_%s_slot_256x384.png" % rarity
-	var frame_tex := GameState.tex(frame_path)
-	if frame_tex:
-		board_canvas.draw_texture_rect(frame_tex, full_tex_rect, false)
+	# Crisp Rarity-Colored Card Border inside the carved slot (N=Silver, R=Blue, S=Purple, SSR=Gold)
+	board_canvas.draw_rect(local_rect.grow(-1.5), Color(0.02, 0.03, 0.06, 0.88), false, 1.0)
+	var rim_w := 2.6 if rarity in ["S", "SSR"] else 2.2
+	board_canvas.draw_rect(local_rect, rarity_col, false, rim_w)
 
-	# Element Icon & Role Icon in the 2 top sockets of the miniature Card
+	# 2 Circular Badges at the top corners: Left = Element (Hệ Ngũ Hành), Right = Card Type / Role (Loại thẻ)
+	var badge_r := 8.8
+	var icon_sz := 15.0
+	var e_pos := Vector2(-cw * 0.5 + 10.5, -ch * 0.5 + 10.5)
+	var r_pos := Vector2(cw * 0.5 - 10.5, -ch * 0.5 + 10.5)
+
+	board_canvas.draw_circle(e_pos, badge_r, Color(0.04, 0.06, 0.10, 0.94))
+	board_canvas.draw_arc(e_pos, badge_r, 0.0, TAU, 20, e_col, 1.6)
 	var e_icon := GameState.tex(str(elem_meta.get("icon", "")))
 	if e_icon:
-		var e_pos := Vector2(-cw * 0.5 + cw * (44.0 / 419.0), -ch * 0.5 + ch * (101.0 / 697.0))
-		board_canvas.draw_texture_rect(e_icon, Rect2(e_pos.x - 5.5, e_pos.y - 5.5, 11.0, 11.0), false)
+		board_canvas.draw_texture_rect(e_icon, Rect2(e_pos.x - icon_sz * 0.5, e_pos.y - icon_sz * 0.5, icon_sz, icon_sz), false)
 
 	var role_meta: Dictionary = GameState.ROLE_META.get(role_group, GameState.ROLE_META["atk_phys"])
+	var r_col: Color = role_meta.get("color", rarity_col)
+	board_canvas.draw_circle(r_pos, badge_r, Color(0.04, 0.06, 0.10, 0.94))
+	board_canvas.draw_arc(r_pos, badge_r, 0.0, TAU, 20, r_col, 1.6)
 	var r_icon := GameState.tex(str(role_meta.get("icon", "")))
 	if r_icon:
-		var r_pos := Vector2(-cw * 0.5 + cw * (376.0 / 419.0), -ch * 0.5 + ch * (101.0 / 697.0))
-		board_canvas.draw_texture_rect(r_icon, Rect2(r_pos.x - 5.5, r_pos.y - 5.5, 11.0, 11.0), false)
-
-	# Lower Plate on Card showing Card ID / Face-down indicator
-	var font := GameState.get_font()
-	var plate_rect := Rect2(-cw * 0.44, ch * 0.06, cw * 0.88, ch * 0.30)
-	board_canvas.draw_rect(plate_rect, Color(0.03, 0.05, 0.09, 0.90), true)
-	var label_txt := cid
-	var txt_pos := Vector2(plate_rect.position.x, plate_rect.position.y + plate_rect.size.y * 0.76)
-	board_canvas.draw_string_outline(
-		font,
-		txt_pos,
-		label_txt,
-		HORIZONTAL_ALIGNMENT_CENTER,
-		plate_rect.size.x,
-		12,
-		3,
-		Color(0.01, 0.01, 0.03, 0.98)
-	)
-	board_canvas.draw_string(
-		font,
-		txt_pos,
-		label_txt,
-		HORIZONTAL_ALIGNMENT_CENTER,
-		plate_rect.size.x,
-		12,
-		Color(0.98, 0.88, 0.42) if st == "facedown" else e_col
-	)
-
-	# Crisp Team / Element Outer Card Rim inside the carved slot
-	var rim_col := Color(0.98, 0.84, 0.28) if st == "facedown" else u_col
-	board_canvas.draw_rect(local_rect, rim_col, false, 1.5)
+		board_canvas.draw_texture_rect(r_icon, Rect2(r_pos.x - icon_sz * 0.5, r_pos.y - icon_sz * 0.5, icon_sz, icon_sz), false)
 
 	board_canvas.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 
@@ -1959,7 +2202,11 @@ func _draw_board_canvas() -> void:
 				board_canvas.draw_rect(dead_s, Color(0.28, 0.30, 0.34, 0.80), true)
 				board_canvas.draw_rect(dead_s, Color(0.48, 0.50, 0.55, 0.65), false, 1.0)
 			else:
-				_draw_card_in_carved_slot(seat_i, s_rect, slots[s_i], u_col)
+				_draw_card_in_carved_slot(seat_i, s_i, s_rect, slots[s_i], u_col)
+
+		# Draw Adjacent Slot Elemental Links (Tương Sinh glowing beam vs Xung Khắc warning crack)
+		if is_alive:
+			_draw_slot_adjacency_links_for_player(seat_i, slots)
 
 		# Inside the Carved Corner Socket: draw team-tinted 2D slot box + team-colored background & border
 		var team_panel_mod := Color(
@@ -2068,7 +2315,8 @@ func _draw_board_canvas() -> void:
 			if int(u["owner_idx"]) == seat_i and float(u["hp"]) > 0.0:
 				unit_cnt += 1
 
-		var status_line := "Tay: %d · Sân: %d" % [p["hand"].size(), unit_cnt]
+		var cur_e: int = int(p.get("energy", 0))
+		var status_line := "LL:%d · Tay:%d · Sân:%d" % [cur_e, p["hand"].size(), unit_cnt]
 		var status_col := Color(0.96, 0.96, 1.0)
 		var is_exposed := (phase == MatchPhase.COMBAT or phase == MatchPhase.SUDDEN_DEATH) and is_alive and not _player_has_living_units(seat_i)
 		if is_exposed:
@@ -2124,6 +2372,37 @@ func _draw_board_canvas() -> void:
 		)
 
 
+func _draw_slot_adjacency_links_for_player(seat_i: int, slots: Array) -> void:
+	for s_i in range(9):
+		var sa: Dictionary = slots[s_i]
+		var sb: Dictionary = slots[s_i + 1]
+		var sta: String = str(sa.get("state", "empty"))
+		var stb: String = str(sb.get("state", "empty"))
+		# Only reveal opponent links on active_hero cards; for Player 0, also show links on face-down cards during PREP!
+		var vis_a := (sta == "active_hero") or (seat_i == 0 and sta == "facedown")
+		var vis_b := (stb == "active_hero") or (seat_i == 0 and stb == "facedown")
+		if not (vis_a and vis_b):
+			continue
+		var rel := _get_slot_link_relation(str(sa.get("element", "")), str(sb.get("element", "")))
+		if rel == 0:
+			continue
+		var ra := _get_slot_rect(seat_i, s_i)
+		var rb := _get_slot_rect(seat_i, s_i + 1)
+		var pa := ra.get_center()
+		var pb := rb.get_center()
+		var mid := (pa + pb) * 0.5
+		if rel == 1:
+			# Tương Sinh Link: glowing emerald-gold energy bridge between the 2 adjacent slots
+			board_canvas.draw_line(pa, pb, Color(0.24, 0.98, 0.52, 0.88), 4.2)
+			board_canvas.draw_line(pa, pb, Color(0.98, 0.94, 0.52, 0.95), 2.0)
+			board_canvas.draw_rect(Rect2(mid.x - 4.5, mid.y - 4.5, 9.0, 9.0), Color(0.32, 1.0, 0.58, 0.98), true)
+			board_canvas.draw_rect(Rect2(mid.x - 4.5, mid.y - 4.5, 9.0, 9.0), Color(1.0, 0.96, 0.68, 1.0), false, 1.5)
+		elif rel == -1:
+			# Xung Khắc Clash: crimson-purple warning fracture between the 2 adjacent slots
+			board_canvas.draw_line(pa, pb, Color(0.98, 0.22, 0.30, 0.90), 3.6)
+			board_canvas.draw_rect(Rect2(mid.x - 4.0, mid.y - 4.0, 8.0, 8.0), Color(0.95, 0.18, 0.26, 0.96), true)
+
+
 func _draw_fx_layer() -> void:
 	var font := GameState.get_font()
 
@@ -2139,7 +2418,37 @@ func _draw_fx_layer() -> void:
 				fx_layer.draw_texture(ptex, -ptex.get_size() * 0.5)
 				fx_layer.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 
-	# 2. Draw Hit Impact & Item Use Bursts
+	# 2. Draw Item Cast Beams & Flying Item Orbs (Slot -> Target Hero)
+	for bm in item_cast_beams:
+		var b_prog := clampf(float(bm["time"]) / maxf(0.01, float(bm["duration"])), 0.0, 1.0)
+		var b_from: Vector2 = bm["from"]
+		var b_to: Vector2 = bm["to"]
+		var is_sup: bool = bool(bm.get("is_support", false))
+		var beam_col := Color(0.28, 0.98, 0.62) if is_sup else Color(1.0, 0.46, 0.26)
+		var b_alpha := clampf(1.25 - b_prog * 1.25, 0.0, 1.0)
+
+		# Glowing energy beam from item slot to target hero
+		fx_layer.draw_line(b_from, b_to, Color(beam_col.r, beam_col.g, beam_col.b, b_alpha * 0.55), 8.0)
+		fx_layer.draw_line(b_from, b_to, Color(1.0, 0.96, 0.78, b_alpha * 0.92), 3.2)
+
+		# Traveling item orb along the beam during first 55% of duration
+		var travel_t := clampf(b_prog / 0.55, 0.0, 1.0)
+		var orb_pos := b_from.lerp(b_to, travel_t)
+		var b_frames: Array = bm.get("frames", [])
+		if not b_frames.is_empty():
+			var bf_idx := int(b_prog * float(b_frames.size()) * 2.0) % b_frames.size()
+			var orb_tex := GameState.tex(str(b_frames[bf_idx]))
+			if orb_tex:
+				var orb_sc := lerpf(0.38, 0.56, sin(b_prog * PI))
+				fx_layer.draw_set_transform(orb_pos, b_prog * 4.5, Vector2(orb_sc, orb_sc))
+				fx_layer.draw_texture(orb_tex, -orb_tex.get_size() * 0.5, Color(1, 1, 1, b_alpha))
+				fx_layer.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+
+		# Expanding target lock-on ring at `b_to`
+		var ring_r := lerpf(22.0, 56.0, b_prog)
+		fx_layer.draw_arc(b_to, ring_r, 0.0, TAU, 28, Color(beam_col.r, beam_col.g, beam_col.b, b_alpha * 0.88), 3.2)
+
+	# 3. Draw Hit Impact & Item Use Bursts
 	for b in vfx_bursts:
 		var frames: Array = b["frames"]
 		if not frames.is_empty():
@@ -2152,7 +2461,82 @@ func _draw_fx_layer() -> void:
 				fx_layer.draw_texture(btex, -btex.get_size() * 0.5, Color(1, 1, 1, 1.0 - ratio * 0.35))
 				fx_layer.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 
-	# 3. Draw Floating Combat Numbers & Skill Callouts
+	# 4. Draw Enlarged Pop-Up 4-Shard Card Shatter & Item Activation Overlays
+	var sh_break_tex := GameState.tex("res://assets/board_map/slots/slot_4_trigger_break.png")
+	for sp in shatter_popups:
+		var sp_prog := clampf(float(sp["time"]) / maxf(0.01, float(sp["duration"])), 0.0, 1.0)
+		var sp_pos: Vector2 = sp["pos"]
+		var sp_cid: String = str(sp["card_id"])
+		var sp_c := GameState.get_card(sp_cid)
+		var sp_rarity: String = str(sp_c.get("rarity", "N"))
+		var sp_art := GameState.tex(str(sp_c.get("card_art", "")))
+		var sp_rar_col: Color = GameState.RARITY_COLOR.get(sp_rarity, Color(0.82, 0.85, 0.92))
+		var is_item_sp: bool = bool(sp.get("is_item", false))
+
+		var pw := 92.0
+		var ph := 138.0
+		var shake_v := Vector2.ZERO
+		if sp_prog < 0.45:
+			var s_amp := (1.0 - sp_prog / 0.45) * 6.5
+			shake_v = Vector2(sin(sp_prog * 96.0) * s_amp, cos(sp_prog * 84.0) * s_amp)
+
+		var shard_t := clampf((sp_prog - 0.18) / 0.82, 0.0, 1.0)
+		var shard_a := clampf(1.0 - pow(shard_t, 1.30), 0.0, 1.0)
+		var burn_c := Color(
+			1.0,
+			lerpf(1.0, 0.34, shard_t),
+			lerpf(1.0, 0.12, shard_t),
+			shard_a
+		)
+		var s_dirs := [
+			Vector2(-1.0, -1.0),
+			Vector2(1.0, -1.0),
+			Vector2(-1.0, 1.0),
+			Vector2(1.0, 1.0),
+		]
+		var s_rots := [-0.82, 0.82, -0.64, 0.64]
+		var qw := pw * 0.5
+		var qh := ph * 0.5
+
+		for q_i in range(4):
+			var dv: Vector2 = s_dirs[q_i]
+			var q_loc := Vector2(dv.x * qw * 0.5, dv.y * qh * 0.5) + dv * (shard_t * 44.0)
+			var q_r: float = float(s_rots[q_i]) * shard_t
+			var q_sc := maxf(0.18, 1.12 - shard_t * 0.52)
+			var q_xf := Transform2D(0.0, sp_pos + shake_v) * Transform2D(q_r, q_loc).scaled_local(Vector2(q_sc, q_sc))
+			fx_layer.draw_set_transform_matrix(q_xf)
+
+			var qr := Rect2(-qw * 0.5, -qh * 0.5, qw, qh)
+			fx_layer.draw_rect(qr, Color(0.08, 0.04, 0.05, shard_a * 0.96), true)
+			if sp_art:
+				var ux := 0.0 if dv.x < 0.0 else 0.5
+				var uy := 0.0 if dv.y < 0.0 else 0.5
+				var asz := sp_art.get_size()
+				fx_layer.draw_texture_rect_region(
+					sp_art,
+					qr,
+					Rect2(asz.x * ux, asz.y * uy, asz.x * 0.5, asz.y * 0.5),
+					burn_c
+				)
+			fx_layer.draw_rect(qr, Color(sp_rar_col.r, sp_rar_col.g, sp_rar_col.b, shard_a * 0.85), false, 2.2)
+			fx_layer.draw_rect(qr.grow(-1.5), Color(1.0, 0.58, 0.16, shard_a * 0.95), false, 1.6)
+
+		# Overlay Item Use 4-frame burst or `slot_4_trigger_break.png` crack flash over the shattering card
+		var b_sc := 1.05 + sp_prog * 0.65
+		var b_al := clampf(1.25 - sp_prog * 1.25, 0.0, 1.0)
+		fx_layer.draw_set_transform(sp_pos + shake_v, 0.0, Vector2(b_sc, b_sc))
+		if is_item_sp:
+			var u_frames: Array = sp.get("use_frames", [])
+			if not u_frames.is_empty():
+				var uf_i := mini(u_frames.size() - 1, int(sp_prog * float(u_frames.size()) * 1.5))
+				var utex := GameState.tex(str(u_frames[uf_i]))
+				if utex:
+					fx_layer.draw_texture_rect(utex, Rect2(-56, -56, 112, 112), false, Color(1, 1, 1, b_al))
+		if sh_break_tex:
+			fx_layer.draw_texture_rect(sh_break_tex, Rect2(-pw * 0.55, -ph * 0.55, pw * 1.1, ph * 1.1), false, Color(1.0, 0.92, 0.78, b_al))
+		fx_layer.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+
+	# 5. Draw Floating Combat Numbers & Skill Callouts
 	for ft in floating_texts:
 		var ft_txt := str(ft["text"])
 		fx_layer.draw_string_outline(
@@ -2224,10 +2608,8 @@ func _on_board_gui_input(event: InputEvent) -> void:
 			if _get_slot_rect(0, s_i).has_point(mpos):
 				if slots[s_i]["state"] == "facedown":
 					recall_card_from_slot(0, s_i)
-					lbl_bot_log.text = "Đã nhặt lại bài từ Ô #%d về tay!" % (s_i + 1)
 				elif slots[s_i]["state"] == "empty" and selected_hand_idx >= 0:
 					place_card_from_hand(0, selected_hand_idx, s_i)
-					lbl_bot_log.text = "Đã đặt thẻ xuống Ô #%d!" % (s_i + 1)
 				elif slots[s_i]["state"] == "empty":
 					lbl_bot_log.text = "Hãy chạm vào 1 thẻ trên tay để rút thẻ lên trước khi đặt!"
 				elif slots[s_i]["state"] == "active_hero":
@@ -2392,11 +2774,9 @@ func _place_currently_selected_card() -> void:
 		return
 	var idx: int = selected_hand_idx
 	var c_inst: Dictionary = hand[idx]
-	var cid: String = str(c_inst["card_id"])
 	var best_slot: int = BotAI.choose_best_slot(c_inst, players[0]["slots"])
 	if best_slot >= 0:
 		place_card_from_hand(0, idx, best_slot)
-		lbl_bot_log.text = "Đã rút & đặt [%s] xuống Ô #%d!" % [cid, best_slot + 1]
 	else:
 		lbl_bot_log.text = "Cả 10 ô trên bàn đã đầy! Chạm vào 1 ô đang úp để nhặt bài về."
 
@@ -2664,7 +3044,11 @@ func _update_top_hud_labels() -> void:
 	for u in units:
 		if float(u["hp"]) > 0.0:
 			living_units += 1
-	var new_info := "Cọc bài: %d lá · Tướng: %d" % [
+	var p0_e: int = int(players[0].get("energy", 0)) if not players.is_empty() else 0
+	var p0_max_e: int = int(players[0].get("max_energy", 6)) if not players.is_empty() else 6
+	var new_info := "Linh Lực: %d/%d · Cọc: %d · Tướng: %d" % [
+		p0_e,
+		p0_max_e,
 		shared_deck.size(),
 		living_units
 	]

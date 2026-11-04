@@ -89,11 +89,14 @@ const COUNTER_TARGET := {
 }
 
 const RARITY_ORDER := {"N": 1, "R": 2, "S": 3, "SSR": 4}
+const RARITY_ENERGY_COST := {"N": 1, "R": 2, "S": 3, "SSR": 4}
+const ROUND_ENERGY_GAIN := 4
+const MAX_ROUND_ENERGY := 6
 const RARITY_COLOR := {
-	"N": Color(0.75, 0.79, 0.84),
-	"R": Color(0.28, 0.65, 0.98),
-	"S": Color(0.76, 0.42, 0.98),
-	"SSR": Color(0.98, 0.75, 0.18),
+	"N": Color(0.78, 0.82, 0.88),
+	"R": Color(0.24, 0.68, 1.0),
+	"S": Color(0.82, 0.38, 1.0),
+	"SSR": Color(1.0, 0.78, 0.16),
 }
 
 const ROLE_META := {
@@ -573,12 +576,23 @@ func get_total_owned_copies() -> int:
 	return total
 
 
-# Checks whether elem_a counters elem_b (+25% damage, target deals -15%)
+# Returns the deployment Linh Lực cost of a card (Item = 1, Hero N/R/S/SSR = 1/2/3/4)
+func get_card_energy_cost(card_id_or_uid: String) -> int:
+	var c := get_card(card_id_or_uid)
+	if c.is_empty():
+		return 1
+	if bool(c.get("is_item", false)):
+		return 1
+	var r: String = str(c.get("rarity", "N"))
+	return int(RARITY_ENERGY_COST.get(r, 1))
+
+
+# Checks whether elem_a counters elem_b (+50% damage dealt, target deals -30% damage)
 func does_element_counter(elem_a: String, elem_b: String) -> bool:
 	return COUNTER_TARGET.get(elem_a, "") == elem_b
 
 
-# Checks whether elem_a generates elem_b (Tương Sinh: +15% ATK & regen, +25% support/item boost)
+# Checks whether elem_a generates elem_b (Tương Sinh: +30% ATK & +25% DEF/MDEF + 3% HP/s on adjacent slots)
 func does_element_generate(elem_a: String, elem_b: String) -> bool:
 	return GEN_NEXT.get(elem_a, "") == elem_b
 

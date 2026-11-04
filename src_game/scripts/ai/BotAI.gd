@@ -231,25 +231,58 @@ static func score_card(card_inst: Dictionary, info: Dictionary) -> float:
 
 static func choose_best_slot(card_inst: Dictionary, slots: Array) -> int:
 	var cid: String = str(card_inst.get("card_id", "C001"))
+	var elem: String = str(card_inst.get("element", "kim"))
 	var c := GameState.get_card(cid)
 	var rg: String = str(c.get("role_group", "atk_phys"))
-	var is_ranged: bool = bool(c.get("is_ranged", false))
+	var is_ranged: bool = bool(c.get("is_ranged", false)) or float(c.get("range", 1.2)) >= 2.3
+	var is_item: bool = bool(c.get("is_item", false))
 
-	var preferred_order: Array = [4, 5, 3, 6, 2, 7, 1, 8, 0, 9]
-	if rg == "tanker":
-		# Tankers take central vanguard slots (4, 5, 3, 6)
-		preferred_order = [4, 5, 3, 6, 2, 7, 1, 8, 0, 9]
-	elif rg == "support" or is_ranged:
-		# Ranged / Support prefer safe backline flank slots (1, 8, 0, 9, 2, 7)
-		preferred_order = [1, 8, 0, 9, 2, 7, 3, 6, 4, 5]
-	else:
-		# Melee Strikers take inner-flank slots (3, 6, 2, 7, 4, 5)
-		preferred_order = [3, 6, 2, 7, 4, 5, 1, 8, 0, 9]
+	var best_s_idx := -1
+	var best_s_score := -99999.0
 
-	for s_idx in preferred_order:
-		if s_idx >= 0 and s_idx < slots.size() and slots[s_idx].get("state", "empty") == "empty":
-			return s_idx
-	return -1
+	for s_idx in range(slots.size()):
+		if str(slots[s_idx].get("state", "empty")) != "empty":
+			continue
+
+		var s_score := 0.0
+		var is_vanguard := (s_idx >= 3 and s_idx <= 6)
+
+		# 1. Positional Zone Role Scoring (Ô 4..7 Tiền Tuyến vs Ô 1..3 & 8..10 Hậu Phương)
+		if is_item:
+			s_score += (8.0 if is_vanguard else 5.0)
+		elif rg == "tanker":
+			s_score += (32.0 if is_vanguard else -14.0)
+		elif rg == "support" or rg == "atk_mag" or is_ranged:
+			s_score += (30.0 if not is_vanguard else -15.0)
+		else:
+			# Melee physical striker prefers Tiền Tuyến or inner flank
+			s_score += (24.0 if is_vanguard else 4.0)
+
+		# Slight tie-breaker toward balanced symmetry
+		s_score -= absf(float(s_idx) - 4.5) * 0.4
+
+		# 2. Adjacent Slot Elemental Link Scoring (Tương Sinh +45 vs Xung Khắc -55)
+		if not is_item:
+			for nb_idx in [s_idx - 1, s_idx + 1]:
+				if nb_idx < 0 or nb_idx >= slots.size():
+					continue
+				var nb: Dictionary = slots[nb_idx]
+				var nb_st: String = str(nb.get("state", "empty"))
+				if nb_st != "facedown" and nb_st != "active_hero":
+					continue
+				var nb_elem: String = str(nb.get("element", ""))
+				if nb_elem.is_empty():
+					continue
+				if GameState.does_element_generate(elem, nb_elem) or GameState.does_element_generate(nb_elem, elem):
+					s_score += 45.0
+				elif GameState.does_element_counter(elem, nb_elem) or GameState.does_element_counter(nb_elem, elem):
+					s_score -= 55.0
+
+		if s_score > best_s_score:
+			best_s_score = s_score
+			best_s_idx = s_idx
+
+	return best_s_idx
 
 
 # Executes 1 real-time decision step during the 15s Preparation Phase.
@@ -271,6 +304,7 @@ static func decide_prep_step(
 
 	var hand: Array = p.get("hand", [])
 	var slots: Array = p.get("slots", [])
+	var cur_energy: int = int(p.get("energy", GameState.ROUND_ENERGY_GAIN))
 	var info := analyze_battlefield(player_idx, players, units)
 
 	var my_alive: int = int(info.get("my_alive_units", 0))
@@ -287,7 +321,7 @@ static func decide_prep_step(
 		# Desperate defense / All-in when low HP
 		target_deploy = mini(4, hand.size() + placed_now)
 	elif my_alive >= 4 and int(info.get("enemy_alive_units", 0)) <= 1:
-		# Already dominating board -> Hold cards in hand!
+		# Already dominating board -> Hold cards & save Linh Lực!
 		target_deploy = 1
 
 	# --------------------------------------------------------------------------
@@ -302,7 +336,7 @@ static func decide_prep_step(
 			return {
 				"action": "recall",
 				"slot_idx": decoy_s,
-				"reason": "Mind-Game Fake-out: Nhặt lại bài dọa từ Ô #%d về tay!" % (decoy_s + 1),
+				"reason": "Mind-Game Fake-out: Nhặt lại bài dọa từ Ô #%d (hoàn Linh Lực)!" % (decoy_s + 1),
 			}
 
 		# Or check if any currently face-down card has low/negative tactical value
@@ -320,22 +354,26 @@ static func decide_prep_step(
 				return {
 					"action": "recall",
 					"slot_idx": worst_slot,
-					"reason": "Đọc bàn: Nhặt lại bài ở Ô #%d về tay giữ lực lượng!" % (worst_slot + 1),
+					"reason": "Đọc bàn: Nhặt lại bài ở Ô #%d về tay tích Linh Lực!" % (worst_slot + 1),
 				}
 
 	# --------------------------------------------------------------------------
-	# STAGE 1 (15.0s -> 9.2s): OPENING DEPLOY & FAKE-OUT OVERCOMMIT BLUFF
+	# STAGE 1 (15.0s -> 0.0s): TACTICAL DEPLOY WITHIN LINH LỰC BUDGET
 	# --------------------------------------------------------------------------
-	if hand.is_empty():
+	if hand.is_empty() or cur_energy <= 0:
 		return {"action": "none"}
 
-	# Score all cards in hand
+	# Score all affordable cards in hand (where cost <= cur_energy)
 	var best_h_idx := -1
 	var best_score := -999.0
-	var lowest_h_idx := 0
+	var lowest_h_idx := -1
 	var lowest_score := 9999.0
 
 	for h_i in range(hand.size()):
+		var cid_i: String = str(hand[h_i].get("card_id", "C001"))
+		var cost_i: int = GameState.get_card_energy_cost(cid_i)
+		if cost_i > cur_energy:
+			continue
 		var sc := score_card(hand[h_i], info)
 		if sc > best_score:
 			best_score = sc
@@ -344,13 +382,16 @@ static func decide_prep_step(
 			lowest_score = sc
 			lowest_h_idx = h_i
 
-	# Fake-out bluff in Stage 1: place an extra decoy card early to scare opponents, then recall it in Stage 2
+	if best_h_idx < 0:
+		return {"action": "none"}
+
+	# Fake-out bluff in Stage 1: place an extra cheap decoy card early to scare opponents, then recall it in Stage 2
 	if (
 		style == "FAKE_ALL_IN_BLUFF"
 		and prep_time_left > 9.5
 		and not bool(profile.get("has_done_fakeout", false))
 		and placed_now >= 1
-		and hand.size() >= 2
+		and lowest_h_idx >= 0
 	):
 		var decoy_slot := choose_best_slot(hand[lowest_h_idx], slots)
 		if decoy_slot >= 0:

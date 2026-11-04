@@ -188,16 +188,16 @@ func _build_tab_wuxing() -> VBoxContainer:
 
 	cnt_v.add_child(_make_section_header(
 		"res://assets/cards/icons/types/atk-phys/prop.png",
-		"TƯƠNG KHẮC (+25% SÁT THƯƠNG)",
+		"TƯƠNG KHẮC (+50% DAME GÂY RA / -30% DAME NHẬN)",
 		Color(1.0, 0.56, 0.46)
 	))
 
 	var counter_pairs := [
-		["kim", "moc", "Kim khắc Mộc (+25% Dame)"],
-		["moc", "tho", "Mộc khắc Thổ (+25% Dame)"],
-		["tho", "thuy", "Thổ khắc Thủy (+25% Dame)"],
-		["thuy", "hoa", "Thủy khắc Hỏa (+25% Dame)"],
-		["hoa", "kim", "Hỏa khắc Kim (+25% Dame)"],
+		["kim", "moc", "Kim khắc Mộc (+50% Dame / -30% Nhận)"],
+		["moc", "tho", "Mộc khắc Thổ (+50% Dame / -30% Nhận)"],
+		["tho", "thuy", "Thổ khắc Thủy (+50% Dame / -30% Nhận)"],
+		["thuy", "hoa", "Thủy khắc Hỏa (+50% Dame / -30% Nhận)"],
+		["hoa", "kim", "Hỏa khắc Kim (+50% Dame / -30% Nhận)"],
 	]
 	for pair in counter_pairs:
 		cnt_v.add_child(_make_element_relation_row(str(pair[0]), str(pair[1]), "KHẮC", Color(1.0, 0.48, 0.40), str(pair[2])))
@@ -212,16 +212,16 @@ func _build_tab_wuxing() -> VBoxContainer:
 
 	gen_v.add_child(_make_section_header(
 		"res://assets/cards/icons/types/support/prop.png",
-		"TƯƠNG SINH (+15% CÔNG & HỒI MÁU)",
+		"TƯƠNG SINH Ô LIỀN KỀ (+30% CÔNG, +25% THỦ, +3% HP/s)",
 		Color(0.46, 0.98, 0.62)
 	))
 
 	var gen_pairs := [
-		["kim", "thuy", "Kim sinh Thủy (+15% Công)"],
-		["thuy", "moc", "Thủy sinh Mộc (+15% Công)"],
-		["moc", "hoa", "Mộc sinh Hỏa (+15% Công)"],
-		["hoa", "tho", "Hỏa sinh Thổ (+15% Công)"],
-		["tho", "kim", "Thổ sinh Kim (+15% Công)"],
+		["kim", "thuy", "Kim sinh Thủy (Ô kề: +30% Công, +25% Thủ)"],
+		["thuy", "moc", "Thủy sinh Mộc (Ô kề: +30% Công, +25% Thủ)"],
+		["moc", "hoa", "Mộc sinh Hỏa (Ô kề: +30% Công, +25% Thủ)"],
+		["hoa", "tho", "Hỏa sinh Thổ (Ô kề: +30% Công, +25% Thủ)"],
+		["tho", "kim", "Thổ sinh Kim (Ô kề: +30% Công, +25% Thủ)"],
 	]
 	for pair in gen_pairs:
 		gen_v.add_child(_make_element_relation_row(str(pair[0]), str(pair[1]), "SINH", Color(0.42, 0.96, 0.58), str(pair[2])))
@@ -275,8 +275,9 @@ func _build_tab_how_to_play() -> VBoxContainer:
 
 	var prep_lbl := Label.new()
 	prep_lbl.text = (
-		"• 15s Chuẩn Bị: Chọn thẻ đang nhô lên rồi chạm vào 1 trong 10 ô trên bàn để Úp bài (chạm lại ô đang úp để nhặt về tay).\n"
-		+ "• Lật Bài & Chiến Đấu: Hết 15s, toàn bộ bài úp đồng loạt lật ngửa! Thẻ Vật Phẩm dùng ngay lập tức rồi biến mất; Thẻ Tướng lao ra sân tự động đánh."
+		"• LINH LỰC MỖI VÒNG: Mỗi vòng hồi +4 Linh Lực (tích trữ tối đa 6). Thẻ N / Item tốn 1, R tốn 2, S tốn 3, SSR tốn 4 Linh Lực. Nhặt lại bài đang úp hoàn trả 100% Linh Lực!\n"
+		+ "• LIÊN KẾT Ô LIỀN KỀ: Đặt 2 thẻ Tương Sinh ở 2 ô sát nhau nhận +30% Công, +25% Giáp/K.Phép & +3% HP/s; đặt 2 thẻ Khắc nhau cạnh nhau bị phạt -20% Công & Tốc đánh!\n"
+		+ "• VỊ TRÍ 10 Ô: 4 Ô Giữa (#4–#7 Tiền Tuyến) tăng +25% Máu & Khiên; 6 Ô Cánh (#1–#3, #8–#10 Hậu Phương) tăng +20% Tầm & Tốc đánh."
 	)
 	prep_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	prep_lbl.add_theme_font_size_override("font_size", 25)

@@ -166,12 +166,16 @@ func _draw() -> void:
 	else:
 		draw_rect(art_rect, Color(0.14, 0.16, 0.22), true)
 
-	# 3. Rarity Frame Overlay
+	# 3. Rarity Frame Overlay + Crisp Rarity-Colored Card Border (N=Silver, R=Blue, S=Purple, SSR=Gold)
+	var rarity_col: Color = GameState.RARITY_COLOR.get(rarity, Color(0.78, 0.82, 0.88))
 	var frame_suffix := "hd_512x768" if use_hd_frame else "slot_256x384"
 	var frame_path := "res://assets/mobile/cards/frames/frame_%s_%s.png" % [rarity, frame_suffix]
 	var frame_tex := GameState.tex(frame_path)
 	if frame_tex:
 		draw_texture_rect(frame_tex, Rect2(0, 0, w, h), false)
+	var border_w := maxf(2.0, (4.2 if rarity in ["S", "SSR"] else 3.2) * sx)
+	draw_rect(outer_rect, Color(rarity_col.r, rarity_col.g, rarity_col.b, 0.96), false, border_w)
+	draw_rect(art_rect, Color(rarity_col.r, rarity_col.g, rarity_col.b, 0.72), false, maxf(1.5, 2.2 * sx))
 
 	# 4. Element Socket Icon (cx=90, cy=139, r=23) & Type Socket Icon (cx=422, cy=139, r=23)
 	var elem_meta: Dictionary = GameState.ELEMENT_META.get(element, GameState.ELEMENT_META["kim"])
@@ -238,7 +242,7 @@ func _draw() -> void:
 	var stat_outline := maxi(2, int(5.0 * sx))
 	var stats_bg := Rect2(76.0 * sx, 547.0 * sy, 360.0 * sx, 112.0 * sy)
 	draw_rect(stats_bg, Color(0.05, 0.07, 0.12, 0.94), true)
-	draw_rect(stats_bg, Color(0.65, 0.56, 0.32, 0.45), false, 1.5)
+	draw_rect(stats_bg, Color(rarity_col.r, rarity_col.g, rarity_col.b, 0.62), false, 1.8)
 
 	if is_item:
 		var item_box := Rect2(82.0 * sx, 552.0 * sy, 348.0 * sx, 102.0 * sy)
@@ -291,30 +295,60 @@ func _draw() -> void:
 				s_info[2]
 			)
 
-	# 8. Card ID Slot & Clean Loadout / Owned Badge
-	var id_fsize := maxi(9, int(21.0 * sx))
+	# 8. Card ID Slot & Clean Loadout / Owned / Linh Lực Cost Badge
+	var energy_cost: int = GameState.get_card_energy_cost(card_id)
+	var id_fsize := maxi(9, int(20.0 * sx))
 	var id_outline := maxi(2, int(4.5 * sx))
+	var id_text := "%s · %dLL" % [card_id, energy_cost] if show_lock_if_unowned else card_id
 	draw_string_outline(
 		font,
-		Vector2(336.0 * sx, 688.0 * sy + float(id_fsize) * 0.45),
-		card_id,
+		Vector2(316.0 * sx, 688.0 * sy + float(id_fsize) * 0.45),
+		id_text,
 		HORIZONTAL_ALIGNMENT_CENTER,
-		106.0 * sx,
+		126.0 * sx,
 		id_fsize,
 		id_outline,
 		Color(0.01, 0.01, 0.03, 0.98)
 	)
 	draw_string(
 		font,
-		Vector2(336.0 * sx, 688.0 * sy + float(id_fsize) * 0.45),
-		card_id,
+		Vector2(316.0 * sx, 688.0 * sy + float(id_fsize) * 0.45),
+		id_text,
 		HORIZONTAL_ALIGNMENT_CENTER,
-		106.0 * sx,
+		126.0 * sx,
 		id_fsize,
 		GameState.RARITY_COLOR.get(rarity, Color.WHITE)
 	)
 
-	if in_loadout and show_lock_if_unowned:
+	if not show_lock_if_unowned:
+		var cost_rect := Rect2(76.0 * sx, 672.0 * sy, 162.0 * sx, 34.0 * sy)
+		draw_rect(cost_rect, Color(0.06, 0.20, 0.34, 0.96), true)
+		draw_rect(cost_rect, Color(0.36, 0.86, 1.0, 0.92), false, 2.0)
+		var bolt_tex := GameState.tex("res://assets/ui_hud/icons/icon_bolt_fast.png")
+		if bolt_tex:
+			draw_texture_rect(bolt_tex, Rect2(cost_rect.position.x + 6.0 * sx, cost_rect.position.y + 4.0 * sy, 26.0 * sx, 26.0 * sy), false)
+		var cost_fsize := maxi(9, int(19.0 * sx))
+		var cost_str := "%d LINH LỰC" % energy_cost
+		draw_string_outline(
+			font,
+			Vector2(cost_rect.position.x + 28.0 * sx, cost_rect.position.y + cost_rect.size.y * 0.5 + float(cost_fsize) * 0.36),
+			cost_str,
+			HORIZONTAL_ALIGNMENT_CENTER,
+			cost_rect.size.x - 30.0 * sx,
+			cost_fsize,
+			maxi(2, int(4.0 * sx)),
+			Color(0.01, 0.01, 0.03, 0.98)
+		)
+		draw_string(
+			font,
+			Vector2(cost_rect.position.x + 28.0 * sx, cost_rect.position.y + cost_rect.size.y * 0.5 + float(cost_fsize) * 0.36),
+			cost_str,
+			HORIZONTAL_ALIGNMENT_CENTER,
+			cost_rect.size.x - 30.0 * sx,
+			cost_fsize,
+			Color(0.56, 0.94, 1.0)
+		)
+	elif in_loadout and show_lock_if_unowned:
 		var badge_rect := Rect2(76.0 * sx, 672.0 * sy, 180.0 * sx, 34.0 * sy)
 		draw_rect(badge_rect, Color(0.12, 0.56, 0.28, 0.96), true)
 		draw_rect(badge_rect, Color(0.42, 0.98, 0.58), false, 2.0)
@@ -399,7 +433,13 @@ func _draw() -> void:
 		)
 
 	if is_selected_highlight:
-		draw_rect(outer_rect.grow(4.0), Color(0.98, 0.78, 0.18, 0.95), false, 4.0)
+		var sel_rim := Color(
+			lerpf(rarity_col.r, 1.0, 0.25),
+			lerpf(rarity_col.g, 1.0, 0.25),
+			lerpf(rarity_col.b, 1.0, 0.25),
+			0.98
+		)
+		draw_rect(outer_rect.grow(5.0 * sx), sel_rim, false, maxf(2.5, 4.2 * sx))
 
 	if flip_flash_alpha > 0.01:
 		var fl_col: Color = GameState.RARITY_COLOR.get(rarity, Color.WHITE)

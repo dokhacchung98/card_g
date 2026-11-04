@@ -151,14 +151,16 @@ func show_card(card_id: String, elem_override: String = "") -> void:
 	var owned_cnt: int = GameState.get_card_owned_count(current_card_id, current_element)
 	var elem_meta: Dictionary = GameState.ELEMENT_META.get(current_element, GameState.ELEMENT_META["kim"])
 
+	var energy_cost: int = GameState.get_card_energy_cost(current_card_id)
 	lbl_title.text = "[%s] %s · Bậc %s" % [
 		current_card_id,
 		str(c.get("name", "")),
 		rarity
 	]
-	lbl_meta.text = "Hệ %s  ·  %s\nSở hữu: %s" % [
+	lbl_meta.text = "Hệ %s  ·  %s  ·  Phí: %d Linh Lực\nSở hữu: %s" % [
 		str(elem_meta.get("short", "")),
 		str(c.get("role_label", "")),
+		energy_cost,
 		("x%d thẻ" % owned_cnt) if owned_cnt > 0 else "Chưa có",
 	]
 
@@ -167,22 +169,21 @@ func show_card(card_id: String, elem_override: String = "") -> void:
 
 	var gen_to: String = GameState.GEN_NEXT.get(current_element, "thuy")
 	var cnt_to: String = GameState.COUNTER_TARGET.get(current_element, "moc")
-	lbl_elem_mod.text = "NGŨ HÀNH:\n• Sinh %s (+15%% Công)\n• Khắc %s (+25%% Sát thương)" % [
+	lbl_elem_mod.text = "NGŨ HÀNH & LIÊN KẾT Ô:\n• Sinh %s (Ô liền kề: +30%% Công, +25%% Thủ)\n• Khắc %s (+50%% Dame gây ra / -30%% Dame nhận)" % [
 		str(GameState.ELEMENT_META[gen_to]["short"]),
 		str(GameState.ELEMENT_META[cnt_to]["short"]),
 	]
 
 	if bool(c.get("is_item", false)):
-		lbl_stats_summary.text = "VẬT PHẨM TỨC THÌ:\n• Mục tiêu: %s\n• Dùng ngay khi bắt đầu trận." % str(c.get("auto_target", ""))
+		lbl_stats_summary.text = "VẬT PHẨM TỨC THÌ (Tốn 1 Linh Lực):\n• Mục tiêu: %s (Ưu tiên theo khu vực Ô đặt)\n• Dùng ngay khi bắt đầu trận & tự hủy thẻ." % str(c.get("auto_target", ""))
 	else:
+		var rg_c: String = str(c.get("role_group", "atk_phys"))
+		var rec_slot := "Ô Giữa 4–7 (Tiền Tuyến: +25% HP & Khiên)" if (rg_c == "tanker" or (rg_c == "atk_phys" and float(c.get("range", 1.2)) < 2.2)) else "Ô Cánh 1–3, 8–10 (Hậu Phương: +20% Tầm & Tốc đánh)"
 		lbl_stats_summary.text = (
-			"CHỈ SỐ:\n"
+			"CHỈ SỐ & VỊ TRÍ Ô:\n"
 			+ "• Máu: %d   |   Dame: %d\n" % [int(c.get("hp", 0)), int(c.get("dame", 0))]
-			+ "• Giáp: %d   |   K.Phép: %d\n" % [int(c.get("def", 0)), int(c.get("mdef", 0))]
-			+ "• Tốc đánh: %.1f/s   |   Tầm: %.1f" % [
-				float(c.get("aspd", 1.0)),
-				float(c.get("range", 1.2)),
-			]
+			+ "• Giáp: %d   |   K.Phép: %d   |   Tầm: %.1f\n" % [int(c.get("def", 0)), int(c.get("mdef", 0)), float(c.get("range", 1.2))]
+			+ "• Gợi ý đặt: %s" % rec_slot
 		)
 
 	var in_deck := GameState.is_card_in_loadout(current_card_id, current_element)
