@@ -1,0 +1,5 @@
+Edit this top-down 1:1 square dark-fantasy 4-player card battle board:
+1) Keep the exact outer dark stone frame, the 4 corner square sockets, and all 40 rectangular gold-rimmed card slots along the top, bottom, left, and right edges in their exact positions and proportions.
+2) Completely remove all chains (iron chains hanging or draped across the corners, edges, and ledges) everywhere on the board.
+3) Completely remove the sunken recessed pit effect, 3D stepped inner stone ledges, and deep drop-off shadows inside the central square arena; instead, make the entire central square area inside the 40 card slots a single flat, flush, level dark-slate stone tabletop surface on the same flat plane.
+4) On that flat central stone surface, render the 5 Wuxing elemental emblems (Metal crossed swords, Wood tree, Water wave, Fire flame, Earth mountain arranged in a pentagram circle) as a very faint, low-contrast, subtle watermark engraving blended softly into the flat dark stone floor so it is flat and unobtrusive.
