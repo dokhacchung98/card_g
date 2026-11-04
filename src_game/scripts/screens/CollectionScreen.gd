@@ -78,25 +78,25 @@ func _build_ui() -> void:
 	top_row.add_child(col_icon)
 
 	var lbl_title := Label.new()
-	lbl_title.text = "KHO THẺ CỔ NGỮ"
+	lbl_title.text = "KHO THẺ 500 LÁ"
 	lbl_title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	lbl_title.clip_text = true
-	lbl_title.add_theme_font_size_override("font_size", 25)
-	lbl_title.add_theme_color_override("font_color", Color(0.98, 0.80, 0.24))
+	lbl_title.add_theme_font_size_override("font_size", 30)
+	lbl_title.add_theme_color_override("font_color", Color(0.98, 0.84, 0.28))
 	top_row.add_child(lbl_title)
 
 	lbl_summary = Label.new()
-	lbl_summary.add_theme_font_size_override("font_size", 19)
-	lbl_summary.add_theme_color_override("font_color", Color(0.52, 0.95, 0.65))
+	lbl_summary.add_theme_font_size_override("font_size", 24)
+	lbl_summary.add_theme_color_override("font_color", Color(0.52, 0.96, 0.68))
 	top_row.add_child(lbl_summary)
 
 	var btn_guide := Button.new()
-	btn_guide.text = "CẨM NANG"
+	btn_guide.text = "LUẬT"
 	btn_guide.icon = GameState.tex("res://assets/ui_hud/icons/icon_guide_book.png")
 	btn_guide.expand_icon = true
-	btn_guide.custom_minimum_size = Vector2(180, 58)
-	btn_guide.add_theme_font_size_override("font_size", 18)
-	GameState.apply_gui_button(btn_guide, "purple", false, 12, 8)
+	btn_guide.custom_minimum_size = Vector2(150, 68)
+	btn_guide.add_theme_font_size_override("font_size", 23)
+	GameState.apply_gui_button(btn_guide, "purple", false, 14, 10)
 	btn_guide.pressed.connect(func():
 		GameState.emit_signal("guide_requested", 0)
 	)
@@ -104,14 +104,14 @@ func _build_ui() -> void:
 
 	# Filter Row 1: Ownership, Role, Rarity
 	var row1 := HBoxContainer.new()
-	row1.add_theme_constant_override("separation", 10)
+	row1.add_theme_constant_override("separation", 12)
 	f_vbox.add_child(row1)
 
 	opt_ownership = _make_dropdown([
-		["all", "Sở hữu: Tất cả (500 Thẻ)", "res://assets/ui_hud/icons/icon_cards_hand.png"],
-		["owned", "Đã sở hữu", "res://assets/ui_hud/icons/icon_star_new.png"],
-		["unowned", "Chưa sở hữu", "res://assets/ui_hud/icons/icon_lock.png"],
-		["loadout", "Trong Bộ Bài 15 Lá", "res://assets/cards/icons/types/tanker/prop.png"],
+		["all", "Tất cả (500)", "res://assets/ui_hud/icons/icon_cards_hand.png"],
+		["owned", "Đã có", "res://assets/ui_hud/icons/icon_star_new.png"],
+		["unowned", "Chưa có", "res://assets/ui_hud/icons/icon_lock.png"],
+		["loadout", "Bộ 15 Lá", "res://assets/cards/icons/types/tanker/prop.png"],
 	], func(val):
 		filter_ownership = val
 		rebuild_grid()
@@ -119,12 +119,12 @@ func _build_ui() -> void:
 	row1.add_child(opt_ownership)
 
 	opt_role = _make_dropdown([
-		["all", "Loại thẻ: Tất cả (5 Nhóm)", "res://assets/cards/icons/types/atk-phys/prop.png"],
-		["atk_phys", "Tấn Công Vật Lý (C01-C20)", "res://assets/cards/icons/types/atk-phys/prop.png"],
-		["atk_mag", "Tấn Công Ma Pháp (C21-C40)", "res://assets/cards/icons/types/atk-mag/prop.png"],
-		["tanker", "Tanker Đỡ Đòn (C41-C60)", "res://assets/cards/icons/types/tanker/prop.png"],
-		["support", "Hỗ Trợ Support (C61-C80)", "res://assets/cards/icons/types/support/prop.png"],
-		["item", "Vật Phẩm Item (C81-C100)", "res://assets/cards/icons/types/item/prop.png"],
+		["all", "Mọi Loại", "res://assets/cards/icons/types/atk-phys/prop.png"],
+		["atk_phys", "Vật Lý", "res://assets/cards/icons/types/atk-phys/prop.png"],
+		["atk_mag", "Ma Pháp", "res://assets/cards/icons/types/atk-mag/prop.png"],
+		["tanker", "Đỡ Đòn", "res://assets/cards/icons/types/tanker/prop.png"],
+		["support", "Hỗ Trợ", "res://assets/cards/icons/types/support/prop.png"],
+		["item", "Vật Phẩm", "res://assets/cards/icons/types/item/prop.png"],
 	], func(val):
 		filter_role = val
 		rebuild_grid()
@@ -132,11 +132,11 @@ func _build_ui() -> void:
 	row1.add_child(opt_role)
 
 	opt_rarity = _make_dropdown([
-		["all", "Độ hiếm: Tất cả", "res://assets/ui_hud/icons/icon_star_new.png"],
-		["SSR", "Bậc SSR (Huyền Thoại)", "res://assets/ui_hud/icons/icon_star_new.png"],
-		["S", "Bậc S (Siêu Hiếm)", "res://assets/ui_hud/icons/icon_star_new.png"],
-		["R", "Bậc R (Hiếm)", "res://assets/ui_hud/icons/icon_cards_hand.png"],
-		["N", "Bậc N (Thường)", "res://assets/ui_hud/icons/icon_cards_hand.png"],
+		["all", "Mọi Bậc", "res://assets/ui_hud/icons/icon_star_new.png"],
+		["SSR", "Bậc SSR", "res://assets/ui_hud/icons/icon_star_new.png"],
+		["S", "Bậc S", "res://assets/ui_hud/icons/icon_star_new.png"],
+		["R", "Bậc R", "res://assets/ui_hud/icons/icon_cards_hand.png"],
+		["N", "Bậc N", "res://assets/ui_hud/icons/icon_cards_hand.png"],
 	], func(val):
 		filter_rarity = val
 		rebuild_grid()
@@ -145,16 +145,16 @@ func _build_ui() -> void:
 
 	# Filter Row 2: Element, Sort Mode, Quick Loadout Toggle
 	var row2 := HBoxContainer.new()
-	row2.add_theme_constant_override("separation", 10)
+	row2.add_theme_constant_override("separation", 12)
 	f_vbox.add_child(row2)
 
 	opt_element = _make_dropdown([
-		["all", "Hệ Ngũ Hành: Tất cả", "res://assets/cards/icons/elements/ngu-hanh/prop.png"],
-		["kim", "Hệ Kim (Metal)", "res://assets/cards/icons/elements/kim/prop.png"],
-		["moc", "Hệ Mộc (Wood)", "res://assets/cards/icons/elements/moc/prop.png"],
-		["thuy", "Hệ Thủy (Water)", "res://assets/cards/icons/elements/thuy/prop.png"],
-		["hoa", "Hệ Hỏa (Fire)", "res://assets/cards/icons/elements/hoa/prop.png"],
-		["tho", "Hệ Thổ (Earth)", "res://assets/cards/icons/elements/tho/prop.png"],
+		["all", "Mọi Hệ", "res://assets/cards/icons/elements/ngu-hanh/prop.png"],
+		["kim", "Hệ Kim", "res://assets/cards/icons/elements/kim/prop.png"],
+		["moc", "Hệ Mộc", "res://assets/cards/icons/elements/moc/prop.png"],
+		["thuy", "Hệ Thủy", "res://assets/cards/icons/elements/thuy/prop.png"],
+		["hoa", "Hệ Hỏa", "res://assets/cards/icons/elements/hoa/prop.png"],
+		["tho", "Hệ Thổ", "res://assets/cards/icons/elements/tho/prop.png"],
 	], func(val):
 		filter_element = val
 		rebuild_grid()
@@ -162,12 +162,11 @@ func _build_ui() -> void:
 	row2.add_child(opt_element)
 
 	opt_sort = _make_dropdown([
-		["id_asc", "Sort: Mã thẻ (C001 -> C100)", "res://assets/ui_hud/icons/icon_cards_hand.png"],
-		["rarity_desc", "Sort: Độ hiếm (SSR -> N)", "res://assets/ui_hud/icons/icon_star_new.png"],
-		["rarity_asc", "Sort: Độ hiếm (N -> SSR)", "res://assets/ui_hud/icons/icon_star_new.png"],
-		["role", "Sort: Theo Loại Thẻ", "res://assets/cards/icons/types/atk-phys/prop.png"],
-		["element", "Sort: Theo Hệ Ngũ Hành", "res://assets/cards/icons/elements/ngu-hanh/prop.png"],
-		["owned_desc", "Sort: Đã sở hữu lên đầu", "res://assets/ui_hud/icons/icon_cards_hand.png"],
+		["id_asc", "Xếp: Mã Thẻ", "res://assets/ui_hud/icons/icon_cards_hand.png"],
+		["rarity_desc", "Xếp: SSR -> N", "res://assets/ui_hud/icons/icon_star_new.png"],
+		["owned_desc", "Xếp: Đã Có", "res://assets/ui_hud/icons/icon_cards_hand.png"],
+		["role", "Xếp: Vai Trò", "res://assets/cards/icons/types/atk-phys/prop.png"],
+		["element", "Xếp: Hệ", "res://assets/cards/icons/elements/ngu-hanh/prop.png"],
 	], func(val):
 		sort_mode = val
 		rebuild_grid()
@@ -175,18 +174,18 @@ func _build_ui() -> void:
 	row2.add_child(opt_sort)
 
 	btn_quick_mode = Button.new()
-	btn_quick_mode.custom_minimum_size = Vector2(280, 48)
-	btn_quick_mode.add_theme_font_size_override("font_size", 17)
+	btn_quick_mode.custom_minimum_size = Vector2(280, 66)
+	btn_quick_mode.add_theme_font_size_override("font_size", 22)
 	btn_quick_mode.icon = GameState.tex("res://assets/ui_hud/icons/icon_cards_hand.png")
 	btn_quick_mode.expand_icon = true
-	btn_quick_mode.text = "Chạm Thẻ: Xem Chi Tiết"
+	btn_quick_mode.text = "Chạm: Xem Thẻ"
 	GameState.apply_gui_button(btn_quick_mode, "purple", false)
 	btn_quick_mode.pressed.connect(func():
 		quick_deck_toggle_mode = not quick_deck_toggle_mode
 		btn_quick_mode.text = (
-			"Chạm Thẻ: Chọn/Gỡ Bộ 15 Lá"
+			"Chạm: Chọn 15 Lá"
 			if quick_deck_toggle_mode
-			else "Chạm Thẻ: Xem Chi Tiết"
+			else "Chạm: Xem Thẻ"
 		)
 		GameState.apply_gui_button(btn_quick_mode, "gold" if quick_deck_toggle_mode else "purple", false)
 	)
@@ -199,7 +198,7 @@ func _build_ui() -> void:
 
 	var ld_icon := TextureRect.new()
 	ld_icon.texture = GameState.tex("res://assets/cards/icons/types/tanker/prop.png")
-	ld_icon.custom_minimum_size = Vector2(28, 28)
+	ld_icon.custom_minimum_size = Vector2(36, 36)
 	ld_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	ld_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	row3.add_child(ld_icon)
@@ -207,14 +206,14 @@ func _build_ui() -> void:
 	lbl_loadout_bar = Label.new()
 	lbl_loadout_bar.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	lbl_loadout_bar.clip_text = true
-	lbl_loadout_bar.add_theme_font_size_override("font_size", 17)
+	lbl_loadout_bar.add_theme_font_size_override("font_size", 23)
 	lbl_loadout_bar.add_theme_color_override("font_color", Color(0.86, 0.92, 0.98))
 	row3.add_child(lbl_loadout_bar)
 
 	var btn_reset_filters := Button.new()
-	btn_reset_filters.text = "Đặt lại Bộ lọc"
-	btn_reset_filters.custom_minimum_size = Vector2(170, 44)
-	btn_reset_filters.add_theme_font_size_override("font_size", 16)
+	btn_reset_filters.text = "Mặc Định"
+	btn_reset_filters.custom_minimum_size = Vector2(180, 58)
+	btn_reset_filters.add_theme_font_size_override("font_size", 22)
 	GameState.apply_gui_button(btn_reset_filters, "wood", false)
 	btn_reset_filters.pressed.connect(_reset_all_filters)
 	row3.add_child(btn_reset_filters)
@@ -235,11 +234,11 @@ func _build_ui() -> void:
 
 func _make_back_home_button() -> Button:
 	var b := Button.new()
-	b.text = "SẢNH CHÍNH"
-	b.custom_minimum_size = Vector2(204, 60)
-	b.add_theme_font_size_override("font_size", 19)
+	b.text = "SẢNH"
+	b.custom_minimum_size = Vector2(170, 68)
+	b.add_theme_font_size_override("font_size", 24)
 	b.add_theme_color_override("font_color", Color(1.0, 0.92, 0.65))
-	GameState.apply_gui_button(b, "back_home", false, 44, 8)
+	GameState.apply_gui_button(b, "back_home", false, 44, 10)
 	b.pressed.connect(func(): GameState.emit_signal("screen_requested", "home"))
 	return b
 
@@ -250,9 +249,12 @@ func _make_dropdown(items: Array, on_select: Callable) -> OptionButton:
 	ob.clip_text = true
 	ob.expand_icon = true
 	ob.fit_to_longest_item = false
-	ob.custom_minimum_size = Vector2(0, 56)
-	ob.add_theme_font_size_override("font_size", 18)
-	GameState.apply_gui_button(ob, "slate", false, 14, 8)
+	ob.custom_minimum_size = Vector2(0, 66)
+	ob.add_theme_font_size_override("font_size", 22)
+	var pop := ob.get_popup()
+	if pop:
+		pop.add_theme_font_size_override("font_size", 24)
+	GameState.apply_gui_button(ob, "slate", false, 14, 10)
 	for i in range(items.size()):
 		if items[i].size() >= 3:
 			var ic := GameState.tex(str(items[i][2]))
@@ -379,11 +381,6 @@ func rebuild_grid() -> void:
 		extra_cw.set_process(false)
 
 	var owned_500 := GameState.get_owned_unique_count()
-	lbl_summary.text = "Coin: %d · KC: %d | Hiển thị: %d/500 | Đã có: %d/500" % [
-		GameState.gold,
-		GameState.diamonds,
-		filtered.size(),
-		owned_500,
-	]
+	lbl_summary.text = "Đã có: %d/500" % owned_500
 	var v_info := GameState.is_loadout_valid(GameState.loadout_deck)
 	lbl_loadout_bar.text = str(v_info.get("reason", ""))

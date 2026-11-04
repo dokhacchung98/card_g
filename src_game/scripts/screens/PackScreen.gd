@@ -88,40 +88,40 @@ func _build_ui() -> void:
 	top_hbox.add_child(title_vbox)
 
 	var lbl_t := Label.new()
-	lbl_t.text = "ĐÀI TRIỆU HỒI 5 CẤP RƯƠNG (10 THẺ/PACK)"
+	lbl_t.text = "ĐÀI MỞ RƯƠNG (10 THẺ)"
 	lbl_t.clip_text = true
-	lbl_t.add_theme_font_size_override("font_size", 19)
-	lbl_t.add_theme_color_override("font_color", Color(0.98, 0.80, 0.24))
+	lbl_t.add_theme_font_size_override("font_size", 28)
+	lbl_t.add_theme_color_override("font_color", Color(0.98, 0.84, 0.28))
 	title_vbox.add_child(lbl_t)
 
 	lbl_pack_count = Label.new()
 	lbl_pack_count.clip_text = true
-	lbl_pack_count.add_theme_font_size_override("font_size", 14)
+	lbl_pack_count.add_theme_font_size_override("font_size", 22)
 	lbl_pack_count.add_theme_color_override("font_color", Color(0.55, 0.94, 0.68))
 	title_vbox.add_child(lbl_pack_count)
 
 	var btn_guide := Button.new()
-	btn_guide.text = "HƯỚNG DẪN"
+	btn_guide.text = "LUẬT"
 	btn_guide.icon = GameState.tex("res://assets/ui_hud/icons/icon_guide_book.png")
 	btn_guide.expand_icon = true
-	btn_guide.custom_minimum_size = Vector2(166, 50)
-	btn_guide.add_theme_font_size_override("font_size", 14)
-	GameState.apply_gui_button(btn_guide, "purple", false, 8, 8)
+	btn_guide.custom_minimum_size = Vector2(148, 66)
+	btn_guide.add_theme_font_size_override("font_size", 23)
+	GameState.apply_gui_button(btn_guide, "purple", false, 10, 8)
 	btn_guide.pressed.connect(func():
 		GameState.emit_signal("guide_requested", 2)
 	)
 	top_hbox.add_child(btn_guide)
 
 	var btn_free := Button.new()
-	btn_free.text = "+Coin & KC"
+	btn_free.text = "+QUÀ"
 	btn_free.icon = GameState.tex("res://assets/ui_hud/icons/icon_shop_chest.png")
 	btn_free.expand_icon = true
-	btn_free.custom_minimum_size = Vector2(164, 50)
-	btn_free.add_theme_font_size_override("font_size", 14)
-	GameState.apply_gui_button(btn_free, "green", false, 8, 8)
+	btn_free.custom_minimum_size = Vector2(148, 66)
+	btn_free.add_theme_font_size_override("font_size", 23)
+	GameState.apply_gui_button(btn_free, "green", false, 10, 8)
 	btn_free.pressed.connect(func():
 		GameState.add_demo_currencies(2000, 300)
-		lbl_pull_summary.text = "Đã nhận viện trợ: +2000 Coin (Mua Pack #1-#3) & +300 Kim Cương (Mua Pack #4-#5)!"
+		lbl_pull_summary.text = "Nhận +2000 Vàng & +300 Kim Cương!"
 		refresh_header()
 	)
 	top_hbox.add_child(btn_free)
@@ -134,9 +134,9 @@ func _build_ui() -> void:
 	for p_id in range(1, 6):
 		var b := Button.new()
 		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		b.custom_minimum_size = Vector2(0, 102)
+		b.custom_minimum_size = Vector2(0, 104)
 		b.clip_text = true
-		b.add_theme_font_size_override("font_size", 16)
+		b.add_theme_font_size_override("font_size", 22)
 		var captured_id := p_id
 		b.pressed.connect(func():
 			if not is_animating:
@@ -160,10 +160,10 @@ func _build_ui() -> void:
 	pack_sprite = TextureRect.new()
 	if not pack_frames.is_empty():
 		pack_sprite.texture = pack_frames[0]
-	pack_sprite.custom_minimum_size = Vector2(186, 186)
+	pack_sprite.custom_minimum_size = Vector2(180, 180)
 	pack_sprite.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	pack_sprite.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	pack_sprite.pivot_offset = Vector2(93, 93)
+	pack_sprite.pivot_offset = Vector2(90, 90)
 	stage_hbox.add_child(pack_sprite)
 
 	var ctrl_vbox := VBoxContainer.new()
@@ -174,14 +174,14 @@ func _build_ui() -> void:
 
 	lbl_selected_pack_title = Label.new()
 	lbl_selected_pack_title.clip_text = true
-	lbl_selected_pack_title.add_theme_font_size_override("font_size", 24)
+	lbl_selected_pack_title.add_theme_font_size_override("font_size", 27)
 	ctrl_vbox.add_child(lbl_selected_pack_title)
 
 	lbl_rates = Label.new()
 	lbl_rates.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	lbl_rates.custom_minimum_size = Vector2(680, 0)
 	lbl_rates.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	lbl_rates.add_theme_font_size_override("font_size", 18)
+	lbl_rates.add_theme_font_size_override("font_size", 23)
 	lbl_rates.add_theme_color_override("font_color", Color(0.84, 0.90, 0.96))
 	ctrl_vbox.add_child(lbl_rates)
 
@@ -191,17 +191,17 @@ func _build_ui() -> void:
 
 	btn_buy_pack = Button.new()
 	btn_buy_pack.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	btn_buy_pack.custom_minimum_size = Vector2(0, 68)
+	btn_buy_pack.custom_minimum_size = Vector2(0, 76)
 	btn_buy_pack.clip_text = true
-	btn_buy_pack.add_theme_font_size_override("font_size", 20)
+	btn_buy_pack.add_theme_font_size_override("font_size", 24)
 	btn_buy_pack.pressed.connect(_on_buy_pack_pressed)
 	action_btns_row.add_child(btn_buy_pack)
 
 	btn_open_pack = Button.new()
 	btn_open_pack.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	btn_open_pack.custom_minimum_size = Vector2(0, 68)
+	btn_open_pack.custom_minimum_size = Vector2(0, 76)
 	btn_open_pack.clip_text = true
-	btn_open_pack.add_theme_font_size_override("font_size", 20)
+	btn_open_pack.add_theme_font_size_override("font_size", 24)
 	GameState.apply_gui_button(btn_open_pack, "gold", false)
 	btn_open_pack.pressed.connect(_on_open_pack_pressed)
 	action_btns_row.add_child(btn_open_pack)
@@ -210,8 +210,8 @@ func _build_ui() -> void:
 	lbl_pull_summary.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	lbl_pull_summary.custom_minimum_size = Vector2(680, 0)
 	lbl_pull_summary.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	lbl_pull_summary.text = "Chọn 1 trong 5 loại Pack ở trên và bấm Khai Mở để xem nghi thức mở gói & lật 10 tấm thẻ!"
-	lbl_pull_summary.add_theme_font_size_override("font_size", 18)
+	lbl_pull_summary.text = "Chọn Rương và bấm MỞ RƯƠNG để nhận 10 thẻ!"
+	lbl_pull_summary.add_theme_font_size_override("font_size", 22)
 	lbl_pull_summary.add_theme_color_override("font_color", Color(0.98, 0.84, 0.36))
 	ctrl_vbox.add_child(lbl_pull_summary)
 
@@ -295,13 +295,13 @@ func _build_ceremony_overlay() -> void:
 
 	ceremony_title_lbl = Label.new()
 	ceremony_title_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	ceremony_title_lbl.add_theme_font_size_override("font_size", 28)
+	ceremony_title_lbl.add_theme_font_size_override("font_size", 32)
 	ceremony_title_lbl.add_theme_color_override("font_color", Color(1.0, 0.86, 0.32))
 	head_vbox.add_child(ceremony_title_lbl)
 
 	ceremony_status_lbl = Label.new()
 	ceremony_status_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	ceremony_status_lbl.add_theme_font_size_override("font_size", 18)
+	ceremony_status_lbl.add_theme_font_size_override("font_size", 24)
 	ceremony_status_lbl.add_theme_color_override("font_color", Color(0.76, 0.90, 1.0))
 	head_vbox.add_child(ceremony_status_lbl)
 
@@ -315,7 +315,7 @@ func _build_ceremony_overlay() -> void:
 	ceremony_cards_grid.add_theme_constant_override("v_separation", 18)
 	grid_center.add_child(ceremony_cards_grid)
 
-	# Bottom Buttons Row: "MỞ TẤT CẢ (LẬT 10 THẺ)" & "MỞ TẤT & THU VÀO BỘ SƯU TẬP (ĐÓNG)"
+	# Bottom Buttons Row: "LẬT TẤT CẢ" & "THU VÀO KHO"
 	var btn_row := HBoxContainer.new()
 	btn_row.alignment = BoxContainer.ALIGNMENT_CENTER
 	btn_row.add_theme_constant_override("separation", 20)
@@ -324,8 +324,8 @@ func _build_ceremony_overlay() -> void:
 	btn_flip_all = _make_ceremony_ornate_button(
 		"res://assets/ui_hud/gui/btn_nav_gacha.png",
 		Vector2(470, 134),
-		"MỞ TẤT CẢ (LẬT 10 THẺ)",
-		"Lật đồng loạt toàn bộ thẻ đang úp",
+		"LẬT TẤT CẢ 10 THẺ",
+		"",
 		Color(0.98, 0.86, 1.0),
 		_on_flip_all_pressed
 	)
@@ -334,8 +334,8 @@ func _build_ceremony_overlay() -> void:
 	btn_collect_close = _make_ceremony_ornate_button(
 		"res://assets/ui_hud/gui/btn_play_battle.png",
 		Vector2(510, 134),
-		"THU VÀO COLLECTION",
-		"Đã tự lưu vào Kho Thẻ · Chạm để đóng",
+		"THU VÀO KHO (ĐÓNG)",
+		"",
 		Color(1.0, 0.92, 0.48),
 		_on_close_ceremony_pressed
 	)
@@ -354,7 +354,7 @@ func _make_ceremony_ornate_button(
 	tex_path: String,
 	min_sz: Vector2,
 	title_txt: String,
-	sub_txt: String,
+	_sub_txt: String,
 	title_col: Color,
 	on_click: Callable
 ) -> Button:
@@ -377,47 +377,31 @@ func _make_ceremony_ornate_button(
 	margin.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	margin.add_theme_constant_override("margin_left", 84)
 	margin.add_theme_constant_override("margin_right", 28)
-	margin.add_theme_constant_override("margin_top", 16)
-	margin.add_theme_constant_override("margin_bottom", 16)
+	margin.add_theme_constant_override("margin_top", 14)
+	margin.add_theme_constant_override("margin_bottom", 14)
 	margin.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	b.add_child(margin)
-
-	var vb := VBoxContainer.new()
-	vb.alignment = BoxContainer.ALIGNMENT_CENTER
-	vb.add_theme_constant_override("separation", 3)
-	vb.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	margin.add_child(vb)
 
 	var l1 := Label.new()
 	l1.text = title_txt
 	l1.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	l1.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	l1.clip_text = true
-	l1.add_theme_font_size_override("font_size", 20)
+	l1.add_theme_font_size_override("font_size", 28)
 	l1.add_theme_color_override("font_color", title_col)
 	l1.add_theme_color_override("font_outline_color", Color(0.02, 0.01, 0.03, 0.98))
-	l1.add_theme_constant_override("outline_size", 4)
+	l1.add_theme_constant_override("outline_size", 5)
 	l1.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	vb.add_child(l1)
-
-	var l2 := Label.new()
-	l2.text = sub_txt
-	l2.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	l2.clip_text = true
-	l2.add_theme_font_size_override("font_size", 13)
-	l2.add_theme_color_override("font_color", Color(0.92, 0.94, 0.98))
-	l2.add_theme_color_override("font_outline_color", Color(0.02, 0.01, 0.03, 0.98))
-	l2.add_theme_constant_override("outline_size", 3)
-	l2.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	vb.add_child(l2)
+	margin.add_child(l1)
 
 	return b
 
 
 func _make_back_home_button() -> Button:
 	var b := Button.new()
-	b.text = "SẢNH CHÍNH"
-	b.custom_minimum_size = Vector2(194, 58)
-	b.add_theme_font_size_override("font_size", 16)
+	b.text = "SẢNH"
+	b.custom_minimum_size = Vector2(168, 66)
+	b.add_theme_font_size_override("font_size", 24)
 	b.add_theme_color_override("font_color", Color(1.0, 0.92, 0.65))
 	GameState.apply_gui_button(b, "back_home", false, 44, 8)
 	b.pressed.connect(func():
@@ -434,48 +418,38 @@ func refresh_header() -> void:
 	var sel_meta: Dictionary = GameState.PACK_TYPES[sel_id]
 	var sel_cnt := GameState.get_pack_type_count(sel_id)
 
-	lbl_pack_count.text = "Coin: %d · Kim Cương: %d · Rương: %d · Thẻ: %d/500" % [
+	lbl_pack_count.text = "Vàng: %d · KC: %d · Rương: %d" % [
 		GameState.gold,
 		GameState.diamonds,
-		GameState.pack_count,
-		GameState.get_owned_unique_count()
+		GameState.pack_count
 	]
 
 	var tab_variants := {1: "wood", 2: "green", 3: "slate", 4: "purple", 5: "gold"}
 	for p_id in range(1, 6):
 		var b: Button = pack_tab_btns[p_id]
 		var pm: Dictionary = GameState.PACK_TYPES[p_id]
-		var r: Dictionary = pm["rates"]
 		var cnt := GameState.get_pack_type_count(p_id)
 		var is_sel := (p_id == sel_id)
 		var p_col: Color = pm["color"]
 		var price_val: int = int(pm.get("price", 200))
-		var cur_label: String = "Kim Cương" if str(pm.get("currency", "coin")) == "diamond" else "Coin"
+		var cur_label: String = "KC" if str(pm.get("currency", "coin")) == "diamond" else "Vàng"
 		b.icon = null
-		b.text = "%s [x%d]\nGiá: %d %s\nS:%s%% · SSR:%s%%" % [
-			pm["short_name"],
+		b.text = "RƯƠNG #%d [x%d]\n%d %s" % [
+			p_id,
 			cnt,
 			price_val,
-			cur_label,
-			str(r["S"]),
-			str(r["SSR"])
+			cur_label
 		]
 		GameState.apply_gui_button(b, str(tab_variants.get(p_id, "gold")) if is_sel else "slate", false, 8, 8)
 		b.add_theme_color_override("font_color", Color(1.0, 0.97, 0.85) if is_sel else p_col)
 
 	var sel_price: int = int(sel_meta.get("price", 200))
-	var sel_cur_name: String = str(sel_meta.get("currency_label", "Coin"))
+	var sel_cur_name: String = "KC" if str(sel_meta.get("currency", "coin")) == "diamond" else "Vàng"
 	var is_diamond_pack: bool = str(sel_meta.get("currency", "coin")) == "diamond"
-	lbl_selected_pack_title.text = "%s  —  Giá: %d %s  (Đang có: x%d)" % [sel_meta["name"], sel_price, sel_cur_name, sel_cnt]
+	lbl_selected_pack_title.text = "%s (Đang có: x%d)" % [sel_meta["name"], sel_cnt]
 	lbl_selected_pack_title.add_theme_color_override("font_color", sel_meta["color"])
 
-	lbl_rates.text = (
-		"• Tỷ lệ rơi của %s:  [ %s ]\n" % [sel_meta["short_name"], sel_meta["rate_text"]]
-		+ "• Quy tắc mua: %s (%s)" % [
-			"Chỉ mua bằng KIM CƯƠNG (2 Pack cuối #4 & #5)" if is_diamond_pack else "Mua bằng COIN (3 Pack đầu #1, #2 & #3)",
-			sel_meta["desc"]
-		]
-	)
+	lbl_rates.text = "Tỷ lệ: %s" % sel_meta["rate_text"]
 
 	if pack_sprite:
 		pack_sprite.self_modulate = sel_meta["tint"]
@@ -484,7 +458,7 @@ func refresh_header() -> void:
 		if btn_buy_pack:
 			btn_buy_pack.icon = GameState.tex(str(sel_meta.get("currency_icon", "res://assets/ui_hud/icons/icon_coin_gold.png")))
 			btn_buy_pack.expand_icon = true
-			btn_buy_pack.text = "MUA +1 %s (%d %s)" % [sel_meta["short_name"], sel_price, sel_cur_name]
+			btn_buy_pack.text = "MUA +1 (%d %s)" % [sel_price, sel_cur_name]
 			GameState.apply_gui_button(btn_buy_pack, "purple" if is_diamond_pack else "green", false, 12, 8)
 			btn_buy_pack.add_theme_color_override("font_color", Color(0.86, 0.96, 1.0) if is_diamond_pack else Color(1.0, 0.96, 0.80))
 
@@ -492,9 +466,9 @@ func refresh_header() -> void:
 		btn_open_pack.icon = GameState.tex("res://assets/ui_hud/icons/icon_star_new.png")
 		btn_open_pack.expand_icon = true
 		if sel_cnt <= 0:
-			btn_open_pack.text = "HẾT %s (Hãy mua thêm bên trái)" % sel_meta["short_name"]
+			btn_open_pack.text = "HẾT RƯƠNG"
 		else:
-			btn_open_pack.text = "KHAI MỞ %s (Còn x%d Pack)" % [sel_meta["short_name"], sel_cnt]
+			btn_open_pack.text = "MỞ RƯƠNG (x%d)" % sel_cnt
 
 
 func _on_buy_pack_pressed() -> void:

@@ -2,6 +2,7 @@ extends Node
 
 signal auth_state_changed(user_profile: Dictionary)
 signal login_succeeded(user_profile: Dictionary, is_first_login: bool)
+signal login_failed(error_message: String)
 signal matchmaking_updated(room_data: Dictionary)
 signal matchmaking_started_battle(room_data: Dictionary)
 signal room_error(err_msg: String)
@@ -30,6 +31,7 @@ var current_user: Dictionary = {
 	"googleId": "",
 	"email": "",
 	"displayName": "Đại Pháp Sư Lam Long",
+	"photoUrl": "",
 	"isGoogleLinked": false,
 	"elo": 1200,
 }
@@ -109,9 +111,12 @@ func logout() -> void:
 		"googleId": "",
 		"email": "",
 		"displayName": "Đại Pháp Sư Lam Long",
+		"photoUrl": "",
 		"isGoogleLinked": false,
 		"elo": 1200,
 	}
+	if OS.has_feature("web"):
+		JavaScriptBridge.eval("localStorage.removeItem('arcana_google_email'); localStorage.removeItem('arcana_google_name'); if (window.firebase && window.firebase.auth) { window.firebase.auth().signOut().catch(function(){}); }", true)
 	if FileAccess.file_exists(AUTH_SAVE_PATH):
 		DirAccess.remove_absolute(ProjectSettings.globalize_path(AUTH_SAVE_PATH))
 	emit_signal("auth_state_changed", current_user)
@@ -139,8 +144,28 @@ func check_server_health() -> void:
 # ==============================================================================
 # 1. GOOGLE OAUTH 1-TAP LOGIN & ACCOUNT SYNC (Online Firebase + Offline Fallback)
 # ==============================================================================
+var _web_auth_timer: Timer = null
+var _web_auth_attempts: int = 0
+
+
 func sign_in_with_google_oauth() -> void:
-	# 1-Tap Google OAuth Sign-In (No email/password input fields required)
+	if OS.has_feature("web"):
+		# 1. If Firebase Web Popup bridge is available, trigger real Google Consent Popup!
+		var has_bridge = JavaScriptBridge.eval("typeof window.arcanaStartGoogleSignIn === 'function'", true)
+		if bool(has_bridge):
+			print("[BackendClient] Triggering Google OAuth Popup via Firebase Web SDK...")
+			JavaScriptBridge.eval("window.arcanaStartGoogleSignIn()", true)
+			_start_web_auth_polling()
+			return
+
+		# 2. Check if browser already has user in localStorage or window
+		var js_email = JavaScriptBridge.eval("window.__ARCANA_GOOGLE_EMAIL__ || localStorage.getItem('arcana_google_email') || ''", true)
+		var js_name = JavaScriptBridge.eval("window.__ARCANA_GOOGLE_NAME__ || localStorage.getItem('arcana_google_name') || ''", true)
+		if typeof(js_email) == TYPE_STRING and not str(js_email).strip_edges().is_empty():
+			login_with_google(str(js_email).strip_edges(), str(js_name).strip_edges())
+			return
+
+	# Fallback for native/offline platforms without Web popup
 	var device_seed := OS.get_unique_id()
 	if device_seed.is_empty():
 		device_seed = str(OS.get_name()) + "_arcana_google_oauth"
@@ -148,15 +173,6 @@ func sign_in_with_google_oauth() -> void:
 
 	var oauth_email := str(current_user.get("email", "")).strip_edges()
 	var oauth_name := str(current_user.get("displayName", "")).strip_edges()
-
-	if OS.has_feature("web"):
-		# Check if browser / Firebase Auth injected Google user info in localStorage or window
-		var js_email = JavaScriptBridge.eval("window.__ARCANA_GOOGLE_EMAIL__ || localStorage.getItem('arcana_google_email') || ''", true)
-		var js_name = JavaScriptBridge.eval("window.__ARCANA_GOOGLE_NAME__ || localStorage.getItem('arcana_google_name') || ''", true)
-		if typeof(js_email) == TYPE_STRING and not str(js_email).strip_edges().is_empty():
-			oauth_email = str(js_email).strip_edges()
-		if typeof(js_name) == TYPE_STRING and not str(js_name).strip_edges().is_empty():
-			oauth_name = str(js_name).strip_edges()
 
 	if oauth_email.is_empty():
 		oauth_email = "commander.%s@gmail.com" % short_hash
@@ -166,7 +182,62 @@ func sign_in_with_google_oauth() -> void:
 	login_with_google(oauth_email, oauth_name)
 
 
-func login_with_google(email_input: String = "", display_name_input: String = "") -> void:
+func _start_web_auth_polling() -> void:
+	_stop_web_auth_polling()
+	_web_auth_attempts = 0
+	_web_auth_timer = Timer.new()
+	_web_auth_timer.wait_time = 0.25
+	_web_auth_timer.one_shot = false
+	add_child(_web_auth_timer)
+	_web_auth_timer.timeout.connect(_on_web_auth_tick)
+	_web_auth_timer.start()
+
+
+func _stop_web_auth_polling() -> void:
+	if _web_auth_timer != null and is_instance_valid(_web_auth_timer):
+		_web_auth_timer.stop()
+		_web_auth_timer.queue_free()
+		_web_auth_timer = null
+
+
+func _on_web_auth_tick() -> void:
+	_web_auth_attempts += 1
+	# Timeout after 120s (480 ticks * 0.25s)
+	if _web_auth_attempts > 480:
+		_stop_web_auth_polling()
+		emit_signal("login_failed", "Quá thời gian đăng nhập Google (Hết hạn). Vui lòng thử lại.")
+		return
+
+	var state = str(JavaScriptBridge.eval("window.arcanaGetGoogleAuthState ? window.arcanaGetGoogleAuthState() : 'error'", true))
+	if state == "pending":
+		return # Still waiting for user interaction in popup
+
+	_stop_web_auth_polling()
+
+	if state == "success":
+		var result_str = str(JavaScriptBridge.eval("window.arcanaGetGoogleAuthResult ? window.arcanaGetGoogleAuthResult() : ''", true))
+		var parsed = JSON.parse_string(result_str)
+		if typeof(parsed) == TYPE_DICTIONARY and parsed.get("ok", false):
+			var id_token := str(parsed.get("idToken", ""))
+			var email := str(parsed.get("email", ""))
+			var dname := str(parsed.get("displayName", ""))
+			var photo := str(parsed.get("photoUrl", ""))
+			var uid := str(parsed.get("uid", ""))
+			login_with_google(email, dname, id_token, photo, uid)
+			return
+		emit_signal("login_failed", "Không thể trích xuất thông tin tài khoản Google.")
+	elif state == "error":
+		var result_str = str(JavaScriptBridge.eval("window.arcanaGetGoogleAuthResult ? window.arcanaGetGoogleAuthResult() : ''", true))
+		var parsed = JSON.parse_string(result_str)
+		var err_msg := "Đăng nhập Google thất bại."
+		if typeof(parsed) == TYPE_DICTIONARY and parsed.has("error"):
+			err_msg = str(parsed["error"])
+		emit_signal("login_failed", err_msg)
+	else:
+		emit_signal("login_failed", "Không thể mở cửa sổ đăng nhập Google.")
+
+
+func login_with_google(email_input: String = "", display_name_input: String = "", id_token: String = "", photo_url: String = "", custom_uid: String = "") -> void:
 	var clean_email := email_input.strip_edges()
 	if clean_email.is_empty():
 		clean_email = "phapsu.nguhanh@gmail.com"
@@ -175,12 +246,18 @@ func login_with_google(email_input: String = "", display_name_input: String = ""
 		clean_name = clean_email.split("@")[0].capitalize()
 
 	var had_zero_cards_before := (GameState.get_owned_unique_count() == 0)
+	var resolved_google_id := custom_uid if not custom_uid.is_empty() else ("g_" + str(abs(clean_email.hash())))
 	var payload := {
-		"googleId": "g_" + str(abs(clean_email.hash())),
+		"googleId": resolved_google_id,
 		"email": clean_email,
 		"displayName": clean_name,
+		"photoUrl": photo_url,
 		"platform": OS.get_name().to_lower(),
 	}
+	if not id_token.is_empty():
+		payload["firebaseIdToken"] = id_token
+		payload["idToken"] = id_token
+
 	if not had_zero_cards_before:
 		payload["offlineProfile"] = {
 			"gold": GameState.gold,
@@ -190,7 +267,7 @@ func login_with_google(email_input: String = "", display_name_input: String = ""
 		}
 
 	var http := HTTPRequest.new()
-	http.timeout = 4.0
+	http.timeout = 7.0
 	add_child(http)
 	http.request_completed.connect(func(_res: int, code: int, _headers: PackedStringArray, body: PackedByteArray):
 		http.queue_free()
@@ -202,15 +279,18 @@ func login_with_google(email_input: String = "", display_name_input: String = ""
 				var u: Dictionary = data.get("user", {})
 				var is_first := bool(data.get("isFirstLogin", had_zero_cards_before)) or had_zero_cards_before
 				current_user = {
-					"uid": str(u.get("uid", "google_user")),
-					"googleId": str(u.get("googleId", "")),
+					"uid": str(u.get("uid", resolved_google_id)),
+					"googleId": str(u.get("googleId", resolved_google_id)),
 					"email": str(u.get("email", clean_email)),
 					"displayName": str(u.get("displayName", clean_name)),
+					"photoUrl": str(u.get("photoUrl", photo_url)),
 					"isGoogleLinked": true,
 					"elo": int(u.get("elo", 1200)),
 				}
 				GameState.apply_cloud_profile(u, is_first)
 				_save_auth()
+				if OS.has_feature("web"):
+					JavaScriptBridge.eval("localStorage.setItem('arcana_google_email', '%s'); localStorage.setItem('arcana_google_name', '%s');" % [clean_email, clean_name], true)
 				emit_signal("auth_state_changed", current_user)
 				emit_signal("login_succeeded", current_user, is_first)
 				return
@@ -219,14 +299,17 @@ func login_with_google(email_input: String = "", display_name_input: String = ""
 		is_online = false
 		var gifted_offline := GameState.grant_first_login_starter_15_cards()
 		current_user = {
-			"uid": "google_" + str(abs(clean_email.hash())),
-			"googleId": "g_" + str(abs(clean_email.hash())),
+			"uid": custom_uid if not custom_uid.is_empty() else ("google_" + str(abs(clean_email.hash()))),
+			"googleId": resolved_google_id,
 			"email": clean_email,
 			"displayName": clean_name,
+			"photoUrl": photo_url,
 			"isGoogleLinked": true,
 			"elo": 1200,
 		}
 		_save_auth()
+		if OS.has_feature("web"):
+			JavaScriptBridge.eval("localStorage.setItem('arcana_google_email', '%s'); localStorage.setItem('arcana_google_name', '%s');" % [clean_email, clean_name], true)
 		emit_signal("auth_state_changed", current_user)
 		emit_signal("login_succeeded", current_user, gifted_offline or had_zero_cards_before)
 	)
@@ -237,6 +320,7 @@ func login_with_google(email_input: String = "", display_name_input: String = ""
 		var gifted_err := GameState.grant_first_login_starter_15_cards()
 		current_user["email"] = clean_email
 		current_user["displayName"] = clean_name
+		current_user["photoUrl"] = photo_url
 		current_user["isGoogleLinked"] = true
 		_save_auth()
 		emit_signal("auth_state_changed", current_user)

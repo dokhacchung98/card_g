@@ -291,6 +291,12 @@ func _init_fonts() -> void:
 		_lilita_num_only_font = nf
 		_ui_theme = Theme.new()
 		_ui_theme.default_font = _lilita_num_only_font
+		_ui_theme.default_font_size = 24
+		for ctrl_type in ["Label", "Button", "OptionButton", "PopupMenu", "LineEdit", "RichTextLabel"]:
+			_ui_theme.set_font_size("font_size", ctrl_type, 24)
+			_ui_theme.set_color("font_outline_color", ctrl_type, Color(0.01, 0.01, 0.03, 0.96))
+			_ui_theme.set_constant("outline_size", ctrl_type, 4)
+		_ui_theme.set_constant("v_separation", "PopupMenu", 14)
 
 
 func get_ui_theme() -> Theme:
@@ -618,11 +624,9 @@ func is_loadout_valid(deck: Array) -> Dictionary:
 		and support_cnt >= 2
 		and item_cnt >= 2
 	)
-	var msg := "Đội hình 15/15 hợp lệ (Công %d | Tank %d | Hỗ trợ %d | Item %d)" % [offense_cnt, tanker_cnt, support_cnt, item_cnt]
+	var msg := "Đủ 15/15 thẻ hợp lệ"
 	if not ok:
-		msg = "Cần đúng 15 thẻ (Hiện có %d/15) & tối thiểu: Công >=2 (%d), Tank >=2 (%d), Hỗ trợ >=2 (%d), Item >=2 (%d)" % [
-			deck.size(), offense_cnt, tanker_cnt, support_cnt, item_cnt
-		]
+		msg = "Đã chọn %d/15 thẻ (Cần đủ 15 thẻ & mỗi nhóm >= 2)" % deck.size()
 	return {
 		"ok": ok,
 		"reason": msg,
@@ -1001,8 +1005,8 @@ func apply_gui_button(btn: Button, variant: String = "slate", is_large: bool = f
 	btn.add_theme_stylebox_override("hover", sb_hover)
 	btn.add_theme_stylebox_override("pressed", sb_pressed)
 	btn.add_theme_stylebox_override("disabled", sb_disabled)
-	btn.add_theme_color_override("font_outline_color", Color(0.03, 0.03, 0.05, 0.96))
-	btn.add_theme_constant_override("outline_size", 3)
+	btn.add_theme_color_override("font_outline_color", Color(0.01, 0.01, 0.03, 0.98))
+	btn.add_theme_constant_override("outline_size", 5)
 
 
 func setup_touch_scroll(scroll: ScrollContainer) -> void:

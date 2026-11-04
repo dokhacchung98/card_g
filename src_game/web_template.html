@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0">
+		<title>$GODOT_PROJECT_NAME</title>
+		<style>
+html, body, #canvas {
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+
+body {
+	color: white;
+	background-color: black;
+	overflow: hidden;
+	touch-action: none;
+}
+
+#canvas {
+	display: block;
+}
+
+#canvas:focus {
+	outline: none;
+}
+
+#status, #status-splash, #status-progress {
+	position: absolute;
+	left: 0;
+	right: 0;
+}
+
+#status, #status-splash {
+	top: 0;
+	bottom: 0;
+}
+
+#status {
+	background-color: #161210;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	visibility: hidden;
+}
+
+#status-splash {
+	max-height: 100%;
+	max-width: 100%;
+	margin: auto;
+}
+
+#status-splash.show-image--false {
+	display: none;
+}
+
+#status-splash.fullsize--true {
+	height: 100%;
+	width: 100%;
+	object-fit: contain;
+}
+
+#status-splash.use-filter--false {
+	image-rendering: pixelated;
+}
+
+#status-progress, #status-notice {
+	display: none;
+}
+
+#status-progress {
+	bottom: 10%;
+	width: 50%;
+	margin: 0 auto;
+}
+
+#status-notice {
+	background-color: #5b3943;
+	border-radius: 0.5rem;
+	border: 1px solid #9b3943;
+	color: #e0e0e0;
+	font-family: 'Noto Sans', 'Droid Sans', Arial, sans-serif;
+	line-height: 1.3;
+	margin: 0 2rem;
+	overflow: hidden;
+	padding: 1rem;
+	text-align: center;
+	z-index: 1;
+}
+		</style>
+		$GODOT_HEAD_INCLUDE
+		<!-- Firebase SDK & Google Authentication Bridge for Arcana Five -->
+		<script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-app-compat.js"></script>
+		<script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-auth-compat.js"></script>
+	</head>
+	<body>
+		<canvas id="canvas">
+			Your browser does not support the canvas tag.
+		</canvas>
+
+		<noscript>
+			Your browser does not support JavaScript.
+		</noscript>
+
+		<div id="status">
+			<img id="status-splash" class="$GODOT_SPLASH_CLASSES" src="$GODOT_SPLASH" alt="">
+			<progress id="status-progress"></progress>
+			<div id="status-notice"></div>
+		</div>
+
+		<script src="$GODOT_URL"></script>
+		<script>
+const GODOT_CONFIG = $GODOT_CONFIG;
+const GODOT_THREADS_ENABLED = $GODOT_THREADS_ENABLED;
+const engine = new Engine(GODOT_CONFIG);
+
+(function () {
+	const statusOverlay = document.getElementById('status');
+	const statusProgress = document.getElementById('status-progress');
+	const statusNotice = document.getElementById('status-notice');
+
+	let initializing = true;
+	let statusMode = '';
+
+	function setStatusMode(mode) {
+		if (statusMode === mode || !initializing) {
+			return;
+		}
+		if (mode === 'hidden') {
+			statusOverlay.remove();
+			initializing = false;
+			return;
+		}
+		statusOverlay.style.visibility = 'visible';
+		statusProgress.style.display = mode === 'progress' ? 'block' : 'none';
+		statusNotice.style.display = mode === 'notice' ? 'block' : 'none';
+		statusMode = mode;
+	}
+
+	function setStatusNotice(text) {
+		while (statusNotice.lastChild) {
+			statusNotice.removeChild(statusNotice.lastChild);
+		}
+		const lines = text.split('\n');
+		lines.forEach((line) => {
+			statusNotice.appendChild(document.createTextNode(line));
+			statusNotice.appendChild(document.createElement('br'));
+		});
+	}
+
+	function displayFailureNotice(err) {
+		console.error(err);
+		if (err instanceof Error) {
+			setStatusNotice(err.message);
+		} else if (typeof err === 'string') {
+			setStatusNotice(err);
+		} else {
+			setStatusNotice('An unknown error occurred.');
+		}
+		setStatusMode('notice');
+		initializing = false;
+	}
+
+	const missing = Engine.getMissingFeatures({
+		threads: GODOT_THREADS_ENABLED,
+	});
+
+	if (missing.length !== 0) {
+		if (GODOT_CONFIG['serviceWorker'] && GODOT_CONFIG['ensureCrossOriginIsolationHeaders'] && 'serviceWorker' in navigator) {
+			let serviceWorkerRegistrationPromise;
+			try {
+				serviceWorkerRegistrationPromise = navigator.serviceWorker.getRegistration();
+			} catch (err) {
+				serviceWorkerRegistrationPromise = Promise.reject(new Error('Service worker registration failed.'));
+			}
+			Promise.race([
+				serviceWorkerRegistrationPromise.then((registration) => {
+					if (registration != null) {
+						return Promise.reject(new Error('Service worker already exists.'));
+					}
+					return registration;
+				}).then(() => engine.installServiceWorker()),
+				new Promise((resolve) => {
+					setTimeout(() => resolve(), 2000);
+				}),
+			]).then(() => {
+				window.location.reload();
+			}).catch((err) => {
+				console.error('Error while registering service worker:', err);
+			});
+		} else {
+			const missingMsg = 'Error\nThe following features required to run Godot projects on the Web are missing:\n';
+			displayFailureNotice(missingMsg + missing.join('\n'));
+		}
+	} else {
+		setStatusMode('progress');
+		engine.startGame({
+			'onProgress': function (current, total) {
+				if (current > 0 && total > 0) {
+					statusProgress.value = current;
+					statusProgress.max = total;
+				} else {
+					statusProgress.removeAttribute('value');
+					statusProgress.removeAttribute('max');
+				}
+			},
+		}).then(() => {
+			setStatusMode('hidden');
+		}, displayFailureNotice);
+	}
+}());
+		</script>
+
+		<!-- Arcana Five Google OAuth & Firebase Authentication Bridge -->
+		<script>
+		(function () {
+			const firebaseConfig = {
+				apiKey: "AIzaSyBf-cdTWa5rXQPFIcUXa1BI8b65Fp5u9M4",
+				authDomain: "arcana-five-card-g.firebaseapp.com",
+				projectId: "arcana-five-card-g",
+				storageBucket: "arcana-five-card-g.firebasestorage.app",
+				messagingSenderId: "673339667273",
+				appId: "1:673339667273:web:24654b1b2267e9e136a098"
+			};
+
+			try {
+				if (!window.firebase.apps || !window.firebase.apps.length) {
+					window.firebase.initializeApp(firebaseConfig);
+				}
+				console.log("[Arcana Firebase] Initialized successfully.");
+			} catch (e) {
+				console.error("[Arcana Firebase] Init failed:", e);
+			}
+
+			window.__arcana_google_auth_state = "idle"; // "idle" | "pending" | "success" | "error"
+			window.__arcana_google_auth_result = null;
+
+			window.arcanaStartGoogleSignIn = function () {
+				console.log("[Arcana Firebase] Triggering Google Sign-In Popup...");
+				window.__arcana_google_auth_state = "pending";
+				window.__arcana_google_auth_result = null;
+
+				if (!window.firebase || !window.firebase.auth) {
+					window.__arcana_google_auth_state = "error";
+					window.__arcana_google_auth_result = {
+						ok: false,
+						code: "firebase_sdk_missing",
+						error: "Không tìm thấy thư viện Firebase Auth. Vui lòng kiểm tra kết nối mạng."
+					};
+					return "error";
+				}
+
+				const provider = new window.firebase.auth.GoogleAuthProvider();
+				provider.setCustomParameters({ prompt: "select_account" });
+
+				window.firebase.auth().signInWithPopup(provider)
+					.then(async (credential) => {
+						const user = credential.user;
+						const idToken = await user.getIdToken(true);
+						const googleProfile = credential.additionalUserInfo?.profile || {};
+						window.__arcana_google_auth_result = {
+							ok: true,
+							idToken: idToken,
+							uid: user.uid,
+							googleId: googleProfile.id || user.providerData?.[0]?.uid || user.uid,
+							email: user.email || "",
+							displayName: user.displayName || (user.email ? user.email.split("@")[0] : "Google Pháp Sư"),
+							photoUrl: user.photoURL || ""
+						};
+						window.__arcana_google_auth_state = "success";
+						console.log("[Arcana Firebase] Popup sign-in succeeded for:", user.email);
+					})
+					.catch((err) => {
+						console.warn("[Arcana Firebase] Popup sign-in error or cancelled:", err);
+						let msg = err.message || String(err);
+						if (err.code === "auth/popup-closed-by-user") {
+							msg = "Bạn đã đóng cửa sổ Google đăng nhập.";
+						} else if (err.code === "auth/popup-blocked") {
+							msg = "Trình duyệt đã chặn cửa sổ Popup. Vui lòng cho phép Pop-up trên trang này.";
+						} else if (err.code === "auth/unauthorized-domain") {
+							msg = "Tên miền hiện tại (" + window.location.hostname + ") chưa được cấu hình trong Firebase Authorized Domains.";
+						}
+						window.__arcana_google_auth_result = {
+							ok: false,
+							code: err.code || "unknown",
+							error: msg
+						};
+						window.__arcana_google_auth_state = "error";
+					});
+
+				return "pending";
+			};
+
+			window.arcanaGetGoogleAuthState = function () {
+				return window.__arcana_google_auth_state;
+			};
+
+			window.arcanaGetGoogleAuthResult = function () {
+				return window.__arcana_google_auth_result ? JSON.stringify(window.__arcana_google_auth_result) : "";
+			};
+		})();
+		</script>
+	</body>
+</html>

@@ -29,9 +29,12 @@ var vfx_bursts: Array = []           # Active hit impacts / item animations
 var floating_texts: Array = []       # Floating combat numbers & skill callouts
 var last_opponent_item_id: String = "C082"
 
-var selected_hand_idx: int = 0
-var carousel_pos: float = 0.0
+var selected_hand_idx: int = -1
+var carousel_pos: float = 2.0
+var carousel_target_pos: float = 2.0
 var hand_cards_widgets: Array = []
+var hand_pull_progress: Array[float] = []
+var hand_entry_offset_y: Array[float] = []
 var _carousel_pressing: bool = false
 var _carousel_is_dragging: bool = false
 var _carousel_drag_start_x: float = 0.0
@@ -44,8 +47,6 @@ var lbl_phase_title: Label
 var lbl_timer: Label
 var lbl_deck_info: Label
 var lbl_bot_log: Label
-var btn_speed: Button
-var btn_skip_prep: Button
 
 var board_canvas: Control
 var units_layer: Node2D
@@ -102,20 +103,20 @@ func _build_ui() -> void:
 	top_panel.add_child(top_vbox)
 
 	var top_row1 := HBoxContainer.new()
-	top_row1.add_theme_constant_override("separation", 10)
+	top_row1.add_theme_constant_override("separation", 14)
 	top_vbox.add_child(top_row1)
 
 	var btn_home := Button.new()
 	btn_home.text = "SẢNH"
-	btn_home.custom_minimum_size = Vector2(124, 46)
-	btn_home.add_theme_font_size_override("font_size", 16)
+	btn_home.custom_minimum_size = Vector2(150, 62)
+	btn_home.add_theme_font_size_override("font_size", 25)
 	btn_home.add_theme_color_override("font_color", Color(1.0, 0.92, 0.65))
-	GameState.apply_gui_button(btn_home, "back_home", false, 40, 6)
+	GameState.apply_gui_button(btn_home, "back_home", false, 38, 6)
 	btn_home.pressed.connect(func(): GameState.emit_signal("screen_requested", "home"))
 	top_row1.add_child(btn_home)
 
 	tex_phase_icon = TextureRect.new()
-	tex_phase_icon.custom_minimum_size = Vector2(56, 56)
+	tex_phase_icon.custom_minimum_size = Vector2(54, 54)
 	tex_phase_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	tex_phase_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	top_row1.add_child(tex_phase_icon)
@@ -125,67 +126,41 @@ func _build_ui() -> void:
 	top_row1.add_child(phase_vbox)
 
 	lbl_phase_title = Label.new()
-	lbl_phase_title.clip_text = true
-	lbl_phase_title.add_theme_font_size_override("font_size", 20)
-	lbl_phase_title.add_theme_color_override("font_color", Color(0.98, 0.82, 0.28))
+	lbl_phase_title.add_theme_font_size_override("font_size", 28)
+	lbl_phase_title.add_theme_color_override("font_color", Color(0.98, 0.84, 0.28))
 	phase_vbox.add_child(lbl_phase_title)
 
 	lbl_deck_info = Label.new()
-	lbl_deck_info.clip_text = true
-	lbl_deck_info.add_theme_font_size_override("font_size", 15)
-	lbl_deck_info.add_theme_color_override("font_color", Color(0.68, 0.86, 0.98))
+	lbl_deck_info.add_theme_font_size_override("font_size", 22)
+	lbl_deck_info.add_theme_color_override("font_color", Color(0.72, 0.90, 1.0))
 	phase_vbox.add_child(lbl_deck_info)
 
 	lbl_timer = Label.new()
-	lbl_timer.add_theme_font_size_override("font_size", 32)
+	lbl_timer.add_theme_font_size_override("font_size", 42)
 	lbl_timer.add_theme_color_override("font_color", Color(0.45, 0.98, 0.62))
-	lbl_timer.add_theme_color_override("font_outline_color", Color(0.02, 0.02, 0.04, 0.96))
-	lbl_timer.add_theme_constant_override("outline_size", 4)
+	lbl_timer.add_theme_color_override("font_outline_color", Color(0.02, 0.02, 0.04, 0.98))
+	lbl_timer.add_theme_constant_override("outline_size", 6)
 	top_row1.add_child(lbl_timer)
 
-	btn_skip_prep = Button.new()
-	btn_skip_prep.text = "Lật Bài"
-	btn_skip_prep.icon = GameState.tex("res://assets/cards/icons/stats/aspd/prop.png")
-	btn_skip_prep.expand_icon = true
-	btn_skip_prep.custom_minimum_size = Vector2(130, 46)
-	btn_skip_prep.add_theme_font_size_override("font_size", 16)
-	GameState.apply_gui_button(btn_skip_prep, "gold", false, 12, 6)
-	btn_skip_prep.pressed.connect(func():
-		if phase == MatchPhase.PREP:
-			_enter_reveal_phase()
+	var btn_guide := Button.new()
+	btn_guide.text = "LUẬT CHƠI"
+	btn_guide.icon = GameState.tex("res://assets/ui_hud/icons/icon_guide_book.png")
+	btn_guide.expand_icon = true
+	btn_guide.custom_minimum_size = Vector2(196, 62)
+	btn_guide.add_theme_font_size_override("font_size", 24)
+	GameState.apply_gui_button(btn_guide, "purple", false, 12, 6)
+	btn_guide.pressed.connect(func():
+		GameState.emit_signal("guide_requested", 1)
 	)
-	top_row1.add_child(btn_skip_prep)
-
-	btn_speed = Button.new()
-	btn_speed.text = "1x"
-	btn_speed.icon = GameState.tex("res://assets/cards/icons/stats/mspd/prop.png")
-	btn_speed.expand_icon = true
-	btn_speed.custom_minimum_size = Vector2(92, 46)
-	btn_speed.add_theme_font_size_override("font_size", 16)
-	GameState.apply_gui_button(btn_speed, "slate", false, 10, 6)
-	btn_speed.pressed.connect(func():
-		GameState.match_speed = 2.0 if GameState.match_speed < 1.5 else 1.0
-		btn_speed.text = "%dx" % int(GameState.match_speed)
-	)
-	top_row1.add_child(btn_speed)
-
-	var btn_restart := Button.new()
-	btn_restart.text = "Ván Mới"
-	btn_restart.icon = GameState.tex("res://assets/ui_hud/icons/icon_cards_hand.png")
-	btn_restart.expand_icon = true
-	btn_restart.custom_minimum_size = Vector2(126, 46)
-	btn_restart.add_theme_font_size_override("font_size", 16)
-	GameState.apply_gui_button(btn_restart, "purple", false, 12, 6)
-	btn_restart.pressed.connect(func(): start_new_match(GameState.selected_player_count))
-	top_row1.add_child(btn_restart)
+	top_row1.add_child(btn_guide)
 
 	var top_row2 := HBoxContainer.new()
 	top_row2.add_theme_constant_override("separation", 12)
 	top_vbox.add_child(top_row2)
 
 	var bot_log_icon := TextureRect.new()
-	bot_log_icon.texture = GameState.tex("res://assets/ui_hud/icons/icon_bot_ai.png")
-	bot_log_icon.custom_minimum_size = Vector2(26, 26)
+	bot_log_icon.texture = GameState.tex("res://assets/ui_hud/icons/icon_cards_hand.png")
+	bot_log_icon.custom_minimum_size = Vector2(30, 30)
 	bot_log_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	bot_log_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	top_row2.add_child(bot_log_icon)
@@ -193,23 +168,10 @@ func _build_ui() -> void:
 	lbl_bot_log = Label.new()
 	lbl_bot_log.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	lbl_bot_log.clip_text = true
-	lbl_bot_log.text = "Vuốt trái/phải dải bài cong bên dưới để chọn thẻ, chạm để Úp bài xuống 10 ô!"
-	lbl_bot_log.add_theme_font_size_override("font_size", 16)
+	lbl_bot_log.text = "Vuốt ngang xem bài · Chạm vào 1 thẻ để rút lên!"
+	lbl_bot_log.add_theme_font_size_override("font_size", 22)
 	lbl_bot_log.add_theme_color_override("font_color", Color(0.55, 0.95, 0.72))
 	top_row2.add_child(lbl_bot_log)
-
-	var btn_guide := Button.new()
-	btn_guide.text = "LUẬT & 5 HỆ"
-	btn_guide.icon = GameState.tex("res://assets/ui_hud/icons/icon_guide_book.png")
-	btn_guide.expand_icon = true
-	btn_guide.custom_minimum_size = Vector2(186, 42)
-	btn_guide.clip_text = true
-	btn_guide.add_theme_font_size_override("font_size", 15)
-	GameState.apply_gui_button(btn_guide, "purple", false, 12, 6)
-	btn_guide.pressed.connect(func():
-		GameState.emit_signal("guide_requested", 1)
-	)
-	top_row2.add_child(btn_guide)
 
 	# 2. Central 1:1 Square 4-Player Poker Battle Board (1024x1024 at x=28, y=188)
 	board_canvas = Control.new()
@@ -239,35 +201,25 @@ func _build_ui() -> void:
 	hand_panel.add_child(hand_vbox)
 
 	var hand_top_bar := HBoxContainer.new()
-	hand_top_bar.add_theme_constant_override("separation", 8)
+	hand_top_bar.add_theme_constant_override("separation", 10)
 	hand_vbox.add_child(hand_top_bar)
-
-	btn_hand_prev = Button.new()
-	btn_hand_prev.text = "TRƯỚC"
-	btn_hand_prev.icon = GameState.tex("res://assets/ui_hud/icons/icon_cards_hand.png")
-	btn_hand_prev.expand_icon = true
-	btn_hand_prev.custom_minimum_size = Vector2(120, 48)
-	btn_hand_prev.add_theme_font_size_override("font_size", 15)
-	GameState.apply_gui_button(btn_hand_prev, "slate", false, 10, 6)
-	btn_hand_prev.pressed.connect(func(): _shift_hand_selection(-1))
-	hand_top_bar.add_child(btn_hand_prev)
 
 	lbl_synergy_info = Label.new()
 	lbl_synergy_info.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	lbl_synergy_info.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	lbl_synergy_info.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
 	lbl_synergy_info.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	lbl_synergy_info.clip_text = true
-	lbl_synergy_info.add_theme_font_size_override("font_size", 15)
-	lbl_synergy_info.add_theme_color_override("font_color", Color(0.98, 0.84, 0.36))
+	lbl_synergy_info.add_theme_font_size_override("font_size", 23)
+	lbl_synergy_info.add_theme_color_override("font_color", Color(0.98, 0.86, 0.36))
 	hand_top_bar.add_child(lbl_synergy_info)
 
 	btn_place_selected = Button.new()
-	btn_place_selected.text = "ÚP BÀI NÀY"
+	btn_place_selected.text = "ĐẶT LÊN BÀN"
 	btn_place_selected.icon = GameState.tex("res://assets/cards/icons/stats/dame/prop.png")
 	btn_place_selected.expand_icon = true
-	btn_place_selected.custom_minimum_size = Vector2(168, 48)
-	btn_place_selected.add_theme_font_size_override("font_size", 15)
-	GameState.apply_gui_button(btn_place_selected, "gold", false, 12, 6)
+	btn_place_selected.custom_minimum_size = Vector2(236, 60)
+	btn_place_selected.add_theme_font_size_override("font_size", 24)
+	GameState.apply_gui_button(btn_place_selected, "gold", false, 14, 6)
 	btn_place_selected.pressed.connect(func(): _place_currently_selected_card())
 	hand_top_bar.add_child(btn_place_selected)
 
@@ -275,26 +227,28 @@ func _build_ui() -> void:
 	btn_inspect_selected.text = "CHI TIẾT"
 	btn_inspect_selected.icon = GameState.tex("res://assets/ui_hud/icons/icon_guide_book.png")
 	btn_inspect_selected.expand_icon = true
-	btn_inspect_selected.custom_minimum_size = Vector2(138, 48)
-	btn_inspect_selected.add_theme_font_size_override("font_size", 15)
-	GameState.apply_gui_button(btn_inspect_selected, "purple", false, 10, 6)
+	btn_inspect_selected.custom_minimum_size = Vector2(174, 60)
+	btn_inspect_selected.add_theme_font_size_override("font_size", 23)
+	GameState.apply_gui_button(btn_inspect_selected, "purple", false, 12, 6)
 	btn_inspect_selected.pressed.connect(func(): _inspect_currently_selected_card())
 	hand_top_bar.add_child(btn_inspect_selected)
 
 	btn_hand_next = Button.new()
-	btn_hand_next.text = "SAU"
-	btn_hand_next.icon = GameState.tex("res://assets/ui_hud/icons/icon_cards_hand.png")
-	btn_hand_next.expand_icon = true
-	btn_hand_next.custom_minimum_size = Vector2(112, 48)
-	btn_hand_next.add_theme_font_size_override("font_size", 15)
-	GameState.apply_gui_button(btn_hand_next, "slate", false, 10, 6)
-	btn_hand_next.pressed.connect(func(): _shift_hand_selection(1))
+	btn_hand_next.text = "HẠ XUỐNG"
+	btn_hand_next.custom_minimum_size = Vector2(164, 60)
+	btn_hand_next.add_theme_font_size_override("font_size", 23)
+	GameState.apply_gui_button(btn_hand_next, "slate", false, 12, 6)
+	btn_hand_next.pressed.connect(func():
+		selected_hand_idx = -1
+		_recalculate_team_synergies()
+		board_canvas.queue_redraw()
+	)
 	hand_top_bar.add_child(btn_hand_next)
 
 	hand_carousel_stage = Control.new()
 	hand_carousel_stage.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	hand_carousel_stage.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	hand_carousel_stage.custom_minimum_size = Vector2(1012, 588)
+	hand_carousel_stage.custom_minimum_size = Vector2(1012, 580)
 	hand_carousel_stage.clip_contents = false
 	hand_carousel_stage.mouse_filter = Control.MOUSE_FILTER_STOP
 	hand_carousel_stage.gui_input.connect(_on_hand_carousel_gui_input)
@@ -317,13 +271,13 @@ func _build_history_modal() -> void:
 	add_child(history_modal)
 
 	var p := PanelContainer.new()
-	p.position = Vector2(70, 260)
-	p.size = Vector2(940, 1340)
+	p.position = Vector2(60, 240)
+	p.size = Vector2(960, 1380)
 	p.add_theme_stylebox_override("panel", GameState.make_gui_panel_style("dialog", 24))
 	history_modal.add_child(p)
 
 	var vb := VBoxContainer.new()
-	vb.add_theme_constant_override("separation", 14)
+	vb.add_theme_constant_override("separation", 16)
 	p.add_child(vb)
 
 	var hb := HBoxContainer.new()
@@ -331,14 +285,14 @@ func _build_history_modal() -> void:
 
 	history_title = Label.new()
 	history_title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	history_title.add_theme_font_size_override("font_size", 26)
-	history_title.add_theme_color_override("font_color", Color(0.98, 0.80, 0.24))
+	history_title.add_theme_font_size_override("font_size", 30)
+	history_title.add_theme_color_override("font_color", Color(0.98, 0.84, 0.28))
 	hb.add_child(history_title)
 
 	var b_close := Button.new()
 	b_close.text = "ĐÓNG"
-	b_close.custom_minimum_size = Vector2(130, 50)
-	b_close.add_theme_font_size_override("font_size", 18)
+	b_close.custom_minimum_size = Vector2(160, 68)
+	b_close.add_theme_font_size_override("font_size", 26)
 	GameState.apply_gui_button(b_close, "wood", false)
 	b_close.pressed.connect(func(): history_modal.visible = false)
 	hb.add_child(b_close)
@@ -349,9 +303,9 @@ func _build_history_modal() -> void:
 	vb.add_child(sc)
 
 	history_grid = GridContainer.new()
-	history_grid.columns = 4
-	history_grid.add_theme_constant_override("h_separation", 12)
-	history_grid.add_theme_constant_override("v_separation", 12)
+	history_grid.columns = 3
+	history_grid.add_theme_constant_override("h_separation", 16)
+	history_grid.add_theme_constant_override("v_separation", 16)
 	sc.add_child(history_grid)
 
 
@@ -361,8 +315,9 @@ func _build_history_modal() -> void:
 func start_new_match(p_count: int) -> void:
 	player_count = clampi(p_count, 2, 4)
 	round_num = 1
-	selected_hand_idx = 2
+	selected_hand_idx = -1
 	carousel_pos = 2.0
+	carousel_target_pos = 2.0
 	GameState.player_is_bot = false
 
 	for ch in units_layer.get_children():
@@ -455,15 +410,18 @@ func _deal_cards_to_alive_players(cards_per_player: int, play_anim: bool = true)
 			if i == 0:
 				newly_drawn_p0.append(drawn_card)
 
+	if not players.is_empty():
+		var h_sz: int = players[0]["hand"].size()
+		selected_hand_idx = -1
+		if h_sz > 0:
+			carousel_target_pos = float(h_sz - 1) * 0.5 if round_num == 1 else float(maxi(0, h_sz - 2))
+			carousel_pos = carousel_target_pos
+
 	if play_anim and not newly_drawn_p0.is_empty():
 		var anim_cards: Array = []
 		var start_idx: int = maxi(0, newly_drawn_p0.size() - 2)
 		for k in range(start_idx, newly_drawn_p0.size()):
 			anim_cards.append(newly_drawn_p0[k])
-		if not players.is_empty() and not players[0]["hand"].is_empty():
-			var h_sz: int = players[0]["hand"].size()
-			selected_hand_idx = int(h_sz / 2) if round_num == 1 else clampi(h_sz - 1, 0, h_sz - 1)
-			carousel_pos = float(selected_hand_idx)
 		_play_draw_new_cards_animation(anim_cards)
 
 
@@ -473,9 +431,7 @@ func _deal_cards_to_alive_players(cards_per_player: int, play_anim: bool = true)
 func _enter_prep_phase() -> void:
 	phase = MatchPhase.PREP
 	phase_timer = 15.0
-	btn_skip_prep.visible = true
-	if is_instance_valid(btn_place_selected):
-		btn_place_selected.disabled = false
+	selected_hand_idx = -1
 	tex_phase_icon.texture = GameState.tex("res://assets/ui_hud/hud_bars/timer_prep_15s_compass.png")
 
 	for i in range(player_count):
@@ -484,14 +440,14 @@ func _enter_prep_phase() -> void:
 			if s["state"] == "trigger_break":
 				s["state"] = "empty"
 
-	lbl_bot_log.text = "Vòng %d (15s Chuẩn Bị) — Vuốt trái/phải dải bài cong để chọn thẻ, chạm để Úp bài xuống 10 ô!" % round_num
+	lbl_bot_log.text = "Vòng %d — Vuốt ngang xem bài · Chạm 1 thẻ để rút lên!" % round_num
 	_rebuild_hand_ui()
 	board_canvas.queue_redraw()
 
 
 func _enter_reveal_phase() -> void:
 	phase = MatchPhase.REVEAL
-	btn_skip_prep.visible = false
+	selected_hand_idx = -1
 	if is_instance_valid(btn_place_selected):
 		btn_place_selected.disabled = true
 
@@ -541,9 +497,9 @@ func _enter_reveal_phase() -> void:
 
 	_recalculate_team_synergies()
 	if used_items_count > 0:
-		lbl_bot_log.text = "LẬT %d LÁ BÀI (%d Thẻ Item kích hoạt ngay & biến mất)! Bắt đầu 15s Chiến Đấu!" % [revealed_count, used_items_count]
+		lbl_bot_log.text = "LẬT %d THẺ (%d Item dùng luôn & biến mất)! Chiến đấu!" % [revealed_count, used_items_count]
 	else:
-		lbl_bot_log.text = "ĐỒNG LOẠT LẬT %d LÁ BÀI! Bắt đầu 15s Chiến Đấu Thời Gian Thực!" % revealed_count
+		lbl_bot_log.text = "LẬT %d THẺ — BẮT ĐẦU 15s CHIẾN ĐẤU!" % revealed_count
 	_enter_combat_phase(false)
 
 
@@ -552,7 +508,7 @@ func _enter_combat_phase(is_sudden_death: bool) -> void:
 		phase = MatchPhase.SUDDEN_DEATH
 		phase_timer = 60.0
 		tex_phase_icon.texture = GameState.tex("res://assets/board_map/props/prop_3_sudden_death_brazier.png")
-		lbl_bot_log.text = "CUỘC CHIẾN SINH TỬ 60 GIÂY (Hết bài rút & hết bài trên tay — Không Pause)!"
+		lbl_bot_log.text = "TỬ CHIẾN 60 GIÂY (Hết bài — Đánh đến cùng)!"
 	else:
 		phase = MatchPhase.COMBAT
 		phase_timer = 15.0
@@ -601,17 +557,30 @@ func place_card_from_hand(p_idx: int, hand_idx: int, slot_idx: int) -> bool:
 		return false
 
 	var card_inst: Dictionary = hand[hand_idx]
+	var cid := str(card_inst["card_id"])
+	var elem := str(card_inst["element"])
+
+	var from_global := Vector2(540.0, 1460.0)
+	if p_idx == 0 and hand_idx >= 0 and hand_idx < hand_cards_widgets.size():
+		var cw_from: Control = hand_cards_widgets[hand_idx]
+		if is_instance_valid(cw_from):
+			from_global = cw_from.global_position
+
 	hand.remove_at(hand_idx)
 	slots[slot_idx]["state"] = "facedown"
-	slots[slot_idx]["card_id"] = str(card_inst["card_id"])
-	slots[slot_idx]["element"] = str(card_inst["element"])
+	slots[slot_idx]["card_id"] = cid
+	slots[slot_idx]["element"] = elem
 
 	if p_idx == 0:
+		# Reset selected_hand_idx to -1 so the next card in hand does NOT automatically pop up!
+		selected_hand_idx = -1
 		if hand.is_empty():
-			selected_hand_idx = -1
 			carousel_pos = 0.0
+			carousel_target_pos = 0.0
 		else:
-			selected_hand_idx = clampi(hand_idx, 0, hand.size() - 1)
+			carousel_target_pos = clampf(carousel_target_pos, 0.0, float(hand.size() - 1))
+			carousel_pos = clampf(carousel_pos, 0.0, float(hand.size() - 1))
+		_play_card_fly_to_slot_animation(cid, elem, from_global, slot_idx)
 		_rebuild_hand_ui()
 	board_canvas.queue_redraw()
 	return true
@@ -637,7 +606,8 @@ func recall_card_from_slot(p_idx: int, slot_idx: int) -> bool:
 	slots[slot_idx]["card_id"] = ""
 
 	if p_idx == 0:
-		selected_hand_idx = p["hand"].size() - 1
+		selected_hand_idx = -1
+		carousel_target_pos = float(maxi(0, p["hand"].size() - 1))
 		_rebuild_hand_ui()
 	board_canvas.queue_redraw()
 	return true
@@ -742,19 +712,29 @@ func _recalculate_team_synergies() -> void:
 			u["has_wuxing_synergy"] = (generated_by_ally or has_all_5)
 			u["synergy_atk_mult"] = (1.25 if has_all_5 else (1.15 if generated_by_ally else 1.0))
 
-	# Update Player 0 synergy banner
-	var p0_elems: Array = []
-	for u in units:
-		if float(u["hp"]) > 0.0 and int(u["owner_idx"]) == 0:
-			var e_short: String = str(GameState.ELEMENT_META[str(u["element"])]["short"])
-			if not p0_elems.has(e_short):
-				p0_elems.append(e_short)
 	var hand_cnt: int = players[0]["hand"].size() if not players.is_empty() else 0
-	var sel_str := ("%d/%d" % [clampi(selected_hand_idx + 1, 1, maxi(1, hand_cnt)), hand_cnt]) if hand_cnt > 0 else "0/0"
-	lbl_synergy_info.text = "Thẻ %s (Vuốt chọn) · Hệ sân: %s" % [
-		sel_str,
-		(", ".join(p0_elems) if not p0_elems.is_empty() else "Trống")
-	]
+	var has_sel := (selected_hand_idx >= 0 and selected_hand_idx < hand_cnt)
+	if is_instance_valid(btn_place_selected):
+		btn_place_selected.disabled = (phase != MatchPhase.PREP or not has_sel)
+	if is_instance_valid(btn_inspect_selected):
+		btn_inspect_selected.disabled = not has_sel
+	if is_instance_valid(btn_hand_next):
+		btn_hand_next.disabled = not has_sel
+
+	if not is_instance_valid(lbl_synergy_info):
+		return
+	if hand_cnt <= 0:
+		lbl_synergy_info.text = "Đã hết thẻ trên tay"
+	elif has_sel:
+		var sel_c: Dictionary = players[0]["hand"][selected_hand_idx]
+		var c_data := GameState.get_card(str(sel_c["card_id"]))
+		lbl_synergy_info.text = "Đang rút: %s (%d/%d)" % [
+			str(c_data.get("name", sel_c["card_id"])),
+			selected_hand_idx + 1,
+			hand_cnt
+		]
+	else:
+		lbl_synergy_info.text = "Chạm 1 thẻ để rút lên (%d lá)" % hand_cnt
 
 
 func _activate_item_card(p_idx: int, slot_idx: int, card_id: String, elem: String) -> void:
@@ -1656,16 +1636,27 @@ func _draw_card_in_carved_slot(p_i: int, s_rect: Rect2, slot: Dictionary, u_col:
 
 	# Lower Plate on Card showing Card ID / Face-down indicator
 	var font := GameState.get_font()
-	var plate_rect := Rect2(-cw * 0.42, ch * 0.08, cw * 0.84, ch * 0.28)
-	board_canvas.draw_rect(plate_rect, Color(0.04, 0.06, 0.10, 0.86), true)
-	var label_txt := ("ÚP " + cid) if st == "facedown" else cid
-	board_canvas.draw_string(
+	var plate_rect := Rect2(-cw * 0.44, ch * 0.06, cw * 0.88, ch * 0.30)
+	board_canvas.draw_rect(plate_rect, Color(0.03, 0.05, 0.09, 0.90), true)
+	var label_txt := cid
+	var txt_pos := Vector2(plate_rect.position.x, plate_rect.position.y + plate_rect.size.y * 0.76)
+	board_canvas.draw_string_outline(
 		font,
-		Vector2(plate_rect.position.x, plate_rect.position.y + plate_rect.size.y * 0.74),
+		txt_pos,
 		label_txt,
 		HORIZONTAL_ALIGNMENT_CENTER,
 		plate_rect.size.x,
-		9 if st == "facedown" else 10,
+		12,
+		3,
+		Color(0.01, 0.01, 0.03, 0.98)
+	)
+	board_canvas.draw_string(
+		font,
+		txt_pos,
+		label_txt,
+		HORIZONTAL_ALIGNMENT_CENTER,
+		plate_rect.size.x,
+		12,
 		Color(0.98, 0.88, 0.42) if st == "facedown" else e_col
 	)
 
@@ -1703,7 +1694,7 @@ func _draw_board_canvas() -> void:
 
 	# 3. Draw all 4 Carved Corners & 40 Carved Card Slots (Active Players vs Gray Empty Seats)
 	var hp_strip_tex := GameState.tex("res://assets/ui_hud/hud_bars/unit_hp_fill_strip.png")
-	var seat_short_titles := ["P1 · BẠN", "P2 · ĐỎ", "P3 · LÁ", "P4 · VÀNG"]
+	var seat_short_titles := ["BẠN", "BOT ĐỎ", "BOT LÁ", "BOT VÀNG"]
 
 	for seat_i in range(4):
 		var av_rect := _get_player_avatar_rect(seat_i)
@@ -1722,27 +1713,28 @@ func _draw_board_canvas() -> void:
 			if av_dead:
 				board_canvas.draw_texture_rect(
 					av_dead,
-					Rect2(inner_corner.position.x + 55, inner_corner.position.y + 14, 48, 48),
+					Rect2(inner_corner.position.x + 55, inner_corner.position.y + 18, 48, 48),
 					false,
 					Color(0.75, 0.77, 0.82, 0.72)
 				)
-			board_canvas.draw_string(
+			board_canvas.draw_string_outline(
 				font,
-				Vector2(inner_corner.position.x + 6, inner_corner.position.y + 84),
-				"GÓC P%d — TRỐNG" % (seat_i + 1),
+				Vector2(inner_corner.position.x + 6, inner_corner.position.y + 98),
+				"TRỐNG",
 				HORIZONTAL_ALIGNMENT_CENTER,
 				inner_corner.size.x - 12,
-				15,
-				Color(0.86, 0.88, 0.92)
+				20,
+				4,
+				Color(0.02, 0.02, 0.04, 0.96)
 			)
 			board_canvas.draw_string(
 				font,
-				Vector2(inner_corner.position.x + 6, inner_corner.position.y + 108),
-				"(Không có người chơi)",
+				Vector2(inner_corner.position.x + 6, inner_corner.position.y + 98),
+				"TRỐNG",
 				HORIZONTAL_ALIGNMENT_CENTER,
 				inner_corner.size.x - 12,
-				12,
-				Color(0.72, 0.75, 0.80)
+				20,
+				Color(0.86, 0.88, 0.92)
 			)
 			continue
 
@@ -1771,16 +1763,12 @@ func _draw_board_canvas() -> void:
 		# Draw directional connector arrow from Corner Socket -> that player's 10 Card Slots
 		var arrow_col := u_col * Color(1, 1, 1, 0.85)
 		if seat_i == 0:
-			# Bottom-Left Corner -> points Right to Bottom 10 Slots
 			board_canvas.draw_line(Vector2(191, 916), Vector2(204, 916), arrow_col, 3.0)
 		elif seat_i == 1:
-			# Top-Right Corner -> points Left to Top 10 Slots
 			board_canvas.draw_line(Vector2(833, 108), Vector2(817, 108), arrow_col, 3.0)
 		elif seat_i == 2:
-			# Top-Left Corner -> points Down to Left 10 Slots
 			board_canvas.draw_line(Vector2(106, 191), Vector2(106, 202), arrow_col, 3.0)
 		else:
-			# Bottom-Right Corner -> points Up to Right 10 Slots
 			board_canvas.draw_line(Vector2(918, 833), Vector2(918, 818), arrow_col, 3.0)
 
 		var commander_avatars := [
@@ -1796,15 +1784,26 @@ func _draw_board_canvas() -> void:
 			av_tex_path = "res://assets/ui_hud/avatars/avatar_2_direct_hit.png"
 		var av_tex := GameState.tex(av_tex_path)
 		if av_tex:
-			board_canvas.draw_texture_rect(av_tex, Rect2(av_rect.position.x + 8, av_rect.position.y + 8, 44, 44), false)
+			board_canvas.draw_texture_rect(av_tex, Rect2(av_rect.position.x + 8, av_rect.position.y + 8, 48, 48), false)
 
-		board_canvas.draw_string(
+		var name_pos := Vector2(av_rect.position.x + 60, av_rect.position.y + 28)
+		board_canvas.draw_string_outline(
 			font,
-			Vector2(av_rect.position.x + 56, av_rect.position.y + 26),
+			name_pos,
 			seat_short_titles[seat_i],
 			HORIZONTAL_ALIGNMENT_LEFT,
-			102,
-			14,
+			98,
+			19,
+			4,
+			Color(0.02, 0.02, 0.04, 0.98)
+		)
+		board_canvas.draw_string(
+			font,
+			name_pos,
+			seat_short_titles[seat_i],
+			HORIZONTAL_ALIGNMENT_LEFT,
+			98,
+			19,
 			u_col
 		)
 
@@ -1813,30 +1812,30 @@ func _draw_board_canvas() -> void:
 		var hp_ratio := clampf(hp_val / maxf(1.0, float(p["max_hp"])), 0.0, 1.0)
 		var hp_icon_tex := GameState.tex("res://assets/cards/icons/stats/hp/prop.png")
 		if hp_icon_tex:
-			board_canvas.draw_texture_rect(hp_icon_tex, Rect2(av_rect.position.x + 56, av_rect.position.y + 32, 16, 16), false)
-		var hp_str := "%d/100" % int(ceil(hp_val))
-		var hp_pos := Vector2(av_rect.position.x + 76, av_rect.position.y + 46)
+			board_canvas.draw_texture_rect(hp_icon_tex, Rect2(av_rect.position.x + 60, av_rect.position.y + 33, 20, 20), false)
+		var hp_str := "%d HP" % int(ceil(hp_val))
+		var hp_pos := Vector2(av_rect.position.x + 84, av_rect.position.y + 51)
 		board_canvas.draw_string_outline(
 			num_font,
 			hp_pos,
 			hp_str,
 			HORIZONTAL_ALIGNMENT_LEFT,
-			82,
-			15,
-			3,
-			Color(0.02, 0.02, 0.04, 0.96)
+			76,
+			19,
+			4,
+			Color(0.02, 0.02, 0.04, 0.98)
 		)
 		board_canvas.draw_string(
 			num_font,
 			hp_pos,
 			hp_str,
 			HORIZONTAL_ALIGNMENT_LEFT,
-			82,
-			15,
+			76,
+			19,
 			Color(0.98, 0.42, 0.42) if hp_val < 40.0 else Color(0.48, 0.96, 0.58)
 		)
 
-		var hp_bar_rect := Rect2(av_rect.position.x + 12, av_rect.position.y + 56, av_rect.size.x - 24, 12)
+		var hp_bar_rect := Rect2(av_rect.position.x + 12, av_rect.position.y + 60, av_rect.size.x - 24, 14)
 		board_canvas.draw_rect(hp_bar_rect, Color(0.03, 0.04, 0.07, 0.95), true)
 		if hp_ratio > 0.0:
 			var fill_w := hp_bar_rect.size.x * hp_ratio
@@ -1847,47 +1846,37 @@ func _draw_board_canvas() -> void:
 				board_canvas.draw_rect(Rect2(hp_bar_rect.position.x, hp_bar_rect.position.y, fill_w, hp_bar_rect.size.y), bar_col, true)
 		board_canvas.draw_rect(hp_bar_rect, u_col * Color(1, 1, 1, 0.75), false, 1.0)
 
-		var facedown_cnt := 0
-		for s in slots:
-			if s["state"] == "facedown":
-				facedown_cnt += 1
-
-		var status_line := "Tay: %d  |  Úp: %d" % [p["hand"].size(), facedown_cnt]
-		var status_col := Color(0.92, 0.94, 0.98)
-		var is_exposed := (phase == MatchPhase.COMBAT or phase == MatchPhase.SUDDEN_DEATH) and is_alive and not _player_has_living_units(seat_i)
-		if is_exposed:
-			status_line = "HẾT TƯỚNG (BỊ ĐÁNH!)"
-			status_col = Color(1.0, 0.42, 0.36)
-		else:
-			var hand_ic := GameState.tex("res://assets/ui_hud/icons/icon_cards_hand.png")
-			if hand_ic:
-				board_canvas.draw_texture_rect(hand_ic, Rect2(av_rect.position.x + 14, av_rect.position.y + 73, 15, 15), false)
-
-		board_canvas.draw_string(
-			font,
-			Vector2(av_rect.position.x + (8 if is_exposed else 24), av_rect.position.y + 86),
-			status_line,
-			HORIZONTAL_ALIGNMENT_CENTER,
-			av_rect.size.x - (16 if is_exposed else 32),
-			12,
-			status_col
-		)
-
 		var unit_cnt := 0
 		for u in units:
 			if int(u["owner_idx"]) == seat_i and float(u["hp"]) > 0.0:
 				unit_cnt += 1
-		var sword_ic := GameState.tex("res://assets/cards/icons/stats/dame/prop.png")
-		if sword_ic:
-			board_canvas.draw_texture_rect(sword_ic, Rect2(av_rect.position.x + 14, av_rect.position.y + 93, 15, 15), false)
+
+		var status_line := "Tay: %d · Sân: %d" % [p["hand"].size(), unit_cnt]
+		var status_col := Color(0.96, 0.96, 1.0)
+		var is_exposed := (phase == MatchPhase.COMBAT or phase == MatchPhase.SUDDEN_DEATH) and is_alive and not _player_has_living_units(seat_i)
+		if is_exposed:
+			status_line = "HẾT TƯỚNG!"
+			status_col = Color(1.0, 0.42, 0.36)
+
+		var st_pos := Vector2(av_rect.position.x + 8, av_rect.position.y + 98)
+		board_canvas.draw_string_outline(
+			font,
+			st_pos,
+			status_line,
+			HORIZONTAL_ALIGNMENT_CENTER,
+			av_rect.size.x - 16,
+			16,
+			4,
+			Color(0.02, 0.02, 0.04, 0.98)
+		)
 		board_canvas.draw_string(
 			font,
-			Vector2(av_rect.position.x + 26, av_rect.position.y + 106),
-			"Tướng trên sân: %d" % unit_cnt,
+			st_pos,
+			status_line,
 			HORIZONTAL_ALIGNMENT_CENTER,
-			av_rect.size.x - 34,
-			12,
-			Color(0.98, 0.84, 0.38)
+			av_rect.size.x - 16,
+			16,
+			status_col
 		)
 
 		# Draw Played History Scroll Button inside the bottom of the Carved Corner Socket
@@ -1895,15 +1884,26 @@ func _draw_board_canvas() -> void:
 		board_canvas.draw_style_box(GameState.make_gui_button_style("wood", false, Color.WHITE, 4, 2), h_rect)
 		var scroll_ic := GameState.tex("res://assets/ui_hud/avatars/icon_played_history_scroll.png")
 		if scroll_ic:
-			board_canvas.draw_texture_rect(scroll_ic, Rect2(h_rect.position.x + 18, h_rect.position.y + 5, 18, 18), false)
+			board_canvas.draw_texture_rect(scroll_ic, Rect2(h_rect.position.x + 12, h_rect.position.y + 7, 22, 22), false)
+		var h_pos := Vector2(h_rect.position.x + 28, h_rect.position.y + h_rect.size.y * 0.72)
+		board_canvas.draw_string_outline(
+			font,
+			h_pos,
+			"Bài mở (%d)" % p["played_history"].size(),
+			HORIZONTAL_ALIGNMENT_CENTER,
+			h_rect.size.x - 32,
+			17,
+			3,
+			Color(0.02, 0.02, 0.04, 0.98)
+		)
 		board_canvas.draw_string(
 			font,
-			Vector2(h_rect.position.x + 22, h_rect.position.y + h_rect.size.y * 0.68),
-			"Đã mở (%d)" % p["played_history"].size(),
+			h_pos,
+			"Bài mở (%d)" % p["played_history"].size(),
 			HORIZONTAL_ALIGNMENT_CENTER,
-			h_rect.size.x - 26,
-			13,
-			Color(0.98, 0.88, 0.58)
+			h_rect.size.x - 32,
+			17,
+			Color(0.98, 0.90, 0.62)
 		)
 
 
@@ -1943,18 +1943,18 @@ func _draw_fx_layer() -> void:
 			ft["pos"],
 			ft_txt,
 			HORIZONTAL_ALIGNMENT_CENTER,
-			180,
-			18,
-			4,
-			Color(0.02, 0.02, 0.04, 0.96)
+			220,
+			22,
+			5,
+			Color(0.02, 0.02, 0.04, 0.98)
 		)
 		fx_layer.draw_string(
 			font,
 			ft["pos"],
 			ft_txt,
 			HORIZONTAL_ALIGNMENT_CENTER,
-			180,
-			18,
+			220,
+			22,
 			ft["color"]
 		)
 
@@ -1976,7 +1976,7 @@ func _spawn_element_impact_vfx(pos: Vector2, elem: String) -> void:
 
 func _add_floating_text(pos: Vector2, txt: String, col: Color) -> void:
 	floating_texts.append({
-		"pos": pos + Vector2(-90, 0),
+		"pos": pos + Vector2(-110, 0),
 		"text": txt,
 		"color": col,
 		"time": 0.95,
@@ -1986,12 +1986,7 @@ func _add_floating_text(pos: Vector2, txt: String, col: Color) -> void:
 func _on_board_gui_input(event: InputEvent) -> void:
 	var mpos := Vector2.ZERO
 	var is_tap := false
-	if event is InputEventScreenTouch:
-		var st: InputEventScreenTouch = event as InputEventScreenTouch
-		if st.pressed:
-			is_tap = true
-			mpos = st.position
-	elif event is InputEventMouseButton:
+	if event is InputEventMouseButton:
 		var mb: InputEventMouseButton = event as InputEventMouseButton
 		if mb.pressed and mb.button_index == MOUSE_BUTTON_LEFT:
 			is_tap = true
@@ -1999,7 +1994,7 @@ func _on_board_gui_input(event: InputEvent) -> void:
 	if not is_tap:
 		return
 
-	# 1. Check Played History Buttons (`Đã mở`)
+	# 1. Check Played History Buttons (`Bài mở`)
 	for p_i in range(player_count):
 		if _get_player_history_btn_rect(p_i).has_point(mpos):
 			_open_player_history_modal(p_i)
@@ -2012,10 +2007,12 @@ func _on_board_gui_input(event: InputEvent) -> void:
 			if _get_slot_rect(0, s_i).has_point(mpos):
 				if slots[s_i]["state"] == "facedown":
 					recall_card_from_slot(0, s_i)
-					lbl_bot_log.text = "Bạn vừa nhặt lại bài từ Ô #%d về tay!" % (s_i + 1)
+					lbl_bot_log.text = "Đã nhặt lại bài từ Ô #%d về tay!" % (s_i + 1)
 				elif slots[s_i]["state"] == "empty" and selected_hand_idx >= 0:
 					place_card_from_hand(0, selected_hand_idx, s_i)
-					lbl_bot_log.text = "Bạn vừa úp bài xuống Ô #%d!" % (s_i + 1)
+					lbl_bot_log.text = "Đã đặt thẻ xuống Ô #%d!" % (s_i + 1)
+				elif slots[s_i]["state"] == "empty":
+					lbl_bot_log.text = "Hãy chạm vào 1 thẻ trên tay để rút thẻ lên trước khi đặt!"
 				elif slots[s_i]["state"] == "active_hero":
 					GameState.emit_signal("card_inspect_requested", str(slots[s_i]["card_id"]), str(slots[s_i]["element"]))
 				return
@@ -2031,12 +2028,12 @@ func _on_board_gui_input(event: InputEvent) -> void:
 
 func _open_player_history_modal(p_idx: int) -> void:
 	var p: Dictionary = players[p_idx]
-	history_title.text = "DANH SÁCH BÀI ĐÃ MỞ — %s (%d lá)" % [str(p["name"]), p["played_history"].size()]
+	history_title.text = "BÀI ĐÃ MỞ — %s (%d lá)" % [str(p["name"]), p["played_history"].size()]
 	for ch in history_grid.get_children():
 		ch.queue_free()
 	for entry in p["played_history"]:
 		var cw: Control = CardWidget.new()
-		cw.custom_minimum_size = Vector2(204, 306)
+		cw.custom_minimum_size = Vector2(276, 414)
 		cw.show_lock_if_unowned = false
 		cw.setup(str(entry["card_id"]), str(entry["element"]), false, false)
 		cw.card_clicked.connect(func(c_id, el): GameState.emit_signal("card_inspect_requested", c_id, el))
@@ -2046,6 +2043,8 @@ func _open_player_history_modal(p_idx: int) -> void:
 
 func _rebuild_hand_ui() -> void:
 	hand_cards_widgets.clear()
+	hand_pull_progress.clear()
+	hand_entry_offset_y.clear()
 	if is_instance_valid(hand_carousel_stage):
 		for ch in hand_carousel_stage.get_children():
 			ch.queue_free()
@@ -2056,11 +2055,13 @@ func _rebuild_hand_ui() -> void:
 	if hand.is_empty():
 		selected_hand_idx = -1
 		carousel_pos = 0.0
+		carousel_target_pos = 0.0
 		_recalculate_team_synergies()
 		return
 
-	if selected_hand_idx < 0 or selected_hand_idx >= hand.size():
-		selected_hand_idx = clampi(int(hand.size() / 2), 0, hand.size() - 1)
+	if selected_hand_idx >= hand.size():
+		selected_hand_idx = -1
+	carousel_target_pos = clampf(carousel_target_pos, 0.0, float(maxi(0, hand.size() - 1)))
 	carousel_pos = clampf(carousel_pos, 0.0, float(maxi(0, hand.size() - 1)))
 
 	for h_i in range(hand.size()):
@@ -2079,6 +2080,8 @@ func _rebuild_hand_ui() -> void:
 		cw.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		hand_carousel_stage.add_child(cw)
 		hand_cards_widgets.append(cw)
+		hand_pull_progress.append(1.0 if h_i == selected_hand_idx else 0.0)
+		hand_entry_offset_y.append(0.0)
 
 	_update_hand_carousel_layout(1.0)
 	_recalculate_team_synergies()
@@ -2088,36 +2091,67 @@ func _update_hand_carousel_layout(delta: float) -> void:
 	if hand_cards_widgets.is_empty() or not is_instance_valid(hand_carousel_stage):
 		return
 	var cnt: int = hand_cards_widgets.size()
-	selected_hand_idx = clampi(selected_hand_idx, 0, cnt - 1)
+	if selected_hand_idx >= cnt:
+		selected_hand_idx = -1
+
+	carousel_target_pos = clampf(carousel_target_pos, 0.0, float(maxi(0, cnt - 1)))
 	if not _carousel_is_dragging:
-		carousel_pos = lerpf(carousel_pos, float(selected_hand_idx), clampf(delta * 12.0, 0.0, 1.0))
+		carousel_pos = lerpf(carousel_pos, carousel_target_pos, clampf(delta * 10.5, 0.0, 1.0))
 
 	var stage_w: float = maxf(1008.0, hand_carousel_stage.size.x)
 	var center_x: float = stage_w * 0.5
 	var card_w: float = 340.0
 
+	var sel_pull: float = 0.0
+	if selected_hand_idx >= 0 and selected_hand_idx < hand_pull_progress.size():
+		sel_pull = hand_pull_progress[selected_hand_idx]
+
 	for i in range(cnt):
 		var cw: Control = hand_cards_widgets[i]
 		if not is_instance_valid(cw):
 			continue
+		var is_sel: bool = (i == selected_hand_idx)
+		var target_pull: float = 1.0 if is_sel else 0.0
+		if i < hand_pull_progress.size():
+			hand_pull_progress[i] = move_toward(hand_pull_progress[i], target_pull, delta * 6.8)
+		var p: float = hand_pull_progress[i] if i < hand_pull_progress.size() else target_pull
+		# Smooth ease-out curve for the card pull-out effect ("hiệu ứng rút thẻ ra")
+		var pull_ease: float = 1.0 - pow(1.0 - p, 3.0)
+		var pull_hop: float = sin(p * PI) * 20.0
+
+		if i < hand_entry_offset_y.size() and hand_entry_offset_y[i] > 0.0:
+			hand_entry_offset_y[i] = move_toward(hand_entry_offset_y[i], 0.0, delta * 460.0)
+		var entry_y: float = hand_entry_offset_y[i] if i < hand_entry_offset_y.size() else 0.0
+
 		var rel: float = float(i) - carousel_pos
 		var abs_rel: float = absf(rel)
 
-		# Curved fan & overlapping stack ("dạng stack và carousel, danh sách thẻ sẽ dạng cong cong")
-		var spread_x: float = rel * 146.0 - signf(rel) * pow(abs_rel, 1.32) * 16.0
-		var arc_drop_y: float = minf((rel * rel) * 24.0 + abs_rel * 16.0, 175.0)
-		var rot_deg: float = clampf(rel * 8.5, -28.0, 28.0)
-		var sc: float = clampf(1.05 - abs_rel * 0.09, 0.74, 1.05)
+		# Neighbors gently part ways when a card is pulled up
+		var neighbor_push: float = 0.0
+		if selected_hand_idx >= 0 and i != selected_hand_idx:
+			var diff_sel := float(i - selected_hand_idx)
+			neighbor_push = signf(diff_sel) * (36.0 / maxf(1.0, absf(diff_sel))) * sel_pull
 
-		cw.position = Vector2(center_x + spread_x - card_w * 0.5, 14.0 + arc_drop_y)
+		# Curved fan & overlapping stack ("dạng stack và carousel, danh sách thẻ sẽ dạng cong cong")
+		var spread_x: float = rel * 144.0 - signf(rel) * pow(abs_rel, 1.28) * 14.0 + neighbor_push
+		var base_arc_y: float = 96.0 + minf((rel * rel) * 19.0 + abs_rel * 11.0, 148.0)
+		var pulled_y: float = 2.0
+		var final_y: float = lerpf(base_arc_y, pulled_y, pull_ease) - pull_hop + entry_y
+
+		var base_rot: float = clampf(rel * 7.8, -24.0, 24.0)
+		var rot_deg: float = lerpf(base_rot, 0.0, pull_ease)
+
+		var base_sc: float = clampf(0.95 - abs_rel * 0.05, 0.78, 0.95)
+		var sc: float = lerpf(base_sc, 1.10, pull_ease)
+
+		cw.position = Vector2(center_x + spread_x - card_w * 0.5, final_y)
 		cw.rotation_degrees = rot_deg
 		cw.scale = Vector2(sc, sc)
-		cw.z_index = 60 - int(round(abs_rel * 10.0))
-		var is_sel: bool = (i == selected_hand_idx)
+		cw.z_index = (95 if p > 0.25 else (60 - int(round(abs_rel * 10.0))))
 		if cw.is_selected_highlight != is_sel:
 			cw.is_selected_highlight = is_sel
 			cw.queue_redraw()
-		cw.modulate = Color(1.0, 1.0, 1.0, 1.0) if is_sel else Color(0.86, 0.88, 0.94, 0.96)
+		cw.modulate = Color(1.0, 1.0, 1.0, 1.0) if p > 0.2 else Color(0.90, 0.92, 0.97, 0.98)
 
 
 func _shift_hand_selection(dir: int) -> void:
@@ -2126,7 +2160,7 @@ func _shift_hand_selection(dir: int) -> void:
 	var hand: Array = players[0]["hand"]
 	if hand.is_empty():
 		return
-	selected_hand_idx = clampi(selected_hand_idx + dir, 0, hand.size() - 1)
+	carousel_target_pos = clampf(carousel_target_pos + float(dir), 0.0, float(hand.size() - 1))
 	_update_hand_carousel_layout(0.25)
 	_recalculate_team_synergies()
 	board_canvas.queue_redraw()
@@ -2136,17 +2170,18 @@ func _place_currently_selected_card() -> void:
 	if players.is_empty() or phase != MatchPhase.PREP:
 		return
 	var hand: Array = players[0]["hand"]
-	if hand.is_empty():
+	if hand.is_empty() or selected_hand_idx < 0 or selected_hand_idx >= hand.size():
+		lbl_bot_log.text = "Hãy chạm vào 1 thẻ trên tay để rút thẻ lên trước!"
 		return
-	var idx: int = clampi(selected_hand_idx, 0, hand.size() - 1)
+	var idx: int = selected_hand_idx
 	var c_inst: Dictionary = hand[idx]
 	var cid: String = str(c_inst["card_id"])
 	var best_slot: int = BotAI.choose_best_slot(c_inst, players[0]["slots"])
 	if best_slot >= 0:
 		place_card_from_hand(0, idx, best_slot)
-		lbl_bot_log.text = "Đã úp [%s] xuống Ô #%d (Chạm vào ô trên bàn nếu muốn nhặt lại về tay)!" % [cid, best_slot + 1]
+		lbl_bot_log.text = "Đã rút & đặt [%s] xuống Ô #%d!" % [cid, best_slot + 1]
 	else:
-		lbl_bot_log.text = "Cả 10 ô trên bàn của bạn đã đầy! Chạm vào 1 ô đang úp để nhặt bài về tay."
+		lbl_bot_log.text = "Cả 10 ô trên bàn đã đầy! Chạm vào 1 ô đang úp để nhặt bài về."
 
 
 func _inspect_currently_selected_card() -> void:
@@ -2155,7 +2190,7 @@ func _inspect_currently_selected_card() -> void:
 	var hand: Array = players[0]["hand"]
 	if hand.is_empty():
 		return
-	var idx: int = clampi(selected_hand_idx, 0, hand.size() - 1)
+	var idx: int = selected_hand_idx if (selected_hand_idx >= 0 and selected_hand_idx < hand.size()) else clampi(int(round(carousel_pos)), 0, hand.size() - 1)
 	var c_inst: Dictionary = hand[idx]
 	GameState.emit_signal("card_inspect_requested", str(c_inst["card_id"]), str(c_inst["element"]))
 
@@ -2167,31 +2202,7 @@ func _on_hand_carousel_gui_input(event: InputEvent) -> void:
 	if hand.is_empty():
 		return
 
-	if event is InputEventScreenTouch:
-		var st: InputEventScreenTouch = event as InputEventScreenTouch
-		if st.pressed:
-			_carousel_pressing = true
-			_carousel_is_dragging = false
-			_carousel_drag_start_x = st.position.x
-			_carousel_drag_start_y = st.position.y
-			_carousel_start_pos = carousel_pos
-		else:
-			var was_drag: bool = _carousel_is_dragging
-			_carousel_pressing = false
-			_carousel_is_dragging = false
-			if not was_drag:
-				_handle_hand_carousel_tap(st.position)
-	elif event is InputEventScreenDrag and _carousel_pressing:
-		var sd: InputEventScreenDrag = event as InputEventScreenDrag
-		var dx: float = sd.position.x - _carousel_drag_start_x
-		if absf(dx) > 10.0:
-			_carousel_is_dragging = true
-			carousel_pos = clampf(_carousel_start_pos - dx / 142.0, 0.0, float(maxi(0, hand.size() - 1)))
-			selected_hand_idx = clampi(int(round(carousel_pos)), 0, hand.size() - 1)
-			_update_hand_carousel_layout(1.0)
-			_recalculate_team_synergies()
-			board_canvas.queue_redraw()
-	elif event is InputEventMouseButton:
+	if event is InputEventMouseButton:
 		var mb: InputEventMouseButton = event as InputEventMouseButton
 		if mb.button_index == MOUSE_BUTTON_LEFT:
 			if mb.pressed:
@@ -2200,7 +2211,7 @@ func _on_hand_carousel_gui_input(event: InputEvent) -> void:
 				_carousel_drag_start_x = mb.position.x
 				_carousel_drag_start_y = mb.position.y
 				_carousel_start_pos = carousel_pos
-			else:
+			elif _carousel_pressing:
 				var was_drag_m: bool = _carousel_is_dragging
 				_carousel_pressing = false
 				_carousel_is_dragging = false
@@ -2215,13 +2226,38 @@ func _on_hand_carousel_gui_input(event: InputEvent) -> void:
 	elif event is InputEventMouseMotion and _carousel_pressing:
 		var mm: InputEventMouseMotion = event as InputEventMouseMotion
 		var dx_m: float = mm.position.x - _carousel_drag_start_x
-		if absf(dx_m) > 10.0:
+		if absf(dx_m) > 12.0:
 			_carousel_is_dragging = true
-			carousel_pos = clampf(_carousel_start_pos - dx_m / 142.0, 0.0, float(maxi(0, hand.size() - 1)))
-			selected_hand_idx = clampi(int(round(carousel_pos)), 0, hand.size() - 1)
+			carousel_pos = clampf(_carousel_start_pos - dx_m / 144.0, 0.0, float(maxi(0, hand.size() - 1)))
+			carousel_target_pos = carousel_pos
 			_update_hand_carousel_layout(1.0)
-			_recalculate_team_synergies()
 			board_canvas.queue_redraw()
+
+
+func _hit_test_hand_card(local_pos: Vector2) -> Dictionary:
+	var best_idx: int = -1
+	var best_z: int = -99999
+	var best_card_local := Vector2.ZERO
+	for i in range(hand_cards_widgets.size()):
+		var cw: Control = hand_cards_widgets[i]
+		if not is_instance_valid(cw):
+			continue
+		var inv_xform: Transform2D = cw.get_transform().affine_inverse()
+		var pt: Vector2 = inv_xform * local_pos
+		if Rect2(Vector2.ZERO, cw.size).has_point(pt):
+			if cw.z_index >= best_z:
+				best_z = cw.z_index
+				best_idx = i
+				best_card_local = pt
+	return {"idx": best_idx, "card_local": best_card_local}
+
+
+func _trigger_card_pull_up_effect(cw: Control) -> void:
+	if not is_instance_valid(cw):
+		return
+	cw.modulate = Color(1.28, 1.22, 1.06, 1.0)
+	var tw := create_tween()
+	tw.tween_property(cw, "modulate", Color(1.0, 1.0, 1.0, 1.0), 0.24).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 
 
 func _handle_hand_carousel_tap(local_pos: Vector2) -> void:
@@ -2231,25 +2267,75 @@ func _handle_hand_carousel_tap(local_pos: Vector2) -> void:
 	if hand.is_empty():
 		return
 
-	var stage_w: float = maxf(1008.0, hand_carousel_stage.size.x)
-	var center_x: float = stage_w * 0.5
-	var rel_click_x: float = local_pos.x - center_x
+	var hit: Dictionary = _hit_test_hand_card(local_pos)
+	var tapped_idx: int = int(hit.get("idx", -1))
+	var card_local: Vector2 = hit.get("card_local", Vector2.ZERO)
 
-	# Tapping within the center active card bounds (-165..+165 px from center) acts on the selected card
-	if absf(rel_click_x) <= 165.0:
-		if phase == MatchPhase.PREP:
-			_place_currently_selected_card()
-		else:
-			_inspect_currently_selected_card()
-	else:
-		# Tapping to the left or right of the center card rotates the carousel toward that side card!
-		var step_offset: int = int(round(rel_click_x / 146.0))
-		if step_offset == 0:
-			step_offset = -1 if rel_click_x < 0.0 else 1
-		selected_hand_idx = clampi(selected_hand_idx + step_offset, 0, hand.size() - 1)
-		_update_hand_carousel_layout(0.25)
+	# 1. Tapped outside any card -> lower currently raised card back into the fan
+	if tapped_idx < 0:
+		if selected_hand_idx >= 0:
+			selected_hand_idx = -1
+			_recalculate_team_synergies()
+			board_canvas.queue_redraw()
+		return
+
+	# 2. Tapped a card that is NOT currently raised -> pull ONLY that card up out of the fan!
+	if tapped_idx != selected_hand_idx:
+		selected_hand_idx = tapped_idx
+		carousel_target_pos = clampf(float(tapped_idx), 0.0, float(maxi(0, hand.size() - 1)))
+		if tapped_idx < hand_cards_widgets.size():
+			_trigger_card_pull_up_effect(hand_cards_widgets[tapped_idx])
+		var c_inst: Dictionary = hand[tapped_idx]
+		var c_data := GameState.get_card(str(c_inst["card_id"]))
+		lbl_bot_log.text = "Đã rút [%s] lên! Chạm ô trên bàn hoặc bấm ĐẶT LÊN BÀN để úp." % str(c_data.get("name", c_inst["card_id"]))
 		_recalculate_team_synergies()
 		board_canvas.queue_redraw()
+		return
+
+	# 3. Tapped the ALREADY raised card -> if fully pulled up and tapped on upper body in PREP, place it; otherwise lower it
+	var cur_pull: float = hand_pull_progress[tapped_idx] if tapped_idx < hand_pull_progress.size() else 1.0
+	if phase == MatchPhase.PREP and cur_pull >= 0.75 and card_local.y <= 320.0:
+		_place_currently_selected_card()
+	else:
+		selected_hand_idx = -1
+		lbl_bot_log.text = "Đã hạ thẻ xuống tay."
+		_recalculate_team_synergies()
+		board_canvas.queue_redraw()
+
+
+func _play_card_fly_to_slot_animation(card_id: String, elem: String, from_global_pos: Vector2, slot_idx: int) -> void:
+	if not is_instance_valid(draw_anim_layer) or not is_instance_valid(board_canvas):
+		return
+	var ghost: Control = CardWidget.new()
+	ghost.custom_minimum_size = Vector2(340, 510)
+	ghost.size = Vector2(340, 510)
+	ghost.pivot_offset = Vector2(170, 255)
+	ghost.use_hd_frame = true
+	ghost.show_lock_if_unowned = false
+	ghost.setup(card_id, elem, false, false)
+	ghost.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	ghost.position = from_global_pos
+	ghost.scale = Vector2(1.08, 1.08)
+	draw_anim_layer.add_child(ghost)
+
+	var slot_rect := _get_slot_rect(0, slot_idx)
+	var slot_global_center := board_canvas.global_position + slot_rect.get_center()
+	var pull_peak_pos := from_global_pos + Vector2(0.0, -90.0)
+	var target_pos := slot_global_center - Vector2(170.0, 255.0)
+
+	var tw := create_tween()
+	# Step 1: Pull upward out of the hand ("hiệu ứng rút thẻ ra")
+	tw.tween_property(ghost, "position", pull_peak_pos, 0.14).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	tw.parallel().tween_property(ghost, "scale", Vector2(1.16, 1.16), 0.14)
+	# Step 2: Fly and shrink into the carved board slot
+	tw.tween_property(ghost, "position", target_pos, 0.24).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
+	tw.parallel().tween_property(ghost, "scale", Vector2(0.18, 0.18), 0.24)
+	tw.parallel().tween_property(ghost, "modulate:a", 0.15, 0.24)
+	tw.tween_callback(func():
+		if is_instance_valid(ghost):
+			ghost.queue_free()
+		_spawn_element_impact_vfx(_get_slot_center_pos(0, slot_idx), elem)
+	)
 
 
 func _play_draw_new_cards_animation(new_cards: Array) -> void:
@@ -2258,58 +2344,84 @@ func _play_draw_new_cards_animation(new_cards: Array) -> void:
 	for ch in draw_anim_layer.get_children():
 		ch.queue_free()
 
+	# Mark the newly added cards in hand so they slide smoothly into the curved fan
+	var cnt: int = new_cards.size()
+	var total_hand := hand_entry_offset_y.size()
+	for k in range(maxi(0, total_hand - cnt), total_hand):
+		hand_entry_offset_y[k] = 220.0
+
 	var banner := PanelContainer.new()
 	banner.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	banner.position = Vector2(150, 560)
-	banner.size = Vector2(780, 74)
-	banner.add_theme_stylebox_override("panel", GameState.make_gui_panel_style("header", 12))
+	banner.position = Vector2(140, 490)
+	banner.size = Vector2(800, 82)
+	banner.add_theme_stylebox_override("panel", GameState.make_gui_panel_style("header", 14))
 	draw_anim_layer.add_child(banner)
 
 	var lbl := Label.new()
 	lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	lbl.text = "VÒNG %d — RÚT THÊM +%d THẺ MỚI VÀO TAY!" % [round_num, new_cards.size()]
+	lbl.text = "VÒNG %d — RÚT +%d THẺ MỚI TỪ CỌC BÀI!" % [round_num, cnt]
 	lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	lbl.add_theme_font_size_override("font_size", 24)
+	lbl.add_theme_font_size_override("font_size", 28)
 	lbl.add_theme_color_override("font_color", Color(1.0, 0.88, 0.34))
 	lbl.add_theme_color_override("font_outline_color", Color(0.02, 0.02, 0.05, 0.98))
 	lbl.add_theme_constant_override("outline_size", 5)
 	banner.add_child(lbl)
 
-	var cnt: int = new_cards.size()
+	# Visual Deck Stack at center from which cards are pulled out
+	var deck_stack := TextureRect.new()
+	deck_stack.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	deck_stack.texture = GameState.tex("res://assets/mobile/cards/frames/card_back_slot_256x384.png")
+	deck_stack.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	deck_stack.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	deck_stack.size = Vector2(180, 270)
+	deck_stack.position = Vector2(450, 610)
+	draw_anim_layer.add_child(deck_stack)
+
 	for i in range(cnt):
 		var c_inst: Dictionary = new_cards[i]
 		var cw: Control = CardWidget.new()
-		cw.custom_minimum_size = Vector2(280, 420)
-		cw.size = Vector2(280, 420)
-		cw.pivot_offset = Vector2(140, 210)
+		cw.custom_minimum_size = Vector2(300, 450)
+		cw.size = Vector2(300, 450)
+		cw.pivot_offset = Vector2(150, 225)
 		cw.use_hd_frame = true
 		cw.show_lock_if_unowned = false
-		cw.setup(str(c_inst["card_id"]), str(c_inst["element"]), false, false)
+		cw.setup(str(c_inst["card_id"]), str(c_inst["element"]), true, false)
 		cw.mouse_filter = Control.MOUSE_FILTER_IGNORE
 
-		var offset_x: float = (float(i) - float(cnt - 1) * 0.5) * 310.0
-		var start_pos := Vector2(540.0 + offset_x * 0.35 - 140.0, 650.0)
-		var mid_pos := Vector2(540.0 + offset_x - 140.0, 665.0)
-		var target_pos := Vector2(540.0 + offset_x * 0.55 - 140.0, 1320.0)
+		var offset_x: float = (float(i) - float(cnt - 1) * 0.5) * 320.0
+		var deck_origin := Vector2(390.0, 560.0)
+		var pull_up_pos := Vector2(390.0 + offset_x * 0.25, 470.0)
+		var showcase_pos := Vector2(540.0 + offset_x - 150.0, 620.0)
+		var target_pos := Vector2(540.0 + offset_x * 0.55 - 150.0, 1340.0)
 
-		cw.position = start_pos
-		cw.scale = Vector2(0.45, 0.45)
-		cw.rotation_degrees = (float(i) - float(cnt - 1) * 0.5) * 10.0
+		cw.position = deck_origin
+		cw.scale = Vector2(0.56, 0.56)
+		cw.rotation_degrees = (float(i) - float(cnt - 1) * 0.5) * 8.0
 		draw_anim_layer.add_child(cw)
-		cw.play_flip_reveal_anim(0.34)
+		cw.play_flip_reveal_anim(0.16 + float(i) * 0.08)
 
 		var tw := create_tween()
-		tw.tween_property(cw, "position", mid_pos, 0.30).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-		tw.parallel().tween_property(cw, "scale", Vector2(1.0, 1.0), 0.30).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-		tw.tween_interval(0.42)
-		tw.tween_property(cw, "position", target_pos, 0.38).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
-		tw.parallel().tween_property(cw, "scale", Vector2(1.12, 1.12), 0.38)
-		tw.parallel().tween_property(cw, "modulate:a", 0.0, 0.38)
+		# 1. Slide/pull card upward out of the deck stack ("rút thẻ ra")
+		tw.tween_property(cw, "position", pull_up_pos, 0.18).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+		tw.parallel().tween_property(cw, "scale", Vector2(0.78, 0.78), 0.18)
+		# 2. Fan out to center showcase while flipping face-up
+		tw.tween_property(cw, "position", showcase_pos, 0.24).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+		tw.parallel().tween_property(cw, "scale", Vector2(1.0, 1.0), 0.24).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+		tw.tween_interval(0.38)
+		# 3. Fly down into the curved hand fan
+		tw.tween_property(cw, "position", target_pos, 0.34).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
+		tw.parallel().tween_property(cw, "scale", Vector2(1.06, 1.06), 0.34)
+		tw.parallel().tween_property(cw, "modulate:a", 0.0, 0.34)
 		tw.tween_callback(cw.queue_free)
 
+	var d_tw := create_tween()
+	d_tw.tween_interval(0.65)
+	d_tw.tween_property(deck_stack, "modulate:a", 0.0, 0.25)
+	d_tw.tween_callback(deck_stack.queue_free)
+
 	var b_tw := create_tween()
-	b_tw.tween_interval(0.82)
+	b_tw.tween_interval(0.90)
 	b_tw.tween_property(banner, "modulate:a", 0.0, 0.28)
 	b_tw.tween_callback(banner.queue_free)
 
@@ -2317,13 +2429,13 @@ func _play_draw_new_cards_animation(new_cards: Array) -> void:
 func _update_top_hud_labels() -> void:
 	var new_title := ""
 	if phase == MatchPhase.PREP:
-		new_title = "VÒNG %d — CHUẨN BỊ 15s (Úp/Nhặt)" % round_num
+		new_title = "VÒNG %d · CHUẨN BỊ" % round_num
 	elif phase == MatchPhase.COMBAT:
-		new_title = "VÒNG %d — CHIẾN ĐẤU 15s (Tự Đánh)" % round_num
+		new_title = "VÒNG %d · CHIẾN ĐẤU" % round_num
 	elif phase == MatchPhase.SUDDEN_DEATH:
-		new_title = "TỬ CHIẾN 60s (Sudden Death)"
+		new_title = "TỬ CHIẾN 60s"
 	elif phase == MatchPhase.GAME_OVER:
-		new_title = "TRẬN ĐẤU ĐÃ KẾT THÚC"
+		new_title = "KẾT THÚC TRẬN"
 	if lbl_phase_title.text != new_title:
 		lbl_phase_title.text = new_title
 
@@ -2331,18 +2443,12 @@ func _update_top_hud_labels() -> void:
 	if lbl_timer.text != new_timer:
 		lbl_timer.text = new_timer
 
-	var alive_cnt := 0
-	for p in players:
-		if bool(p["alive"]):
-			alive_cnt += 1
 	var living_units := 0
 	for u in units:
 		if float(u["hp"]) > 0.0:
 			living_units += 1
-	var new_info := "Bài chung: %d lá · Sống: %d/%d · Tướng: %d" % [
+	var new_info := "Cọc bài: %d lá · Tướng: %d" % [
 		shared_deck.size(),
-		alive_cnt,
-		player_count,
 		living_units
 	]
 	if lbl_deck_info.text != new_info:
