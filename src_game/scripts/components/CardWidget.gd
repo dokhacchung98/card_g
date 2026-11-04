@@ -185,18 +185,25 @@ func _draw() -> void:
 	if role_tex:
 		draw_texture_rect(role_tex, Rect2(422.0 * sx - sock_r, 139.0 * sy - sock_r, sock_r * 2.0, sock_r * 2.0), false)
 
-	# 5. Name Header Slot (77, 63, 358, 42) — Large Outlined Title
+	# 5. Name Header Slot (77, 63, 358, 42) — Auto-fitted Outlined Title (never clips!)
 	var name_rect := Rect2(74.0 * sx, 62.0 * sy, 364.0 * sx, 44.0 * sy)
-	var name_fsize := maxi(18, int(30.0 * sx))
-	var name_outline := maxi(3, int(5.0 * sx))
 	var card_name: String = str(card.get("name", card_id))
-	var name_pos := Vector2(name_rect.position.x + 4.0 * sx, name_rect.position.y + name_rect.size.y * 0.76)
+	var max_name_w := name_rect.size.x - 8.0 * sx
+	var name_fsize := maxi(11, int(30.0 * sx))
+	var min_name_fsize := maxi(9, int(18.0 * sx))
+	while name_fsize > min_name_fsize:
+		var measured_w := font.get_string_size(card_name, HORIZONTAL_ALIGNMENT_LEFT, -1, name_fsize).x
+		if measured_w <= max_name_w:
+			break
+		name_fsize -= 1
+	var name_outline := maxi(2, int(5.0 * sx))
+	var name_pos := Vector2(name_rect.position.x + 4.0 * sx, name_rect.position.y + name_rect.size.y * 0.5 + float(name_fsize) * 0.36)
 	draw_string_outline(
 		font,
 		name_pos,
 		card_name,
 		HORIZONTAL_ALIGNMENT_CENTER,
-		name_rect.size.x - 8.0 * sx,
+		max_name_w,
 		name_fsize,
 		name_outline,
 		Color(0.01, 0.01, 0.03, 0.98)
@@ -206,12 +213,12 @@ func _draw() -> void:
 		name_pos,
 		card_name,
 		HORIZONTAL_ALIGNMENT_CENTER,
-		name_rect.size.x - 8.0 * sx,
+		max_name_w,
 		name_fsize,
 		Color(1.0, 0.96, 0.84)
 	)
 
-	# 6. Skill Description Box (78, 410, 357, 118) — Large Outlined Text
+	# 6. Skill Description Box (78, 410, 357, 118) — Strictly Clamped inside Box
 	var skill_rect := Rect2(80.0 * sx, 410.0 * sy, 352.0 * sx, 118.0 * sy)
 	var skill_desc: String = str(card.get("skill_desc", ""))
 	if w >= 120.0 and not skill_desc.is_empty():
@@ -219,16 +226,16 @@ func _draw() -> void:
 			font,
 			skill_rect,
 			skill_desc,
-			maxi(16, int(25.5 * sx)),
-			maxi(14, int(18.5 * sx)),
+			maxi(11, int(25.5 * sx)),
+			maxi(9, int(17.5 * sx)),
 			Color(0.96, 0.98, 1.0),
 			HORIZONTAL_ALIGNMENT_CENTER
 		)
 
-	# 7. Stats Grid (76, 547, 360, 112) — Clean 2x2 Grid of 4 Core Stats (HP, Dame, Def, Range) with Giant Numbers!
+	# 7. Stats Grid (76, 547, 360, 112) — Clean 2x2 Grid of 4 Core Stats (HP, Dame, Def, Range)
 	var is_item: bool = bool(card.get("is_item", false))
-	var stat_fsize := maxi(18, int(31.0 * sx))
-	var stat_outline := maxi(3, int(5.0 * sx))
+	var stat_fsize := maxi(12, int(31.0 * sx))
+	var stat_outline := maxi(2, int(5.0 * sx))
 	var stats_bg := Rect2(76.0 * sx, 547.0 * sy, 360.0 * sx, 112.0 * sy)
 	draw_rect(stats_bg, Color(0.05, 0.07, 0.12, 0.94), true)
 	draw_rect(stats_bg, Color(0.65, 0.56, 0.32, 0.45), false, 1.5)
@@ -240,8 +247,8 @@ func _draw() -> void:
 			font,
 			item_box,
 			item_txt,
-			maxi(17, int(27.0 * sx)),
-			maxi(15, int(21.0 * sx)),
+			maxi(11, int(27.0 * sx)),
+			maxi(9, int(19.0 * sx)),
 			Color(1.0, 0.88, 0.36),
 			HORIZONTAL_ALIGNMENT_CENTER
 		)
@@ -263,13 +270,13 @@ func _draw() -> void:
 			var s_icon := GameState.tex("res://assets/cards/icons/stats/%s/prop.png" % s_info[0])
 			if s_icon:
 				draw_texture_rect(s_icon, Rect2(bx, by + 2.0 * sy, 38.0 * sx, 38.0 * sy), false)
-			var s_pos := Vector2(bx + 46.0 * sx, by + 33.0 * sy)
+			var s_pos := Vector2(bx + 44.0 * sx, by + 20.0 * sy + float(stat_fsize) * 0.38)
 			draw_string_outline(
 				num_font,
 				s_pos,
 				str(s_info[1]),
 				HORIZONTAL_ALIGNMENT_LEFT,
-				112.0 * sx,
+				120.0 * sx,
 				stat_fsize,
 				stat_outline,
 				Color(0.01, 0.01, 0.03, 0.98)
@@ -279,30 +286,30 @@ func _draw() -> void:
 				s_pos,
 				str(s_info[1]),
 				HORIZONTAL_ALIGNMENT_LEFT,
-				112.0 * sx,
+				120.0 * sx,
 				stat_fsize,
 				s_info[2]
 			)
 
 	# 8. Card ID Slot & Clean Loadout / Owned Badge
-	var id_fsize := maxi(14, int(22.0 * sx))
-	var id_outline := maxi(3, int(4.5 * sx))
+	var id_fsize := maxi(9, int(21.0 * sx))
+	var id_outline := maxi(2, int(4.5 * sx))
 	draw_string_outline(
 		font,
-		Vector2(346.0 * sx, 700.0 * sy),
+		Vector2(336.0 * sx, 688.0 * sy + float(id_fsize) * 0.45),
 		card_id,
 		HORIZONTAL_ALIGNMENT_CENTER,
-		92.0 * sx,
+		106.0 * sx,
 		id_fsize,
 		id_outline,
 		Color(0.01, 0.01, 0.03, 0.98)
 	)
 	draw_string(
 		font,
-		Vector2(346.0 * sx, 700.0 * sy),
+		Vector2(336.0 * sx, 688.0 * sy + float(id_fsize) * 0.45),
 		card_id,
 		HORIZONTAL_ALIGNMENT_CENTER,
-		92.0 * sx,
+		106.0 * sx,
 		id_fsize,
 		GameState.RARITY_COLOR.get(rarity, Color.WHITE)
 	)
@@ -311,62 +318,65 @@ func _draw() -> void:
 		var badge_rect := Rect2(76.0 * sx, 672.0 * sy, 180.0 * sx, 34.0 * sy)
 		draw_rect(badge_rect, Color(0.12, 0.56, 0.28, 0.96), true)
 		draw_rect(badge_rect, Color(0.42, 0.98, 0.58), false, 2.0)
+		var b_fsize := maxi(9, int(20.0 * sx))
 		draw_string_outline(
 			font,
-			Vector2(badge_rect.position.x, badge_rect.position.y + 25.0 * sy),
+			Vector2(badge_rect.position.x, badge_rect.position.y + badge_rect.size.y * 0.5 + float(b_fsize) * 0.36),
 			"ĐÃ CHỌN",
 			HORIZONTAL_ALIGNMENT_CENTER,
 			badge_rect.size.x,
-			maxi(13, int(20.0 * sx)),
+			b_fsize,
 			maxi(2, int(4.0 * sx)),
 			Color(0.01, 0.01, 0.03, 0.98)
 		)
 		draw_string(
 			font,
-			Vector2(badge_rect.position.x, badge_rect.position.y + 25.0 * sy),
+			Vector2(badge_rect.position.x, badge_rect.position.y + badge_rect.size.y * 0.5 + float(b_fsize) * 0.36),
 			"ĐÃ CHỌN",
 			HORIZONTAL_ALIGNMENT_CENTER,
 			badge_rect.size.x,
-			maxi(13, int(20.0 * sx)),
+			b_fsize,
 			Color.WHITE
 		)
 	elif is_owned and owned_cnt > 0 and show_lock_if_unowned:
 		var cnt_rect := Rect2(76.0 * sx, 672.0 * sy, 110.0 * sx, 34.0 * sy)
 		draw_rect(cnt_rect, Color(0.08, 0.14, 0.22, 0.92), true)
+		var c_fsize := maxi(9, int(20.0 * sx))
 		draw_string_outline(
 			font,
-			Vector2(cnt_rect.position.x, cnt_rect.position.y + 25.0 * sy),
+			Vector2(cnt_rect.position.x, cnt_rect.position.y + cnt_rect.size.y * 0.5 + float(c_fsize) * 0.36),
 			"x%d" % owned_cnt,
 			HORIZONTAL_ALIGNMENT_CENTER,
 			cnt_rect.size.x,
-			maxi(13, int(20.0 * sx)),
+			c_fsize,
 			maxi(2, int(4.0 * sx)),
 			Color(0.01, 0.01, 0.03, 0.98)
 		)
 		draw_string(
 			font,
-			Vector2(cnt_rect.position.x, cnt_rect.position.y + 25.0 * sy),
+			Vector2(cnt_rect.position.x, cnt_rect.position.y + cnt_rect.size.y * 0.5 + float(c_fsize) * 0.36),
 			"x%d" % owned_cnt,
 			HORIZONTAL_ALIGNMENT_CENTER,
 			cnt_rect.size.x,
-			maxi(13, int(20.0 * sx)),
+			c_fsize,
 			Color(0.56, 0.96, 0.68)
 		)
 
 	if is_new_badge:
-		var new_rect := Rect2(58.0 * sx, 26.0 * sy, 128.0 * sx, 38.0 * sy)
+		var new_rect := Rect2(54.0 * sx, 14.0 * sy, 134.0 * sx, 38.0 * sy)
 		draw_rect(new_rect, Color(0.92, 0.18, 0.24, 0.96), true)
-		draw_rect(new_rect, Color(1.0, 0.86, 0.28), false, 2.0)
+		draw_rect(new_rect, Color(1.0, 0.86, 0.28), false, 1.5)
 		var star_tex := GameState.tex("res://assets/ui_hud/icons/icon_star_new.png")
 		if star_tex:
-			draw_texture_rect(star_tex, Rect2(new_rect.position.x + 6.0 * sx, new_rect.position.y + 5.0 * sy, 28.0 * sx, 28.0 * sy), false)
+			draw_texture_rect(star_tex, Rect2(new_rect.position.x + 5.0 * sx, new_rect.position.y + 5.0 * sy, 28.0 * sx, 28.0 * sy), false)
+		var new_fsize := maxi(9, int(20.0 * sx))
 		draw_string(
 			font,
-			Vector2(new_rect.position.x + 26.0 * sx, new_rect.position.y + 27.0 * sy),
+			Vector2(new_rect.position.x + 28.0 * sx, new_rect.position.y + new_rect.size.y * 0.5 + float(new_fsize) * 0.36),
 			"MỚI!",
 			HORIZONTAL_ALIGNMENT_CENTER,
-			new_rect.size.x - 26.0 * sx,
-			maxi(13, int(20.0 * sx)),
+			new_rect.size.x - 28.0 * sx,
+			new_fsize,
 			Color(1.0, 0.96, 0.75)
 		)
 
@@ -473,14 +483,24 @@ func _draw_responsive_text_box(
 			chosen_fsize = min_fsize
 			chosen_lines = _wrap_text(font, text, box.size.x, chosen_fsize)
 
+		var max_fit_lines := maxi(1, int(floor((box.size.y + 5.0) / (float(chosen_fsize) * 1.20))))
+		if chosen_lines.size() > max_fit_lines:
+			var clamped := PackedStringArray()
+			for li in range(max_fit_lines):
+				var ln := chosen_lines[li]
+				if li == max_fit_lines - 1 and not ln.ends_with("..."):
+					ln = ln + "..."
+				clamped.append(ln)
+			chosen_lines = clamped
+
 		_text_layout_cache[cache_key] = {
 			"fsize": chosen_fsize,
 			"lines": chosen_lines,
 		}
 
-	var line_step := float(chosen_fsize) * 1.24
+	var line_step := float(chosen_fsize) * 1.20
 	var block_h := chosen_lines.size() * line_step
-	var start_y := box.position.y + maxf(0.0, (box.size.y - block_h) * 0.5) + float(chosen_fsize) * 0.90
+	var start_y := box.position.y + maxf(0.0, (box.size.y - block_h) * 0.5) + float(chosen_fsize) * 0.88
 	var out_sz := maxi(2, int(float(chosen_fsize) * 0.18))
 
 	for i in range(chosen_lines.size()):

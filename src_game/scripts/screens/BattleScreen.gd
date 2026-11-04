@@ -472,7 +472,7 @@ func _enter_reveal_phase() -> void:
 					var uid := _spawn_hero_unit(p_i, s_i, cid, elem, false, "")
 					slot["unit_uid"] = uid
 
-	# PASS 2: Immediately activate all Item cards and remove them from the board slots right away!
+	# PASS 2: Immediately activate all Item cards and trigger Card Shatter Destruction on the board slots!
 	for p_i in range(player_count):
 		if not bool(players[p_i]["alive"]):
 			continue
@@ -488,16 +488,11 @@ func _enter_reveal_phase() -> void:
 					used_items_count += 1
 					players[p_i]["played_history"].append({"card_id": cid, "element": elem, "round": round_num})
 					_activate_item_card(p_i, s_i, cid, elem)
-					_spawn_element_impact_vfx(_get_slot_center_pos(p_i, s_i), elem)
-					# Immediately clear the item card from the slot so it disappears right as battle starts
-					slot["state"] = "empty"
-					slot["card_id"] = ""
-					slot["unit_uid"] = -1
-					slot["trigger_timer"] = 0.0
+					_trigger_slot_card_destroy(p_i, s_i, "DÙNG & PHÁ HỦY!")
 
 	_recalculate_team_synergies()
 	if used_items_count > 0:
-		lbl_bot_log.text = "LẬT %d THẺ (%d Item dùng luôn & biến mất)! Chiến đấu!" % [revealed_count, used_items_count]
+		lbl_bot_log.text = "LẬT %d THẺ (%d Item dùng ngay & phá hủy thẻ)! Chiến đấu!" % [revealed_count, used_items_count]
 	else:
 		lbl_bot_log.text = "LẬT %d THẺ — BẮT ĐẦU 15s CHIẾN ĐẤU!" % revealed_count
 	_enter_combat_phase(false)
@@ -783,113 +778,116 @@ func _activate_item_card(p_idx: int, slot_idx: int, card_id: String, elem: Strin
 
 	# Execute Item logic by card number (C081..C100)
 	if c_num in [81, 83, 84, 85, 87, 90, 92, 94, 97, 99, 100]:
-		if allies.is_empty():
-			_add_floating_text(start_pos, "%s (Trống đồng minh!)" % str(c.get("name", "")), Color(0.75, 0.75, 0.78))
-			return
-		allies.sort_custom(func(a, b): return (a["hp"] / a["max_hp"]) < (b["hp"] / b["max_hp"]))
-		var ally: Dictionary = allies[0]
-		if c_num in [87, 90, 100]:
-			allies.sort_custom(func(a, b): return float(a["dame"]) > float(b["dame"]))
-			ally = allies[0]
-		target_pos = ally["pos"]
-		var boost := 1.25 if GameState.does_element_generate(elem, str(ally["element"])) else 1.0
+		if not allies.is_empty():
+			allies.sort_custom(func(a, b): return (a["hp"] / a["max_hp"]) < (b["hp"] / b["max_hp"]))
+			var ally: Dictionary = allies[0]
+			if c_num in [87, 90, 100]:
+				allies.sort_custom(func(a, b): return float(a["dame"]) > float(b["dame"]))
+				ally = allies[0]
+			target_pos = ally["pos"]
+			var boost := 1.25 if GameState.does_element_generate(elem, str(ally["element"])) else 1.0
 
-		if c_num == 81:
-			_heal_unit(ally, 160.0 * boost)
-		elif c_num == 83:
-			ally["mana"] = minf(ally["max_mana"], float(ally["mana"]) + 45.0 * boost)
-			ally["aspd"] = float(ally["aspd"]) * 1.15
-		elif c_num == 84:
-			ally["mspd"] = float(ally["mspd"]) * 1.40
-			ally["aspd"] = float(ally["aspd"]) * 1.25
-		elif c_num == 85:
-			ally["shield"] = float(ally["shield"]) + 150.0 * boost
-		elif c_num == 87:
-			ally["dame"] = float(ally["dame"]) * (1.0 + 0.25 * boost)
-			ally["aspd"] = float(ally["aspd"]) * 1.25
-		elif c_num == 90:
-			ally["dame"] = float(ally["dame"]) * 1.20
-			ally["def"] = float(ally["def"]) + 20.0
-		elif c_num == 92:
-			ally["def"] = float(ally["def"]) + 50.0 * boost
-			ally["mdef"] = float(ally["mdef"]) + 50.0 * boost
-			_heal_unit(ally, 120.0 * boost)
-		elif c_num == 94:
-			for a_i in range(mini(2, allies.size())):
-				allies[a_i]["shield"] = float(allies[a_i]["shield"]) + 220.0 * boost
-				allies[a_i]["def"] = float(allies[a_i]["def"]) + 35.0
-		elif c_num == 97:
-			for al in allies:
-				al["stun_timer"] = 0.0
-				al["silence_timer"] = 0.0
-				al["mana"] = minf(al["max_mana"], float(al["mana"]) + 20.0)
-				_heal_unit(al, 60.0 * boost)
-		elif c_num == 99:
-			ally["shield"] = float(ally["shield"]) + 150.0 * boost
-			ally["reflect_ratio"] = 0.40
-			ally["reflect_timer"] = 6.0
-		elif c_num == 100:
-			if not enemies.is_empty():
-				enemies.sort_custom(func(a, b): return float(a["dame"]) > float(b["dame"]))
-				ally["element"] = GameState.get_counter_element_against(str(enemies[0]["element"]))
-			ally["dame"] = float(ally["dame"]) * 1.25
-			ally["mana"] = minf(ally["max_mana"], float(ally["mana"]) + 35.0)
-		_attach_status_icon(ally, st_icon)
-		_add_floating_text(target_pos, str(c.get("name", "Item")), Color(0.38, 0.98, 0.58))
+			if c_num == 81:
+				_heal_unit(ally, 160.0 * boost)
+			elif c_num == 83:
+				ally["mana"] = minf(ally["max_mana"], float(ally["mana"]) + 45.0 * boost)
+				ally["aspd"] = float(ally["aspd"]) * 1.15
+			elif c_num == 84:
+				ally["mspd"] = float(ally["mspd"]) * 1.40
+				ally["aspd"] = float(ally["aspd"]) * 1.25
+			elif c_num == 85:
+				ally["shield"] = float(ally["shield"]) + 150.0 * boost
+			elif c_num == 87:
+				ally["dame"] = float(ally["dame"]) * (1.0 + 0.25 * boost)
+				ally["aspd"] = float(ally["aspd"]) * 1.25
+			elif c_num == 90:
+				ally["dame"] = float(ally["dame"]) * 1.20
+				ally["def"] = float(ally["def"]) + 20.0
+			elif c_num == 92:
+				ally["def"] = float(ally["def"]) + 50.0 * boost
+				ally["mdef"] = float(ally["mdef"]) + 50.0 * boost
+				_heal_unit(ally, 120.0 * boost)
+			elif c_num == 94:
+				for a_i in range(mini(2, allies.size())):
+					allies[a_i]["shield"] = float(allies[a_i]["shield"]) + 220.0 * boost
+					allies[a_i]["def"] = float(allies[a_i]["def"]) + 35.0
+			elif c_num == 97:
+				for al in allies:
+					al["stun_timer"] = 0.0
+					al["silence_timer"] = 0.0
+					al["mana"] = minf(al["max_mana"], float(al["mana"]) + 20.0)
+					_heal_unit(al, 60.0 * boost)
+			elif c_num == 99:
+				ally["shield"] = float(ally["shield"]) + 150.0 * boost
+				ally["reflect_ratio"] = 0.40
+				ally["reflect_timer"] = 6.0
+			elif c_num == 100:
+				if not enemies.is_empty():
+					enemies.sort_custom(func(a, b): return float(a["dame"]) > float(b["dame"]))
+					ally["element"] = GameState.get_counter_element_against(str(enemies[0]["element"]))
+				ally["dame"] = float(ally["dame"]) * 1.25
+				ally["mana"] = minf(ally["max_mana"], float(ally["mana"]) + 35.0)
+			_attach_status_icon(ally, st_icon)
+			_add_floating_text(target_pos, str(c.get("name", "Item")), Color(0.38, 0.98, 0.58))
+		else:
+			target_pos = _get_slot_arena_spawn_pos(p_idx, slot_idx)
+			_add_floating_text(start_pos, "%s (Kích hoạt!)" % str(c.get("name", "Item")), Color(0.38, 0.98, 0.58))
 	else:
 		# Offensive / Debuff Items (C082, C086, C088, C089, C091, C093, C096, C098)
-		if enemies.is_empty():
-			return
-		enemies.sort_custom(func(a, b): return float(a["mana"]) > float(b["mana"]))
-		var target_e: Dictionary = enemies[0]
-		target_pos = target_e["pos"]
-		var mult := 1.25 if GameState.does_element_counter(elem, str(target_e["element"])) else 1.0
-
-		if c_num == 82:
-			for en in enemies:
-				if en["pos"].distance_to(target_pos) <= 180.0:
-					_apply_damage(en, 125.0 * mult, true, elem, null)
-					_attach_status_icon(en, st_icon)
-		elif c_num == 86:
-			_apply_damage(target_e, 95.0 * mult, true, elem, null)
-			target_e["stun_timer"] = 1.4
-			_attach_status_icon(target_e, st_icon)
-		elif c_num == 88:
-			_apply_damage(target_e, 110.0 * mult, true, elem, null)
-			target_e["def"] = maxf(0.0, float(target_e["def"]) - 30.0)
-			target_e["mdef"] = maxf(0.0, float(target_e["mdef"]) - 30.0)
-			_attach_status_icon(target_e, st_icon)
-		elif c_num == 89:
-			target_e["mana"] = maxf(0.0, float(target_e["mana"]) - 40.0)
-			target_e["stun_timer"] = 2.0
-			_attach_status_icon(target_e, st_icon)
-			if not allies.is_empty():
-				allies[0]["shield"] = float(allies[0]["shield"]) + 130.0
-		elif c_num == 91:
-			target_e["mana"] = maxf(0.0, float(target_e["mana"]) - 30.0)
-			target_e["silence_timer"] = 3.5
-			_apply_damage(target_e, 100.0 * mult, true, elem, null)
-			_attach_status_icon(target_e, st_icon)
-		elif c_num == 93:
-			for en in enemies:
-				en["aspd"] = float(en["aspd"]) * 0.65
-				en["mspd"] = float(en["mspd"]) * 0.65
-				_attach_status_icon(en, st_icon)
-			for al in allies:
-				al["mana"] = minf(al["max_mana"], float(al["mana"]) + 25.0)
-		elif c_num == 96:
-			if not allies.is_empty():
-				var tmp_m: float = float(target_e["mana"])
-				target_e["mana"] = float(allies[0]["mana"])
-				allies[0]["mana"] = minf(allies[0]["max_mana"], tmp_m)
-		elif c_num == 98:
-			enemies.sort_custom(func(a, b): return float(a["shield"]) > float(b["shield"]))
-			target_e = enemies[0]
+		if not enemies.is_empty():
+			enemies.sort_custom(func(a, b): return float(a["mana"]) > float(b["mana"]))
+			var target_e: Dictionary = enemies[0]
 			target_pos = target_e["pos"]
-			target_e["shield"] = 0.0
-			target_e["stun_timer"] = 1.5
-			_attach_status_icon(target_e, st_icon)
-		_add_floating_text(target_pos, str(c.get("name", "Item")), Color(0.98, 0.45, 0.35))
+			var mult := 1.25 if GameState.does_element_counter(elem, str(target_e["element"])) else 1.0
+
+			if c_num == 82:
+				for en in enemies:
+					if en["pos"].distance_to(target_pos) <= 180.0:
+						_apply_damage(en, 125.0 * mult, true, elem, null)
+						_attach_status_icon(en, st_icon)
+			elif c_num == 86:
+				_apply_damage(target_e, 95.0 * mult, true, elem, null)
+				target_e["stun_timer"] = 1.4
+				_attach_status_icon(target_e, st_icon)
+			elif c_num == 88:
+				_apply_damage(target_e, 110.0 * mult, true, elem, null)
+				target_e["def"] = maxf(0.0, float(target_e["def"]) - 30.0)
+				target_e["mdef"] = maxf(0.0, float(target_e["mdef"]) - 30.0)
+				_attach_status_icon(target_e, st_icon)
+			elif c_num == 89:
+				target_e["mana"] = maxf(0.0, float(target_e["mana"]) - 40.0)
+				target_e["stun_timer"] = 2.0
+				_attach_status_icon(target_e, st_icon)
+				if not allies.is_empty():
+					allies[0]["shield"] = float(allies[0]["shield"]) + 130.0
+			elif c_num == 91:
+				target_e["mana"] = maxf(0.0, float(target_e["mana"]) - 30.0)
+				target_e["silence_timer"] = 3.5
+				_apply_damage(target_e, 100.0 * mult, true, elem, null)
+				_attach_status_icon(target_e, st_icon)
+			elif c_num == 93:
+				for en in enemies:
+					en["aspd"] = float(en["aspd"]) * 0.65
+					en["mspd"] = float(en["mspd"]) * 0.65
+					_attach_status_icon(en, st_icon)
+				for al in allies:
+					al["mana"] = minf(al["max_mana"], float(al["mana"]) + 25.0)
+			elif c_num == 96:
+				if not allies.is_empty():
+					var tmp_m: float = float(target_e["mana"])
+					target_e["mana"] = float(allies[0]["mana"])
+					allies[0]["mana"] = minf(allies[0]["max_mana"], tmp_m)
+			elif c_num == 98:
+				enemies.sort_custom(func(a, b): return float(a["shield"]) > float(b["shield"]))
+				target_e = enemies[0]
+				target_pos = target_e["pos"]
+				target_e["shield"] = 0.0
+				target_e["stun_timer"] = 1.5
+				_attach_status_icon(target_e, st_icon)
+			_add_floating_text(target_pos, str(c.get("name", "Item")), Color(0.98, 0.45, 0.35))
+		else:
+			target_pos = _get_slot_arena_spawn_pos(p_idx, slot_idx)
+			_add_floating_text(start_pos, "%s (Kích hoạt!)" % str(c.get("name", "Item")), Color(0.98, 0.45, 0.35))
 
 	# Spawn 4-frame Item Use Spritesheet animation at target_pos
 	var use_frames: Array = c.get("use_frames", [])
@@ -918,7 +916,7 @@ func _attach_status_icon(u: Dictionary, icon_path: String) -> void:
 func _process(delta: float) -> void:
 	var dt := delta * GameState.match_speed
 
-	# Update hit flash & trigger slot timers
+	# Update hit flash & trigger slot timers (card shatter destruction animation -> empty slot)
 	for p in players:
 		if float(p["hit_flash"]) > 0.0:
 			p["hit_flash"] = maxf(0.0, float(p["hit_flash"]) - dt)
@@ -927,6 +925,9 @@ func _process(delta: float) -> void:
 				s["trigger_timer"] -= dt
 				if float(s["trigger_timer"]) <= 0.0:
 					s["state"] = "empty"
+					s["card_id"] = ""
+					s["unit_uid"] = -1
+					s["trigger_timer"] = 0.0
 
 	if phase == MatchPhase.PREP:
 		phase_timer -= dt
@@ -1360,6 +1361,32 @@ func _heal_unit(u: Dictionary, amount: float) -> void:
 	_add_floating_text(u["pos"] + Vector2(0, -32), "+%d HP" % int(round(amount)), Color(0.35, 0.98, 0.55))
 
 
+func _trigger_slot_card_destroy(p_idx: int, slot_idx: int, reason_txt: String = "PHÁ HỦY!") -> void:
+	if p_idx < 0 or p_idx >= players.size():
+		return
+	var slots: Array = players[p_idx]["slots"]
+	if slot_idx < 0 or slot_idx >= slots.size():
+		return
+	var slot: Dictionary = slots[slot_idx]
+	var elem: String = str(slot.get("element", "hoa"))
+	slot["state"] = "trigger_break"
+	slot["unit_uid"] = -1
+	slot["trigger_timer"] = 1.45
+	slot["trigger_max_timer"] = 1.45
+
+	var sc_pos := _get_slot_center_pos(p_idx, slot_idx)
+	_spawn_element_impact_vfx(sc_pos, elem)
+	vfx_bursts.append({
+		"pos": sc_pos,
+		"frames": ["res://assets/board_map/slots/slot_4_trigger_break.png"],
+		"time": 0.0,
+		"duration": 1.25,
+		"scale": 0.50,
+	})
+	if not reason_txt.is_empty():
+		_add_floating_text(sc_pos + Vector2(0, -18), reason_txt, Color(1.0, 0.64, 0.24))
+
+
 func _on_unit_killed(u: Dictionary) -> void:
 	u["hp"] = 0.0
 	var owner_i: int = int(u["owner_idx"])
@@ -1367,8 +1394,7 @@ func _on_unit_killed(u: Dictionary) -> void:
 	if owner_i >= 0 and owner_i < players.size():
 		var slots: Array = players[owner_i]["slots"]
 		if slot_i >= 0 and slot_i < slots.size() and int(slots[slot_i]["unit_uid"]) == int(u["uid"]):
-			slots[slot_i]["state"] = "empty"
-			slots[slot_i]["unit_uid"] = -1
+			_trigger_slot_card_destroy(owner_i, slot_i, "VỠ THẺ!")
 
 	var u_node: Node2D = u.get("node", null)
 	if is_instance_valid(u_node):
@@ -1623,15 +1649,26 @@ func _get_player_history_btn_rect(p_idx: int) -> Rect2:
 
 func _draw_card_in_carved_slot(p_i: int, s_rect: Rect2, slot: Dictionary, u_col: Color) -> void:
 	var st: String = str(slot["state"])
+	var outer_slot := s_rect.grow(-1.5)
 	var inner_rect := s_rect.grow(-3.0)
 
-	# 1. Empty Carved Socket: keep the hollowed-out board socket visible!
+	# Always tint the slot background & frame slightly with the owner player's team color for instant visual grouping
+	var bg_tint := Color(u_col.r * 0.42, u_col.g * 0.42, u_col.b * 0.42, 0.34)
+	var border_tint := Color(
+		lerpf(u_col.r, 1.0, 0.18),
+		lerpf(u_col.g, 1.0, 0.18),
+		lerpf(u_col.b, 1.0, 0.18),
+		0.82
+	)
+
+	# 1. Empty Carved Socket: team-tinted background + team-colored frame
 	if st == "empty":
 		if p_i == 0 and phase == MatchPhase.PREP and selected_hand_idx >= 0:
-			board_canvas.draw_rect(inner_rect, Color(0.28, 0.78, 1.0, 0.18), true)
-			board_canvas.draw_rect(inner_rect, Color(0.45, 0.90, 1.0, 0.85), false, 1.5)
+			board_canvas.draw_rect(inner_rect, Color(0.18, 0.62, 1.0, 0.38), true)
+			board_canvas.draw_rect(outer_slot, Color(0.48, 0.92, 1.0, 0.96), false, 2.2)
 		else:
-			board_canvas.draw_rect(inner_rect, u_col * Color(1, 1, 1, 0.28), false, 1.0)
+			board_canvas.draw_rect(inner_rect, bg_tint, true)
+			board_canvas.draw_rect(outer_slot, border_tint, false, 1.8)
 		return
 
 	# Orientation: Top/Bottom slots are vertical (2:3), Left/Right slots are horizontal (rotated 90 deg)
@@ -1654,9 +1691,100 @@ func _draw_card_in_carved_slot(p_i: int, s_rect: Rect2, slot: Dictionary, u_col:
 		ch * (768.0 / 697.0)
 	)
 
+	# 3. Trigger Break (Card Destruction / Shatter Effect into 4 Flying Burning Shards!)
+	if st == "trigger_break":
+		# First draw the team-colored empty socket underneath so it reveals cleanly as shards fly apart
+		board_canvas.draw_rect(inner_rect, bg_tint, true)
+		board_canvas.draw_rect(outer_slot, border_tint, false, 1.8)
+
+		var cid_br: String = str(slot["card_id"])
+		var el_br: String = str(slot["element"])
+		var c_br := GameState.get_card(cid_br)
+		var rarity_br: String = str(c_br.get("rarity", "N"))
+		var art_tex_br := GameState.tex(str(c_br.get("card_art", "")))
+		var frame_tex_br := GameState.tex("res://assets/mobile/cards/frames/frame_%s_slot_256x384.png" % rarity_br)
+		var sh_tex := GameState.tex("res://assets/board_map/slots/slot_4_trigger_break.png")
+
+		var max_t := maxf(0.01, float(slot.get("trigger_max_timer", 1.45)))
+		var rem_t := clampf(float(slot.get("trigger_timer", 0.0)), 0.0, max_t)
+		var prog := clampf(1.0 - (rem_t / max_t), 0.0, 1.0) # 0.0 -> 1.0
+
+		var shake_vec := Vector2.ZERO
+		if prog < 0.55:
+			var shake_amp := (1.0 - prog / 0.55) * 5.2
+			shake_vec = Vector2(sin(prog * 95.0) * shake_amp, cos(prog * 82.0) * shake_amp)
+
+		board_canvas.draw_set_transform(center + shake_vec, rot, Vector2.ONE)
+
+		# Split card into 4 shattering quadrants that separate, rotate, burn dark orange-red, and fade out
+		var shard_p := clampf((prog - 0.20) / 0.80, 0.0, 1.0)
+		var shard_alpha := clampf(1.0 - pow(shard_p, 1.35), 0.0, 1.0)
+		var burn_mod := Color(
+			1.0,
+			lerpf(1.0, 0.32, shard_p),
+			lerpf(1.0, 0.12, shard_p),
+			shard_alpha
+		)
+		var dirs := [
+			Vector2(-1.0, -1.0),
+			Vector2(1.0, -1.0),
+			Vector2(-1.0, 1.0),
+			Vector2(1.0, 1.0),
+		]
+		var rots := [-0.72, 0.72, -0.58, 0.58]
+		var qw := cw * 0.5
+		var qh := ch * 0.5
+
+		for q_i in range(4):
+			var d_vec: Vector2 = dirs[q_i]
+			var q_center_local := Vector2(d_vec.x * qw * 0.5, d_vec.y * qh * 0.5) + d_vec * (shard_p * 25.0)
+			var q_rot: float = float(rots[q_i]) * shard_p
+			var q_scale := maxf(0.15, 1.08 - shard_p * 0.48)
+			var q_xf := Transform2D(rot, center + shake_vec) * Transform2D(q_rot, q_center_local).scaled_local(Vector2(q_scale, q_scale))
+			board_canvas.draw_set_transform_matrix(q_xf)
+
+			var q_rect := Rect2(-qw * 0.5, -qh * 0.5, qw, qh)
+			board_canvas.draw_rect(q_rect, Color(0.08, 0.04, 0.04, shard_alpha * 0.95), true)
+			if art_tex_br:
+				var uv_x := 0.0 if d_vec.x < 0.0 else 0.5
+				var uv_y := 0.0 if d_vec.y < 0.0 else 0.5
+				var asz := art_tex_br.get_size()
+				board_canvas.draw_texture_rect_region(
+					art_tex_br,
+					q_rect.grow(-1.5),
+					Rect2(asz.x * uv_x, asz.y * uv_y, asz.x * 0.5, asz.y * 0.5),
+					burn_mod
+				)
+			if frame_tex_br:
+				var f_uv_x := 0.0 if d_vec.x < 0.0 else 0.5
+				var f_uv_y := 0.0 if d_vec.y < 0.0 else 0.5
+				var fsz := frame_tex_br.get_size()
+				board_canvas.draw_texture_rect_region(
+					frame_tex_br,
+					q_rect.grow(1.5),
+					Rect2(fsz.x * f_uv_x, fsz.y * f_uv_y, fsz.x * 0.5, fsz.y * 0.5),
+					burn_mod
+				)
+			# Glowing fracture edge on each shard
+			board_canvas.draw_rect(q_rect, Color(1.0, 0.62, 0.18, shard_alpha * 0.92), false, 1.6)
+
+		# Draw expanding `slot_4_trigger_break.png` explosion & crack lines over the shattering slot
+		var burst_sc := 1.05 + prog * 0.65
+		var burst_alpha := clampf(1.25 - prog * 1.25, 0.0, 1.0)
+		board_canvas.draw_set_transform(center + shake_vec, rot, Vector2(burst_sc, burst_sc))
+		if sh_tex:
+			board_canvas.draw_texture_rect(sh_tex, local_rect.grow(6.0), false, Color(1.0, 0.92, 0.78, burst_alpha))
+		if prog < 0.55:
+			var fl_a := (1.0 - prog / 0.55) * 0.85
+			board_canvas.draw_line(Vector2(-cw * 0.48, -ch * 0.48), Vector2(cw * 0.48, ch * 0.48), Color(1.0, 0.88, 0.38, fl_a), 2.4)
+			board_canvas.draw_line(Vector2(cw * 0.48, -ch * 0.48), Vector2(-cw * 0.48, ch * 0.48), Color(1.0, 0.52, 0.18, fl_a), 2.4)
+
+		board_canvas.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+		return
+
 	board_canvas.draw_set_transform(center, rot, Vector2.ONE)
 
-	# 2. Opponent Face-Down Card -> Fit Card Back directly into the carved socket
+	# 4. Opponent Face-Down Card -> Fit Card Back directly into the carved socket
 	if st == "facedown" and p_i > 0:
 		var back_tex := GameState.tex("res://assets/mobile/cards/frames/card_back_slot_256x384.png")
 		if back_tex:
@@ -1667,7 +1795,7 @@ func _draw_card_in_carved_slot(p_i: int, s_rect: Rect2, slot: Dictionary, u_col:
 		board_canvas.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 		return
 
-	# 3. Player 0 Face-Down Card OR Any Revealed Card (active_hero / trigger_break) -> Render Actual Miniature Card!
+	# 5. Player 0 Face-Down Card OR Any Active Revealed Card (active_hero) -> Render Actual Miniature Card!
 	var cid: String = str(slot["card_id"])
 	var el: String = str(slot["element"])
 	var c := GameState.get_card(cid)
@@ -1733,12 +1861,6 @@ func _draw_card_in_carved_slot(p_i: int, s_rect: Rect2, slot: Dictionary, u_col:
 		12,
 		Color(0.98, 0.88, 0.42) if st == "facedown" else e_col
 	)
-
-	# Trigger Break Shatter Effect for Item Cards
-	if st == "trigger_break":
-		var sh_tex := GameState.tex("res://assets/board_map/slots/slot_4_trigger_break.png")
-		if sh_tex:
-			board_canvas.draw_texture_rect(sh_tex, local_rect, false, Color(1, 1, 1, 0.82))
 
 	# Crisp Team / Element Outer Card Rim inside the carved slot
 	var rim_col := Color(0.98, 0.84, 0.28) if st == "facedown" else u_col
@@ -1818,6 +1940,18 @@ func _draw_board_canvas() -> void:
 		var is_alive: bool = bool(p["alive"])
 		var u_col: Color = p["ui_color"] if is_alive else Color(0.46, 0.48, 0.52)
 
+		# Subtle team-colored strip behind the entire 10-slot row/column for this player
+		if is_alive:
+			var strip_rect := Rect2(201, 873, 621, 87)
+			if seat_i == 1:
+				strip_rect = Rect2(202, 64, 618, 87)
+			elif seat_i == 2:
+				strip_rect = Rect2(63, 199, 85, 620)
+			elif seat_i == 3:
+				strip_rect = Rect2(876, 198, 85, 623)
+			board_canvas.draw_rect(strip_rect, Color(u_col.r * 0.35, u_col.g * 0.35, u_col.b * 0.35, 0.22), true)
+			board_canvas.draw_rect(strip_rect, Color(u_col.r, u_col.g, u_col.b, 0.52), false, 1.6)
+
 		for s_i in range(10):
 			var s_rect := _get_slot_rect(seat_i, s_i)
 			if not is_alive:
@@ -1827,23 +1961,32 @@ func _draw_board_canvas() -> void:
 			else:
 				_draw_card_in_carved_slot(seat_i, s_rect, slots[s_i], u_col)
 
-		# Inside the Carved Corner Socket: draw hand-crafted 2D stone/bronze slot box
-		var slot_mod := Color(1.18, 0.65, 0.65, 1.0) if float(p["hit_flash"]) > 0.0 else Color.WHITE
+		# Inside the Carved Corner Socket: draw team-tinted 2D slot box + team-colored background & border
+		var team_panel_mod := Color(
+			lerpf(1.0, u_col.r, 0.52),
+			lerpf(1.0, u_col.g, 0.52),
+			lerpf(1.0, u_col.b, 0.52),
+			1.0
+		)
+		var slot_mod := Color(1.22, 0.55, 0.55, 1.0) if float(p["hit_flash"]) > 0.0 else (team_panel_mod if is_alive else Color.WHITE)
 		board_canvas.draw_style_box(
 			GameState.make_gui_panel_style("slot_active" if is_alive else "slot_gray", 8, slot_mod),
 			inner_corner
 		)
+		if is_alive:
+			board_canvas.draw_rect(inner_corner.grow(-2.0), Color(u_col.r * 0.45, u_col.g * 0.45, u_col.b * 0.45, 0.34), true)
+			board_canvas.draw_rect(inner_corner, Color(lerpf(u_col.r, 1.0, 0.22), lerpf(u_col.g, 1.0, 0.22), lerpf(u_col.b, 1.0, 0.22), 0.92), false, 2.5)
 
-		# Draw directional connector arrow from Corner Socket -> that player's 10 Card Slots
-		var arrow_col := u_col * Color(1, 1, 1, 0.85)
+		# Draw directional connector bar from Corner Socket -> that player's 10 Card Slots
+		var arrow_col := Color(lerpf(u_col.r, 1.0, 0.22), lerpf(u_col.g, 1.0, 0.22), lerpf(u_col.b, 1.0, 0.22), 0.92)
 		if seat_i == 0:
-			board_canvas.draw_line(Vector2(191, 916), Vector2(204, 916), arrow_col, 3.0)
+			board_canvas.draw_line(Vector2(190, 916), Vector2(204, 916), arrow_col, 4.5)
 		elif seat_i == 1:
-			board_canvas.draw_line(Vector2(833, 108), Vector2(817, 108), arrow_col, 3.0)
+			board_canvas.draw_line(Vector2(834, 108), Vector2(818, 108), arrow_col, 4.5)
 		elif seat_i == 2:
-			board_canvas.draw_line(Vector2(106, 191), Vector2(106, 202), arrow_col, 3.0)
+			board_canvas.draw_line(Vector2(106, 190), Vector2(106, 202), arrow_col, 4.5)
 		else:
-			board_canvas.draw_line(Vector2(918, 833), Vector2(918, 818), arrow_col, 3.0)
+			board_canvas.draw_line(Vector2(918, 834), Vector2(918, 818), arrow_col, 4.5)
 
 		var commander_avatars := [
 			"res://assets/ui_hud/avatars/commander_p1_blue.png",

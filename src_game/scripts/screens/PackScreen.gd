@@ -104,27 +104,13 @@ func _build_ui() -> void:
 	btn_guide.text = "LUẬT"
 	btn_guide.icon = GameState.tex("res://assets/ui_hud/icons/icon_guide_book.png")
 	btn_guide.expand_icon = true
-	btn_guide.custom_minimum_size = Vector2(148, 66)
-	btn_guide.add_theme_font_size_override("font_size", 23)
-	GameState.apply_gui_button(btn_guide, "purple", false, 10, 8)
+	btn_guide.custom_minimum_size = Vector2(168, 66)
+	btn_guide.add_theme_font_size_override("font_size", 24)
+	GameState.apply_gui_button(btn_guide, "purple", false, 12, 8)
 	btn_guide.pressed.connect(func():
 		GameState.emit_signal("guide_requested", 2)
 	)
 	top_hbox.add_child(btn_guide)
-
-	var btn_free := Button.new()
-	btn_free.text = "+QUÀ"
-	btn_free.icon = GameState.tex("res://assets/ui_hud/icons/icon_shop_chest.png")
-	btn_free.expand_icon = true
-	btn_free.custom_minimum_size = Vector2(148, 66)
-	btn_free.add_theme_font_size_override("font_size", 23)
-	GameState.apply_gui_button(btn_free, "green", false, 10, 8)
-	btn_free.pressed.connect(func():
-		GameState.add_demo_currencies(2000, 300)
-		lbl_pull_summary.text = "Nhận +2000 Vàng & +300 Kim Cương!"
-		refresh_header()
-	)
-	top_hbox.add_child(btn_free)
 
 	# 2. 5-Pack Tier Selector Row (Pack #1 .. Pack #5)
 	var tabs_hbox := HBoxContainer.new()
@@ -174,14 +160,16 @@ func _build_ui() -> void:
 
 	lbl_selected_pack_title = Label.new()
 	lbl_selected_pack_title.clip_text = true
-	lbl_selected_pack_title.add_theme_font_size_override("font_size", 27)
+	lbl_selected_pack_title.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	lbl_selected_pack_title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	lbl_selected_pack_title.add_theme_font_size_override("font_size", 26)
 	ctrl_vbox.add_child(lbl_selected_pack_title)
 
 	lbl_rates = Label.new()
-	lbl_rates.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	lbl_rates.custom_minimum_size = Vector2(680, 0)
+	lbl_rates.clip_text = true
+	lbl_rates.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	lbl_rates.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	lbl_rates.add_theme_font_size_override("font_size", 23)
+	lbl_rates.add_theme_font_size_override("font_size", 22)
 	lbl_rates.add_theme_color_override("font_color", Color(0.84, 0.90, 0.96))
 	ctrl_vbox.add_child(lbl_rates)
 
@@ -207,8 +195,8 @@ func _build_ui() -> void:
 	action_btns_row.add_child(btn_open_pack)
 
 	lbl_pull_summary = Label.new()
-	lbl_pull_summary.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	lbl_pull_summary.custom_minimum_size = Vector2(680, 0)
+	lbl_pull_summary.clip_text = true
+	lbl_pull_summary.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	lbl_pull_summary.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	lbl_pull_summary.text = "Chọn Rương và bấm MỞ RƯƠNG để nhận 10 thẻ!"
 	lbl_pull_summary.add_theme_font_size_override("font_size", 22)
@@ -218,15 +206,23 @@ func _build_ui() -> void:
 	# 4. Last-Pulled 10-Card History Grid on main screen (Large 3-Column Grid + Touch Scroll)
 	var scroll := ScrollContainer.new()
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	GameState.setup_touch_scroll(scroll)
 	main_vbox.add_child(scroll)
 
+	var grid_center_bg := HBoxContainer.new()
+	grid_center_bg.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	grid_center_bg.alignment = BoxContainer.ALIGNMENT_CENTER
+	grid_center_bg.mouse_filter = Control.MOUSE_FILTER_PASS
+	scroll.add_child(grid_center_bg)
+
 	results_grid = GridContainer.new()
 	results_grid.columns = 3
-	results_grid.add_theme_constant_override("h_separation", 16)
+	results_grid.add_theme_constant_override("h_separation", 18)
 	results_grid.add_theme_constant_override("v_separation", 18)
 	results_grid.mouse_filter = Control.MOUSE_FILTER_PASS
-	scroll.add_child(results_grid)
+	grid_center_bg.add_child(results_grid)
 
 	# 5. Build Full-Screen Black Pack Opening Ceremony & Interactive Flip Overlay
 	_build_ceremony_overlay()
@@ -278,29 +274,36 @@ func _build_ceremony_overlay() -> void:
 
 	# Stage B: 10 Face-Down Cards Interactive Flip Grid + Bottom Action Buttons
 	ceremony_cards_stage = VBoxContainer.new()
-	ceremony_cards_stage.position = Vector2(28, 86)
-	ceremony_cards_stage.size = Vector2(1024, 1760)
+	ceremony_cards_stage.position = Vector2(28, 64)
+	ceremony_cards_stage.size = Vector2(1024, 1792)
 	ceremony_cards_stage.alignment = BoxContainer.ALIGNMENT_CENTER
-	ceremony_cards_stage.add_theme_constant_override("separation", 22)
+	ceremony_cards_stage.add_theme_constant_override("separation", 20)
 	ceremony_cards_stage.visible = false
 	ceremony_overlay.add_child(ceremony_cards_stage)
 
 	var head_panel := PanelContainer.new()
-	head_panel.add_theme_stylebox_override("panel", GameState.make_gui_panel_style("dialog", 20))
+	head_panel.custom_minimum_size = Vector2(980, 0)
+	head_panel.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	head_panel.add_theme_stylebox_override("panel", GameState.make_gui_panel_style("dialog", 18))
 	ceremony_cards_stage.add_child(head_panel)
 
 	var head_vbox := VBoxContainer.new()
-	head_vbox.add_theme_constant_override("separation", 8)
+	head_vbox.custom_minimum_size = Vector2(936, 0)
+	head_vbox.add_theme_constant_override("separation", 6)
 	head_panel.add_child(head_vbox)
 
 	ceremony_title_lbl = Label.new()
 	ceremony_title_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	ceremony_title_lbl.add_theme_font_size_override("font_size", 32)
+	ceremony_title_lbl.clip_text = true
+	ceremony_title_lbl.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	ceremony_title_lbl.add_theme_font_size_override("font_size", 30)
 	ceremony_title_lbl.add_theme_color_override("font_color", Color(1.0, 0.86, 0.32))
 	head_vbox.add_child(ceremony_title_lbl)
 
 	ceremony_status_lbl = Label.new()
 	ceremony_status_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	ceremony_status_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	ceremony_status_lbl.custom_minimum_size = Vector2(920, 0)
 	ceremony_status_lbl.add_theme_font_size_override("font_size", 24)
 	ceremony_status_lbl.add_theme_color_override("font_color", Color(0.76, 0.90, 1.0))
 	head_vbox.add_child(ceremony_status_lbl)
@@ -318,12 +321,12 @@ func _build_ceremony_overlay() -> void:
 	# Bottom Buttons Row: "LẬT TẤT CẢ" & "THU VÀO KHO"
 	var btn_row := HBoxContainer.new()
 	btn_row.alignment = BoxContainer.ALIGNMENT_CENTER
-	btn_row.add_theme_constant_override("separation", 20)
+	btn_row.add_theme_constant_override("separation", 18)
 	ceremony_cards_stage.add_child(btn_row)
 
 	btn_flip_all = _make_ceremony_ornate_button(
 		"res://assets/ui_hud/gui/btn_nav_gacha.png",
-		Vector2(470, 134),
+		Vector2(450, 124),
 		"LẬT TẤT CẢ 10 THẺ",
 		"",
 		Color(0.98, 0.86, 1.0),
@@ -333,7 +336,7 @@ func _build_ceremony_overlay() -> void:
 
 	btn_collect_close = _make_ceremony_ornate_button(
 		"res://assets/ui_hud/gui/btn_play_battle.png",
-		Vector2(510, 134),
+		Vector2(470, 124),
 		"THU VÀO KHO (ĐÓNG)",
 		"",
 		Color(1.0, 0.92, 0.48),
@@ -576,7 +579,7 @@ func _populate_ceremony_and_background_cards(sel_id: int) -> void:
 
 		# 1. Interactive Face-Down Card inside the Ceremony Overlay
 		var cw_ceremony: Control = CardWidget.new()
-		cw_ceremony.custom_minimum_size = Vector2(190, 285)
+		cw_ceremony.custom_minimum_size = Vector2(184, 276)
 		cw_ceremony.show_lock_if_unowned = false
 		cw_ceremony.is_new_badge = is_new
 		cw_ceremony.show_gacha_glow = true
@@ -593,16 +596,17 @@ func _populate_ceremony_and_background_cards(sel_id: int) -> void:
 
 		# 2. Face-Up Card in the background PackScreen history grid
 		var cw_bg: Control = CardWidget.new()
-		cw_bg.custom_minimum_size = Vector2(306, 459)
+		cw_bg.custom_minimum_size = Vector2(314, 470)
 		cw_bg.show_lock_if_unowned = false
 		cw_bg.is_new_badge = is_new
 		cw_bg.setup(cid, elem, false, false)
 		cw_bg.card_clicked.connect(func(c_id: String, el: String):
-			GameState.emit_signal("card_inspect_requested", c_id, el)
+			if not GameState.is_touch_scrolling:
+				GameState.emit_signal("card_inspect_requested", c_id, el)
 		)
 		results_grid.add_child(cw_bg)
 
-	lbl_pull_summary.text = "Kết quả mở %s (10 thẻ): %d SSR · %d S · %d R · %d N (Mở mới %d mẫu thẻ!) — Chạm vào thẻ để xem chi tiết" % [
+	lbl_pull_summary.text = "Kết quả %s: %d SSR · %d S · %d R · %d N (Mới: %d)" % [
 		p_short,
 		current_pull_counts.get("SSR", 0),
 		current_pull_counts.get("S", 0),
@@ -621,10 +625,10 @@ func _update_ceremony_flip_counter() -> void:
 			flipped += 1
 	var total := ceremony_card_widgets.size()
 	if flipped < total:
-		ceremony_status_lbl.text = "Chạm vào từng lá bài đang úp để lật mở (Đã lật: %d/%d) — Hoặc bấm 'MỞ TẤT CẢ' bên dưới" % [flipped, total]
+		ceremony_status_lbl.text = "Chạm từng thẻ để lật (%d/%d) hoặc bấm LẬT TẤT CẢ" % [flipped, total]
 		btn_flip_all.visible = true
 	else:
-		ceremony_status_lbl.text = "ĐÃ LẬT ĐỦ 10/10 LÁ BÀI (%d SSR · %d S · %d R · %d N) — Chạm thẻ xem chi tiết hoặc bấm Thu Vào Collection!" % [
+		ceremony_status_lbl.text = "ĐÃ LẬT ĐỦ 10/10 THẺ (%d SSR · %d S · %d R · %d N) — Chạm thẻ xem chi tiết!" % [
 			current_pull_counts.get("SSR", 0),
 			current_pull_counts.get("S", 0),
 			current_pull_counts.get("R", 0),
